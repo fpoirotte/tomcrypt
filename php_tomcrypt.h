@@ -1,13 +1,13 @@
 /*
   +----------------------------------------------------------------------+
-  | PHP Version 4                                                        |
+  | PHP Version 5                                                        |
   +----------------------------------------------------------------------+
-  | Copyright (c) 1997-2015 The PHP Group                                |
+  | Copyright (c) 2015 The PHP Group                                     |
   +----------------------------------------------------------------------+
-  | This source file is subject to version 2.02 of the PHP license,      |
+  | This source file is subject to version 3.01 of the PHP license,      |
   | that is bundled with this package in the file LICENSE, and is        |
-  | available at through the world-wide-web at                           |
-  | http://www.php.net/license/2_02.txt.                                 |
+  | available through the world-wide-web at the following url:           |
+  | http://www.php.net/license/3_01.txt                                  |
   | If you did not receive a copy of the PHP license and are unable to   |
   | obtain it through the world-wide-web, please send a note to          |
   | license@php.net so we can mail you a copy immediately.               |
@@ -16,32 +16,129 @@
   +----------------------------------------------------------------------+
 */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #ifndef PHP_TOMCRYPT_H
 #define PHP_TOMCRYPT_H
 
-#include "php.h"
+#if HAVE_LIBMCRYPT
 
-#define PHP_TOMCRYPT_EXTNAME "tomcrypt"
-#define PHP_TOMCRYPT_VERSION "0.0.1"
+#ifdef ZTS
+#include "TSRM.h"
+#endif
+
+#define PHP_TOMCRYPT_EXTNAME        "tomcrypt"
+#define PHP_TOMCRYPT_VERSION        "0.1.0"
+
+/* MAC protocols */
+#define PHP_TOMCRYPT_MAC_HMAC       "hmac"
+#define PHP_TOMCRYPT_MAC_CMAC       "cmac"
+#define PHP_TOMCRYPT_MAC_PMAC       "pmac"
+#define PHP_TOMCRYPT_MAC_PELICAN    "pelican"
+#define PHP_TOMCRYPT_MAC_XCBC       "xcbc"
+#define PHP_TOMCRYPT_MAC_F9         "f9"
+
+/* Regular modes */
+#define PHP_TOMCRYPT_MODE_ECB       "ecb"
+#define PHP_TOMCRYPT_MODE_CFB       "cfb"
+#define PHP_TOMCRYPT_MODE_OFB       "ofb"
+#define PHP_TOMCRYPT_MODE_CBC       "cbc"
+#define PHP_TOMCRYPT_MODE_CTR       "ctr"
+#define PHP_TOMCRYPT_MODE_LRW       "lrw"
+#define PHP_TOMCRYPT_MODE_F8        "f8"
+#define PHP_TOMCRYPT_MODE_XTS       "xts"
+
+/* AEAD modes */
+#define PHP_TOMCRYPT_MODE_CCM       "ccm"
+#define PHP_TOMCRYPT_MODE_GCM       "gcm"
+#define PHP_TOMCRYPT_MODE_EAX       "eax"
+#define PHP_TOMCRYPT_MODE_OCB       "ocb"
+
+/* RNGs */
+#define PHP_TOMCRYPT_RNG_FORTUNA    "fortuna"
+#define PHP_TOMCRYPT_RNG_RC4        "rc4"
+#define PHP_TOMCRYPT_RNG_SOBER128   "sober128"
+#define PHP_TOMCRYPT_RNG_SECURE     "sprng"
+#define PHP_TOMCRYPT_RNG_YARROW     "yarrow"
 
 extern zend_module_entry tomcrypt_module_entry;
-#define phpext_tomcrypt_ptr &tomcrypt_module_entry
+#define tomcrypt_module_ptr &tomcrypt_module_entry
 
-PHP_MINIT_FUNCTION(tomcrypt);
-PHP_MSHUTDOWN_FUNCTION(tomcrypt);
-PHP_MINFO_FUNCTION(tomcrypt);
+/* Miscelleanous functions */
+PHP_FUNCTION(tomcrypt_strerror);
+#ifdef LTC_BASE64
+PHP_FUNCTION(tomcrypt_base64_encode);
+PHP_FUNCTION(tomcrypt_base64_decode);
+#endif
+
+/* Various lists */
+PHP_FUNCTION(tomcrypt_list_modes);
+PHP_FUNCTION(tomcrypt_list_ciphers);
+PHP_FUNCTION(tomcrypt_list_hashes);
+PHP_FUNCTION(tomcrypt_list_macs);
+PHP_FUNCTION(tomcrypt_list_rngs);
+
+/* Cipher-related functions */
+PHP_FUNCTION(tomcrypt_cipher_name);
+PHP_FUNCTION(tomcrypt_cipher_block_size);
+PHP_FUNCTION(tomcrypt_cipher_adapt_key_size);
+PHP_FUNCTION(tomcrypt_cipher_min_key_size);
+PHP_FUNCTION(tomcrypt_cipher_max_key_size);
+PHP_FUNCTION(tomcrypt_cipher_default_rounds);
+PHP_FUNCTION(tomcrypt_cipher_encrypt);
+PHP_FUNCTION(tomcrypt_cipher_decrypt);
+
+/* Hash-related functions */
+PHP_FUNCTION(tomcrypt_hash_name);
+PHP_FUNCTION(tomcrypt_hash_block_size);
+PHP_FUNCTION(tomcrypt_hash_digest_size);
+PHP_FUNCTION(tomcrypt_hash_string);
+PHP_FUNCTION(tomcrypt_hash_file);
+
+/* xMAC-related functions */
+#ifdef LTC_HMAC
+PHP_FUNCTION(tomcrypt_hmac_string);
+PHP_FUNCTION(tomcrypt_hmac_file);
+#endif
+#ifdef LTC_OMAC
+PHP_FUNCTION(tomcrypt_cmac_string);
+PHP_FUNCTION(tomcrypt_cmac_file);
+#endif
+#ifdef LTC_PMAC
+PHP_FUNCTION(tomcrypt_pmac_string);
+PHP_FUNCTION(tomcrypt_pmac_file);
+#endif
+#ifdef LTC_PELICAN
+PHP_FUNCTION(tomcrypt_pelican_string);
+PHP_FUNCTION(tomcrypt_pelican_file);
+#endif
+#ifdef LTC_XCBC
+PHP_FUNCTION(tomcrypt_xcbc_string);
+PHP_FUNCTION(tomcrypt_xcbc_file);
+#endif
+#ifdef LTC_F9_MODE
+PHP_FUNCTION(tomcrypt_f9_string);
+PHP_FUNCTION(tomcrypt_f9_file);
+#endif
+
+/* RNG-related functions */
+PHP_FUNCTION(tomcrypt_rng_name);
+PHP_FUNCTION(tomcrypt_rng_get_bytes);
+
+
+static inline void php_tomcrypt_bin2hex(char *out, const unsigned char *in, int in_len)
+{
+	static const char hexits[17] = "0123456789abcdef";
+	int i;
+
+	for(i = 0; i < in_len; i++) {
+		out[i * 2]       = hexits[in[i] >> 4];
+		out[(i * 2) + 1] = hexits[in[i] &  0x0F];
+	}
+}
+
+#else
+#define tomcrypt_module_ptr NULL
+#endif
+
+#define phpext_tomcrypt_ptr tomcrypt_module_ptr
 
 #endif	/* PHP_TOMCRYPT_H */
-
-
-/*
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * indent-tabs-mode: t
- * End:
- */

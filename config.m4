@@ -1,23 +1,41 @@
 dnl
-dnl $Id: config.m4 180917 2005-02-27 07:09:35Z pollita $
-dnl 
+dnl $Id$
+dnl
 
 PHP_ARG_WITH(tomcrypt, for libtomcrypt support,
-[  --with-tomcrypt[=DIR] Include tomcrypt support.])
+[  --with-tomcrypt[=DIR]    Include tomcrypt support])
 
-if test "$PHP_tomcrypt" != "no"; then
-  for i in $PHP_tomcrypt /usr/local /usr; do
-    test -f $i/include/tomcrypt.h && tomcrypt_DIR=$i && break
+if test "$PHP_TOMCRYPT" != "no"; then
+  for i in $PHP_TOMCRYPT /usr/local /usr; do
+    test -f $i/include/tomcrypt.h && TOMCRYPT_DIR=$i && break
   done
 
-  if test -z "$tomcrypt_DIR"; then
-    AC_MSG_ERROR(tomcrypt.h not found. Please reinstall libtomcrypt.)
+  if test -z "$TOMCRYPT_DIR"; then
+    AC_MSG_ERROR(tomcrypt.h not found)
   fi
 
-  PHP_ADD_LIBRARY_WITH_PATH(tomcrypt, $tomcrypt_DIR/lib, TOMCRYPT_SHARED_LIBADD)
+  TOMCRYPT_LIBDIR=$TOMCRYPT_DIR/$PHP_LIBDIR
+  TOMCRYPT_INCDIR=$TOMCRYPT_DIR/include
+
+  O_LDFLAGS=$LDFLAGS
+  LDFLAGS="$LDFLAGS -L$TOMCRYPT_LIBDIR"
+  AC_CHECK_LIB(tomcrypt, find_cipher, [
+      TOMCRYPT_LIBS=tomcrypt
+      TOMCRYPT_CHECK_IN_LIB=tomcrypt
+    ],[
+      AC_MSG_ERROR(Unable to find required tomcrypt library)
+    ]
+  )
+  LDFLAGS=$O_LDFLAGS
+
+  AC_DEFINE(HAVE_LIBTOMCRYPT,1,[ ])
+  PHP_NEW_EXTENSION(tomcrypt, tomcrypt.c, $ext_shared)
+  PHP_SUBST(TOMCRYPT_SHARED_LIBADD)
+
+  if test -n "$TOMCRYPT_LIBS"; then
+    PHP_ADD_LIBRARY_WITH_PATH($TOMCRYPT_LIBS, $TOMCRYPT_LIBDIR/lib, TOMCRYPT_SHARED_LIBADD)
+  fi
+
   PHP_ADD_INCLUDE($tomcrypt_DIR/include)
 
-  PHP_NEW_EXTENSION(tomcrypt, tomcrypt_stub.c tomcrypt.c, $ext_shared)
-  PHP_SUBST(tomcrypt_SHARED_LIBADD)
-  AC_DEFINE(HAVE_LIBTOMCRYPT,1,[ ])
 fi

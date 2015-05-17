@@ -7,9 +7,9 @@ xmlns:tasks="http://pear.php.net/dtd/tasks-1.0"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
  <name>tomcrypt</name>
  <channel>pecl.php.net</channel>
- <summary>PHP bindings for the libtomcrypt cryptographic framework</summary>
+ <summary>PHP bindings for libtomcrypt</summary>
  <description>
-  Provides a replacement API for the old bundled mcrypt extension.
+  Provides a replacement API for the old mcrypt extension.
  </description>
  <lead>
   <name>François Poirotte</name>
@@ -17,8 +17,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <email>clicky@erebot.net</email>
   <active>yes</active>
  </lead>
- <date>2015-05-27</date>
- <time>06:36:00</time>
+ <date>2015-05-17</date>
+ <time>20:36:00</time>
  <version>
   <release>0.1.0</release>
   <api>0.1</api>
@@ -27,14 +27,13 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <release>beta</release>
   <api>stable</api>
  </stability>
- <license uri="http://www.php.net/license/3_0.txt">PHP</license>
+ <license uri="http://www.php.net/license/3_01.txt">PHP</license>
  <notes>Initial Release.
  </notes>
  <contents>
   <dir name="/">
    <file name="config.m4" role="src" />
    <file name="tomcrypt.c" role="src" />
-   <file name="tomcrypt_stub.c" role="src" />
    <file name="php_tomcrypt.h" role="src" />
   </dir>
  </contents>
