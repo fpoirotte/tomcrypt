@@ -30,6 +30,10 @@ install:
     - ./configure
     - make
 
-script:
-    - make test
+env:
+    - TEST_PHP_EXECUTABLE=`which php`
+    - TEST_PHP_SRCDIR=`pwd`
+    - REPORT_EXIT_STATUS=1
 
+script:
+    - php -c /dev/null -d extension_dir=./modules -d extension=tomcrypt.so run-tests.php -c /dev/null -d extension_dir=./modules -d extension=tomcrypt.so -q
