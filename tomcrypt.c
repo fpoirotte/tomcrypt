@@ -725,41 +725,41 @@ PHP_FUNCTION(tomcrypt_list_modes)
 #define APPEND_MODE(mode) \
 	add_index_string(return_value, i++, PHP_TOMCRYPT_MODE_ ## mode, 1);
 
-#ifdef LTC_ECB_MODE
-	APPEND_MODE(ECB);
-#endif
-#ifdef LTC_CFB_MODE
-	APPEND_MODE(CFB);
-#endif
-#ifdef LTC_OFB_MODE
-	APPEND_MODE(OFB);
-#endif
 #ifdef LTC_CBC_MODE
 	APPEND_MODE(CBC);
-#endif
-#ifdef LTC_CTR_MODE
-	APPEND_MODE(CTR);
-#endif
-#ifdef LTC_LRW_MODE
-	APPEND_MODE(LRW);
-#endif
-#ifdef LTC_F8_MODE
-	APPEND_MODE(F8);
-#endif
-#ifdef LTC_XTS_MODE
-	APPEND_MODE(XTS);
 #endif
 #ifdef LTC_CCM_MODE
 	APPEND_MODE(CCM);
 #endif
-#ifdef LTC_GCM_MODE
-	APPEND_MODE(GCM);
+#ifdef LTC_CFB_MODE
+	APPEND_MODE(CFB);
+#endif
+#ifdef LTC_CTR_MODE
+	APPEND_MODE(CTR);
+#endif
+#ifdef LTC_ECB_MODE
+	APPEND_MODE(ECB);
 #endif
 #ifdef LTC_EAX_MODE
 	APPEND_MODE(EAX);
 #endif
+#ifdef LTC_F8_MODE
+	APPEND_MODE(F8);
+#endif
+#ifdef LTC_GCM_MODE
+	APPEND_MODE(GCM);
+#endif
+#ifdef LTC_LRW_MODE
+	APPEND_MODE(LRW);
+#endif
 #ifdef LTC_OCB_MODE
 	APPEND_MODE(OCB);
+#endif
+#ifdef LTC_OFB_MODE
+	APPEND_MODE(OFB);
+#endif
+#ifdef LTC_XTS_MODE
+	APPEND_MODE(XTS);
 #endif
 }
 /* }}} */
