@@ -1,0 +1,41 @@
+# phpize
+Makefile.global
+ac*.m4
+autom4te.cache/
+build/
+run-tests.php
+mkinstalldirs
+ltmain.sh
+missing
+config.guess
+config.sub
+config.h.in
+configure
+configure.in
+install-sh
+
+# configure
+.deps
+Makefile
+Makefile.fragments
+Makefile.objects
+config.h
+config.log
+config.nice
+config.status
+libtool
+
+# make
+.libs/
+modules/
+tomcrypt.la
+tomcrypt.lo
+
+# make test
+tests/*.sh
+tests/*.log
+tests/*.diff
+tests/*.out
+tests/*.exp
+tests/*.php
+tmp-php.ini
