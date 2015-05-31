@@ -31,7 +31,7 @@ You can install this extension using ``pear``:
 
 ..  sourcecode:: console
 
-    pear install https://github.com/fpoirotte/php_tomcrypt/archive/master.tar.gz
+    pear install https://github.com/fpoirotte/tomcrypt/archive/master.tar.gz
 
 It will also try to add the extension to your ``php.ini`` automatically.
 If it fails to do so, you can enable the extension manually by adding
@@ -48,7 +48,7 @@ Unfortunately, I do not have access to Windows development tools
 and cannot compile a binary release for Windows users.
 
 If you manage to compile the extension on Windows, please let me know through
-`GitHub's issue tracker <https://github.com/fpoirotte/php_tomcrypt/issues>`.
+`GitHub's issue tracker <https://github.com/fpoirotte/tomcrypt/issues>`.
 
 License
 -------
