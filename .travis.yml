@@ -8,14 +8,10 @@ php:
     - 5.5
     - 5.6
     - nightly
-    - hhvm
-    - hhvm-nightly
 
 matrix:
     allow_failures:
     - php: nightly
-    - php: hhvm
-    - php: hhvm-nightly
 
 notifications:
     email: false
@@ -24,6 +20,9 @@ notifications:
 before_install:
     - sudo apt-get update -qq
     - sudo apt-get install -y libtomcrypt-dev
+    - export TEST_PHP_EXECUTABLE=`which php`
+    - export TEST_PHP_SRCDIR=`pwd`
+    - export REPORT_EXIT_STATUS=1
 
 install:
     - phpize
@@ -31,6 +30,4 @@ install:
     - make
 
 script:
-    - export TEST_PHP_EXECUTABLE=`which php`
-    - export TEST_PHP_SRCDIR=`pwd`
-    - REPORT_EXIT_STATUS=1 php -c /dev/null -d extension_dir=./modules -d extension=tomcrypt.so run-tests.php -c /dev/null -d extension_dir=./modules -d extension=tomcrypt.so -q
+    - php -c /dev/null -d extension_dir=./modules -d extension=tomcrypt.so run-tests.php -c /dev/null -d extension_dir=./modules -d extension=tomcrypt.so -q
