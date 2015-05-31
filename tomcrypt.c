@@ -401,7 +401,6 @@ PHP_MINIT_FUNCTION(tomcrypt)
 /*	TOMCRYPT_CIPHER(SERPENT, "serpent");*/
 /*	TOMCRYPT_CIPHER(THREEWAY, "threeway");*/
 /*	TOMCRYPT_CIPHER(WAKE, "wake");*/
-
 /*	TOMCRYPT_CIPHER(IDEA, "idea");*/
 /*	TOMCRYPT_CIPHER(MARS, "mars");*/
 
@@ -1374,7 +1373,7 @@ PHP_FUNCTION(tomcrypt_cipher_decrypt)
 #ifdef LTC_ECB_MODE
 		symmetric_ECB  ctx;
 		if ((err = ecb_start(index, key, key_len, num_rounds, &ctx)) != CRYPT_OK ||
-			(err = ecb_encrypt(ciphertext, plaintext, ciphertext_len, &ctx)) != CRYPT_OK ||
+			(err = ecb_decrypt(ciphertext, plaintext, ciphertext_len, &ctx)) != CRYPT_OK ||
 			(err = ecb_done(&ctx)) != CRYPT_OK) {
 			efree(ciphertext);
 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
