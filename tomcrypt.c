@@ -58,6 +58,16 @@ static php_tomcrypt_rng php_tomcrypt_rngs[] = {
 # define DEFAULT_CONTEXT NULL
 #endif
 
+#ifdef ZEND_ENGINE_3
+typedef zend_long   pltc_long;
+typedef size_t      pltc_size;
+#else
+typedef long        pltc_long;
+typedef int         pltc_size;
+# define PLTC_LONG long
+# define PLTC_SIZE int
+#endif
+
 
 /* {{{ arginfo */
 
@@ -645,7 +655,7 @@ PHP_MINFO_FUNCTION(tomcrypt)
    Retrieve the error message for the given errno */
 PHP_FUNCTION(tomcrypt_strerror)
 {
-	long   err;
+	pltc_long   err;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l",
 		&err) == FAILURE) {
@@ -662,7 +672,7 @@ PHP_FUNCTION(tomcrypt_strerror)
 PHP_FUNCTION(tomcrypt_base64_encode)
 {
 	char          *data, *buf;
-	int            data_len;
+	pltc_size      data_len;
 	unsigned long  out_len = 0;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &data, &data_len) == FAILURE) {
@@ -689,7 +699,7 @@ PHP_FUNCTION(tomcrypt_base64_encode)
 PHP_FUNCTION(tomcrypt_base64_decode)
 {
 	char          *data, *buf;
-	int            data_len;
+	pltc_size      data_len;
 	unsigned long  out_len;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &data, &data_len) == FAILURE) {
@@ -859,8 +869,9 @@ PHP_FUNCTION(tomcrypt_list_rngs)
    Get the name of the specified cipher */
 PHP_FUNCTION(tomcrypt_cipher_name)
 {
-	char *cipher;
-	int   cipher_len, index;
+	char      *cipher;
+	pltc_size cipher_len;
+	int       index;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",
 		&cipher, &cipher_len) == FAILURE) {
@@ -880,8 +891,9 @@ PHP_FUNCTION(tomcrypt_cipher_name)
    Get the block size of the specified cipher in bytes */
 PHP_FUNCTION(tomcrypt_cipher_block_size)
 {
-	char *cipher;
-	int   cipher_len, index;
+	char      *cipher;
+	pltc_size cipher_len;
+	int       index;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",
 		&cipher, &cipher_len) == FAILURE) {
@@ -901,9 +913,10 @@ PHP_FUNCTION(tomcrypt_cipher_block_size)
    Derive an appropriate key size for the specified cipher */
 PHP_FUNCTION(tomcrypt_cipher_adapt_key_size)
 {
-	char *cipher;
-	int   cipher_len, err, index, size;
-	long  keysize;
+	char      *cipher;
+	pltc_size cipher_len;
+	int       index, err, size;
+	pltc_long keysize;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sl",
 		&cipher, &cipher_len, &keysize) == FAILURE) {
@@ -931,8 +944,9 @@ PHP_FUNCTION(tomcrypt_cipher_adapt_key_size)
    Get the minimum key size of the specified cipher in bytes */
 PHP_FUNCTION(tomcrypt_cipher_min_key_size)
 {
-	char *cipher;
-	int   cipher_len, index;
+	char      *cipher;
+	pltc_size cipher_len;
+	int       index;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",
 		&cipher, &cipher_len) == FAILURE) {
@@ -952,8 +966,9 @@ PHP_FUNCTION(tomcrypt_cipher_min_key_size)
    Get the maximum key size of the specified cipher in bytes */
 PHP_FUNCTION(tomcrypt_cipher_max_key_size)
 {
-	char *cipher;
-	int   cipher_len, index;
+	char      *cipher;
+	pltc_size cipher_len;
+	int       index;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",
 		&cipher, &cipher_len) == FAILURE) {
@@ -973,8 +988,9 @@ PHP_FUNCTION(tomcrypt_cipher_max_key_size)
    Get the default number of rounds for the specified cipher */
 PHP_FUNCTION(tomcrypt_cipher_default_rounds)
 {
-	char *cipher;
-	int   cipher_len, index;
+	char      *cipher;
+	pltc_size cipher_len;
+	int       index;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",
 		&cipher, &cipher_len) == FAILURE) {
@@ -1015,10 +1031,10 @@ PHP_FUNCTION(tomcrypt_cipher_default_rounds)
    Encrypt some data */
 PHP_FUNCTION(tomcrypt_cipher_encrypt)
 {
-	char  *cipher, *key, *plaintext, *mode, *ciphertext = NULL;
-	int    cipher_len, key_len, plaintext_len, mode_len;
-	zval  *options = NULL;
-	int    index, err, num_rounds = 0;
+	char      *cipher, *key, *plaintext, *mode, *ciphertext = NULL;
+	pltc_size  cipher_len, key_len, plaintext_len, mode_len;
+	zval      *options = NULL;
+	int        index, err, num_rounds = 0;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ssss|a!",
 		&cipher, &cipher_len, &key, &key_len, &plaintext, &plaintext_len,
@@ -1349,10 +1365,10 @@ PHP_FUNCTION(tomcrypt_cipher_encrypt)
    Encrypt some data */
 PHP_FUNCTION(tomcrypt_cipher_decrypt)
 {
-	char  *cipher, *key, *plaintext = NULL, *mode, *ciphertext;
-	int    cipher_len, key_len, ciphertext_len, mode_len;
-	zval  *options = NULL;
-	int    index, err, num_rounds = 0;
+	char      *cipher, *key, *plaintext = NULL, *mode, *ciphertext;
+	pltc_size  cipher_len, key_len, ciphertext_len, mode_len;
+	zval      *options = NULL;
+	int        index, err, num_rounds = 0;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ssss|a!",
 		&cipher, &cipher_len, &key, &key_len, &ciphertext, &ciphertext_len,
@@ -1694,7 +1710,7 @@ PHP_FUNCTION(tomcrypt_cipher_decrypt)
 static void php_tomcrypt_do_hash(INTERNAL_FUNCTION_PARAMETERS, int isfilename, zend_bool raw_output_default) /* {{{ */
 {
 	char       *algo, *data, hash[MAXBLOCKSIZE + 1];
-	int         algo_len, data_len;
+	pltc_size   algo_len, data_len;
 	int         index, err;
 	hash_state  md;
 	zend_bool   raw_output = raw_output_default;
@@ -1758,8 +1774,9 @@ static void php_tomcrypt_do_hash(INTERNAL_FUNCTION_PARAMETERS, int isfilename, z
    Get the name of the specified hashing algorithm */
 PHP_FUNCTION(tomcrypt_hash_name)
 {
-	char *algo;
-	int   algo_len, index;
+	char      *algo;
+	pltc_size  algo_len;
+	int        index;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",
 		&algo, &algo_len) == FAILURE) {
@@ -1779,8 +1796,9 @@ PHP_FUNCTION(tomcrypt_hash_name)
    Get the block size of the specified hashing algorithm in bytes */
 PHP_FUNCTION(tomcrypt_hash_block_size)
 {
-	char *algo;
-	int   algo_len, index;
+	char      *algo;
+	pltc_size  algo_len;
+	int        index;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",
 		&algo, &algo_len) == FAILURE) {
@@ -1800,8 +1818,9 @@ PHP_FUNCTION(tomcrypt_hash_block_size)
    Get the digest output size of the specified hashing algorithm in bytes */
 PHP_FUNCTION(tomcrypt_hash_digest_size)
 {
-	char *algo;
-	int   algo_len, index;
+	char      *algo;
+	pltc_size  algo_len;
+	int        index;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",
 		&algo, &algo_len) == FAILURE) {
@@ -1856,7 +1875,7 @@ static void php_tomcrypt_do_mac(INTERNAL_FUNCTION_PARAMETERS, php_tomcrypt_mac *
 {
 	char           *algo, *key, *data, mac[MAXBLOCKSIZE + 1];
 	unsigned long   macsize = MAXBLOCKSIZE;
-	int             algo_len, key_len, data_len;
+	pltc_size       algo_len, key_len, data_len;
 	int             err, index;
 	zend_bool       raw_output = raw_output_default;
 	php_stream     *stream = NULL;
@@ -2136,8 +2155,9 @@ PHP_FUNCTION(tomcrypt_f9_file)
    Get the name of the specified (Pseudo-)RNG */
 PHP_FUNCTION(tomcrypt_rng_name)
 {
-	char *rng;
-	int   rng_len, index;
+	char      *rng;
+	pltc_size  rng_len;
+	int        index;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",
 		&rng, &rng_len) == FAILURE) {
@@ -2159,7 +2179,9 @@ PHP_FUNCTION(tomcrypt_rng_get_bytes)
 {
 	char           sprng[] = "sprng";
 	char          *rng = sprng;
-	int            rng_len = sizeof("sprng"), index, index2, size;
+	pltc_size      rng_len = sizeof("sprng");
+	int            index, index2;
+	pltc_long      size;
 	unsigned char *buffer;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l|s",
