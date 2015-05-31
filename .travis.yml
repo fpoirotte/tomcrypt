@@ -27,6 +27,7 @@ notifications:
 
 install:
    - phpize
+   - ./configure
    - make
 
 script:
