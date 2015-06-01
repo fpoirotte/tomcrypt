@@ -61,12 +61,39 @@ static php_tomcrypt_rng php_tomcrypt_rngs[] = {
 #ifdef ZEND_ENGINE_3
 typedef zend_long   pltc_long;
 typedef size_t      pltc_size;
+# define PLTC_RETVAL_STRING(s, ex) { \
+    RETVAL_STRING(s);                \
+    if (!ex) efree(s);               \
+  }
+# define PLTC_RETVAL_STRINGL(s, len, ex) { \
+    RETVAL_STRINGL(s, len);                \
+    if (!ex) efree(s);                     \
+  }
+# define pltc_add_index_string(zv, idx, s, ex) { \
+    add_index_string(zv, idx, s);                \
+    if (!ex) efree(s);                           \
+  }
+# define pltc_add_assoc_stringl(zv, key, s, len, ex) { \
+    add_assoc_stringl(zv, key, s, len);                \
+    if (!ex) efree(s);                           \
+  }
 #else
 typedef long        pltc_long;
 typedef int         pltc_size;
-# define PLTC_LONG long
-# define PLTC_SIZE int
+# define PLTC_RETVAL_STRING(s, ex)       RETVAL_STRING(s, ex)
+# define PLTC_RETVAL_STRINGL(s, len, ex) RETVAL_STRINGL(s, len, ex)
+# define pltc_add_index_string(zv, idx, s, ex) add_index_string(zv, idx, s, ex)
+# define pltc_add_assoc_stringl(zv, key, s, len, ex) add_assoc_stringl(zv, key, s, len, ex)
 #endif
+
+#define PLTC_RETURN_STRING(s, ex) { \
+    PLTC_RETVAL_STRING(s, ex);      \
+    return;                         \
+}
+#define PLTC_RETURN_STRINGL(s, len, ex) { \
+    PLTC_RETVAL_STRINGL(s, len, ex);      \
+    return;                               \
+}
 
 
 /* {{{ arginfo */
@@ -645,7 +672,11 @@ PHP_MINFO_FUNCTION(tomcrypt)
 /* }}} */
 
 
-#include "ext/standard/php_smart_str.h"
+#ifdef ZEND_ENGINE_3
+# include "ext/standard/php_smart_string.h"
+#else
+# include "ext/standard/php_smart_str.h"
+#endif
 
 /***************/
 /*    MISC.    */
@@ -662,7 +693,7 @@ PHP_FUNCTION(tomcrypt_strerror)
 		return;
 	}
 
-	RETVAL_STRING(error_to_string(err), 1);
+	PLTC_RETVAL_STRING(error_to_string(err), 1);
 }
 /* }}} */
 
@@ -690,7 +721,7 @@ PHP_FUNCTION(tomcrypt_base64_encode)
 		RETURN_FALSE;
 	}
 
-	RETVAL_STRINGL(buf, out_len, 0);
+	PLTC_RETVAL_STRINGL(buf, out_len, 0);
 }
 /* }}} */
 
@@ -714,7 +745,7 @@ PHP_FUNCTION(tomcrypt_base64_decode)
 	}
 
 	buf[out_len] = '\0';
-	RETVAL_STRINGL(buf, out_len, 0);
+	PLTC_RETVAL_STRINGL(buf, out_len, 0);
 }
 /* }}} */
 #endif /* LTC_BASE64 */
@@ -733,7 +764,7 @@ PHP_FUNCTION(tomcrypt_list_modes)
 	array_init(return_value);
 
 #define APPEND_MODE(mode) \
-	add_index_string(return_value, i++, PHP_TOMCRYPT_MODE_ ## mode, 1);
+	pltc_add_index_string(return_value, i++, PHP_TOMCRYPT_MODE_ ## mode, 1);
 
 #ifdef LTC_CBC_MODE
 	APPEND_MODE(CBC);
@@ -783,7 +814,7 @@ PHP_FUNCTION(tomcrypt_list_ciphers)
 	array_init(return_value);
 
 	for (i = 0; cipher_descriptor[i].name != NULL; i++) {
-		add_index_string(return_value, i, cipher_descriptor[i].name, 1);
+		pltc_add_index_string(return_value, i, cipher_descriptor[i].name, 1);
 	}
 }
 /* }}} */
@@ -797,7 +828,7 @@ PHP_FUNCTION(tomcrypt_list_hashes)
 	array_init(return_value);
 
 	for (i = 0; hash_descriptor[i].name != NULL; i++) {
-		add_index_string(return_value, i, hash_descriptor[i].name, 1);
+		pltc_add_index_string(return_value, i, hash_descriptor[i].name, 1);
 	}
 }
 /* }}} */
@@ -811,7 +842,7 @@ PHP_FUNCTION(tomcrypt_list_macs)
 	array_init(return_value);
 
 #define APPEND_MAC(mac) \
-	add_index_string(return_value, i++, PHP_TOMCRYPT_MAC_ ## mac, 1);
+	pltc_add_index_string(return_value, i++, PHP_TOMCRYPT_MAC_ ## mac, 1);
 
 #ifdef LTC_HMAC
 	APPEND_MAC(HMAC);
@@ -840,7 +871,7 @@ PHP_FUNCTION(tomcrypt_list_rngs)
 	array_init(return_value);
 
 #define APPEND_RNG(rng) \
-	add_index_string(return_value, i++, PHP_TOMCRYPT_RNG_ ## rng, 1);
+	pltc_add_index_string(return_value, i++, PHP_TOMCRYPT_RNG_ ## rng, 1);
 
 #ifdef LTC_YARROW
 	APPEND_RNG(YARROW);
@@ -883,7 +914,7 @@ PHP_FUNCTION(tomcrypt_cipher_name)
 		RETURN_FALSE;
 	}
 
-	RETVAL_STRING(cipher_descriptor[index].name, 1);
+	PLTC_RETVAL_STRING(cipher_descriptor[index].name, 1);
 }
 /* }}} */
 
@@ -1006,7 +1037,30 @@ PHP_FUNCTION(tomcrypt_cipher_default_rounds)
 }
 /* }}} */
 
-#define GET_OPT_STRING(arr, key, dest, destlen, defval) { \
+#ifdef ZEND_ENGINE_3
+# define GET_OPT_STRING(arr, key, dest, destlen, defval) { \
+	zend_string *str = zend_string_init(key, sizeof(key)-1, 0); \
+	zval *item; \
+	if (arr && (item = zend_hash_find(Z_ARRVAL_P(arr), str)) != NULL && Z_TYPE_P(item) == IS_STRING) { \
+		dest = Z_STRVAL_P(item); \
+		destlen = Z_STRLEN_P(item); \
+	} else { \
+		dest = defval; \
+		destlen = (defval == NULL) ? 0 : sizeof(defval); \
+	} \
+	zend_string_release(str); \
+}
+# define GET_OPT_LONG(arr, key, dest, defval)	{ \
+	zend_string *str = zend_string_init(key, sizeof(key)-1, 0); \
+	zval *item; \
+	if (arr && (item = zend_hash_find(Z_ARRVAL_P(arr), str)) != NULL && Z_TYPE_P(item) == IS_LONG) \
+		dest = Z_LVAL_P(item); \
+	else \
+		dest = defval; \
+	zend_string_release(str); \
+}
+#else
+# define GET_OPT_STRING(arr, key, dest, destlen, defval) { \
 	zval **item; \
 	if (arr && zend_hash_find(Z_ARRVAL_P(arr), key, sizeof(key), (void**)&item) == SUCCESS && Z_TYPE_PP(item) == IS_STRING) { \
 		dest = Z_STRVAL_PP(item); \
@@ -1016,14 +1070,14 @@ PHP_FUNCTION(tomcrypt_cipher_default_rounds)
 		destlen = (defval == NULL) ? 0 : sizeof(defval); \
 	} \
 }
-
-#define GET_OPT_LONG(arr, key, dest, defval)	{ \
+# define GET_OPT_LONG(arr, key, dest, defval)	{ \
 	zval **item; \
 	if (arr && zend_hash_find(Z_ARRVAL_P(arr), key, sizeof(key), (void**)&item) == SUCCESS && Z_TYPE_PP(item) == IS_LONG) \
 		dest = Z_LVAL_PP(item); \
 	else \
 		dest = defval; \
 }
+#endif
 
 /* {{{ proto int tomcrypt_cipher_encrypt(string cipher, string key,
                                          string plaintext, string mode,
@@ -1061,7 +1115,7 @@ PHP_FUNCTION(tomcrypt_cipher_encrypt)
 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
 			RETURN_FALSE;
 		}
-		RETURN_STRINGL(ciphertext, plaintext_len, 0);
+		PLTC_RETURN_STRINGL(ciphertext, plaintext_len, 0);
 #endif
 	} else if (!strncmp(PHP_TOMCRYPT_MODE_CFB, mode, mode_len)) {
 #ifdef LTC_CFB_MODE
@@ -1084,7 +1138,7 @@ PHP_FUNCTION(tomcrypt_cipher_encrypt)
 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
 			RETURN_FALSE;
 		}
-		RETURN_STRINGL(ciphertext, plaintext_len, 0);
+		PLTC_RETURN_STRINGL(ciphertext, plaintext_len, 0);
 #endif
 	} else if (!strncmp(PHP_TOMCRYPT_MODE_OFB, mode, mode_len)) {
 #ifdef LTC_OFB_MODE
@@ -1107,7 +1161,7 @@ PHP_FUNCTION(tomcrypt_cipher_encrypt)
 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
 			RETURN_FALSE;
 		}
-		RETURN_STRINGL(ciphertext, plaintext_len, 0);
+		PLTC_RETURN_STRINGL(ciphertext, plaintext_len, 0);
 #endif
 	} else if (!strncmp(PHP_TOMCRYPT_MODE_CBC, mode, mode_len)) {
 #ifdef LTC_CBC_MODE
@@ -1130,7 +1184,7 @@ PHP_FUNCTION(tomcrypt_cipher_encrypt)
 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
 			RETURN_FALSE;
 		}
-		RETURN_STRINGL(ciphertext, plaintext_len, 0);
+		PLTC_RETURN_STRINGL(ciphertext, plaintext_len, 0);
 #endif
 	} else if (!strncmp(PHP_TOMCRYPT_MODE_CTR, mode, mode_len)) {
 #ifdef LTC_CTR_MODE
@@ -1154,7 +1208,7 @@ PHP_FUNCTION(tomcrypt_cipher_encrypt)
 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
 			RETURN_FALSE;
 		}
-		RETURN_STRINGL(ciphertext, plaintext_len, 0);
+		PLTC_RETURN_STRINGL(ciphertext, plaintext_len, 0);
 #endif
 	} else if (!strncmp(PHP_TOMCRYPT_MODE_LRW, mode, mode_len)) {
 #ifdef LTC_LRW_MODE
@@ -1186,7 +1240,7 @@ PHP_FUNCTION(tomcrypt_cipher_encrypt)
 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
 			RETURN_FALSE;
 		}
-		RETURN_STRINGL(ciphertext, plaintext_len, 0);
+		PLTC_RETURN_STRINGL(ciphertext, plaintext_len, 0);
 #endif
 	} else if (!strncmp(PHP_TOMCRYPT_MODE_F8, mode, mode_len)) {
 #ifdef LTC_F8_MODE
@@ -1216,7 +1270,7 @@ PHP_FUNCTION(tomcrypt_cipher_encrypt)
 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
 			RETURN_FALSE;
 		}
-		RETURN_STRINGL(ciphertext, plaintext_len, 0);
+		PLTC_RETURN_STRINGL(ciphertext, plaintext_len, 0);
 #endif
 	} else if (!strncmp(PHP_TOMCRYPT_MODE_XTS, mode, mode_len)) {
 #ifdef LTC_XTS_MODE
@@ -1250,7 +1304,7 @@ PHP_FUNCTION(tomcrypt_cipher_encrypt)
 			RETURN_FALSE;
 		}
 		xts_done(&ctx);
-		RETURN_STRINGL(ciphertext, plaintext_len, 0);
+		PLTC_RETURN_STRINGL(ciphertext, plaintext_len, 0);
 #endif
 	} else if (!strncmp(PHP_TOMCRYPT_MODE_CCM, mode, mode_len)) {
 #ifdef LTC_CCM_MODE
@@ -1271,9 +1325,9 @@ PHP_FUNCTION(tomcrypt_cipher_encrypt)
 		/* Write the tag back. */
 		if (options) {
 			tag[tag_len] = '\0';
-			add_assoc_stringl(options, "tag", tag, tag_len, 1);
+			pltc_add_assoc_stringl(options, "tag", tag, tag_len, 1);
 		}
-		RETURN_STRINGL(ciphertext, plaintext_len, 0);
+		PLTC_RETURN_STRINGL(ciphertext, plaintext_len, 0);
 #endif
 	} else if (!strncmp(PHP_TOMCRYPT_MODE_GCM, mode, mode_len)) {
 #ifdef LTC_GCM_MODE
@@ -1294,9 +1348,9 @@ PHP_FUNCTION(tomcrypt_cipher_encrypt)
 		/* Write the tag back. */
 		if (options) {
 			tag[tag_len] = '\0';
-			add_assoc_stringl(options, "tag", tag, tag_len, 1);
+			pltc_add_assoc_stringl(options, "tag", tag, tag_len, 1);
 		}
-		RETURN_STRINGL(ciphertext, plaintext_len, 0);
+		PLTC_RETURN_STRINGL(ciphertext, plaintext_len, 0);
 #endif
 	} else if (!strncmp(PHP_TOMCRYPT_MODE_EAX, mode, mode_len)) {
 #ifdef LTC_EAX_MODE
@@ -1318,9 +1372,9 @@ PHP_FUNCTION(tomcrypt_cipher_encrypt)
 		/* Write the tag back. */
 		if (options) {
 			tag[tag_len] = '\0';
-			add_assoc_stringl(options, "tag", tag, tag_len, 1);
+			pltc_add_assoc_stringl(options, "tag", tag, tag_len, 1);
 		}
-		RETURN_STRINGL(ciphertext, plaintext_len, 0);
+		PLTC_RETURN_STRINGL(ciphertext, plaintext_len, 0);
 #endif
 	} else if (!strncmp(PHP_TOMCRYPT_MODE_OCB, mode, mode_len)) {
 #ifdef LTC_OCB_MODE
@@ -1346,9 +1400,9 @@ PHP_FUNCTION(tomcrypt_cipher_encrypt)
 		/* Write the tag back. */
 		if (options) {
 			tag[tag_len] = '\0';
-			add_assoc_stringl(options, "tag", tag, tag_len, 1);
+			pltc_add_assoc_stringl(options, "tag", tag, tag_len, 1);
 		}
-		RETURN_STRINGL(ciphertext, plaintext_len, 0);
+		PLTC_RETURN_STRINGL(ciphertext, plaintext_len, 0);
 #endif
 	}
 
@@ -1395,7 +1449,7 @@ PHP_FUNCTION(tomcrypt_cipher_decrypt)
 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
 			RETURN_FALSE;
 		}
-		RETURN_STRINGL(plaintext, ciphertext_len, 0);
+		PLTC_RETURN_STRINGL(plaintext, ciphertext_len, 0);
 #endif
 	} else if (!strncmp(PHP_TOMCRYPT_MODE_CFB, mode, mode_len)) {
 #ifdef LTC_CFB_MODE
@@ -1418,7 +1472,7 @@ PHP_FUNCTION(tomcrypt_cipher_decrypt)
 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
 			RETURN_FALSE;
 		}
-		RETURN_STRINGL(plaintext, ciphertext_len, 0);
+		PLTC_RETURN_STRINGL(plaintext, ciphertext_len, 0);
 #endif
 	} else if (!strncmp(PHP_TOMCRYPT_MODE_OFB, mode, mode_len)) {
 #ifdef LTC_OFB_MODE
@@ -1441,7 +1495,7 @@ PHP_FUNCTION(tomcrypt_cipher_decrypt)
 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
 			RETURN_FALSE;
 		}
-		RETURN_STRINGL(plaintext, ciphertext_len, 0);
+		PLTC_RETURN_STRINGL(plaintext, ciphertext_len, 0);
 #endif
 	} else if (!strncmp(PHP_TOMCRYPT_MODE_CBC, mode, mode_len)) {
 #ifdef LTC_CBC_MODE
@@ -1464,7 +1518,7 @@ PHP_FUNCTION(tomcrypt_cipher_decrypt)
 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
 			RETURN_FALSE;
 		}
-		RETURN_STRINGL(plaintext, ciphertext_len, 0);
+		PLTC_RETURN_STRINGL(plaintext, ciphertext_len, 0);
 #endif
 	} else if (!strncmp(PHP_TOMCRYPT_MODE_CTR, mode, mode_len)) {
 #ifdef LTC_CTR_MODE
@@ -1488,7 +1542,7 @@ PHP_FUNCTION(tomcrypt_cipher_decrypt)
 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
 			RETURN_FALSE;
 		}
-		RETURN_STRINGL(plaintext, ciphertext_len, 0);
+		PLTC_RETURN_STRINGL(plaintext, ciphertext_len, 0);
 #endif
 	} else if (!strncmp(PHP_TOMCRYPT_MODE_LRW, mode, mode_len)) {
 #ifdef LTC_LRW_MODE
@@ -1520,7 +1574,7 @@ PHP_FUNCTION(tomcrypt_cipher_decrypt)
 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
 			RETURN_FALSE;
 		}
-		RETURN_STRINGL(plaintext, ciphertext_len, 0);
+		PLTC_RETURN_STRINGL(plaintext, ciphertext_len, 0);
 #endif
 	} else if (!strncmp(PHP_TOMCRYPT_MODE_F8, mode, mode_len)) {
 #ifdef LTC_F8_MODE
@@ -1550,7 +1604,7 @@ PHP_FUNCTION(tomcrypt_cipher_decrypt)
 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
 			RETURN_FALSE;
 		}
-		RETURN_STRINGL(plaintext, ciphertext_len, 0);
+		PLTC_RETURN_STRINGL(plaintext, ciphertext_len, 0);
 #endif
 	} else if (!strncmp(PHP_TOMCRYPT_MODE_XTS, mode, mode_len)) {
 #ifdef LTC_XTS_MODE
@@ -1584,7 +1638,7 @@ PHP_FUNCTION(tomcrypt_cipher_decrypt)
 			RETURN_FALSE;
 		}
 		xts_done(&ctx);
-		RETURN_STRINGL(plaintext, ciphertext_len, 0);
+		PLTC_RETURN_STRINGL(plaintext, ciphertext_len, 0);
 #endif
 	} else if (!strncmp(PHP_TOMCRYPT_MODE_CCM, mode, mode_len)) {
 #ifdef LTC_CCM_MODE
@@ -1609,7 +1663,7 @@ PHP_FUNCTION(tomcrypt_cipher_decrypt)
 			RETURN_FALSE;
 		}
 
-		RETURN_STRINGL(plaintext, ciphertext_len, 0);
+		PLTC_RETURN_STRINGL(plaintext, ciphertext_len, 0);
 #endif
 	} else if (!strncmp(PHP_TOMCRYPT_MODE_GCM, mode, mode_len)) {
 #ifdef LTC_GCM_MODE
@@ -1634,7 +1688,7 @@ PHP_FUNCTION(tomcrypt_cipher_decrypt)
 			RETURN_FALSE;
 		}
 
-		RETURN_STRINGL(plaintext, ciphertext_len, 0);
+		PLTC_RETURN_STRINGL(plaintext, ciphertext_len, 0);
 #endif
 	} else if (!strncmp(PHP_TOMCRYPT_MODE_EAX, mode, mode_len)) {
 #ifdef LTC_EAX_MODE
@@ -1661,7 +1715,7 @@ PHP_FUNCTION(tomcrypt_cipher_decrypt)
 			RETURN_FALSE;
 		}
 
-		RETURN_STRINGL(plaintext, ciphertext_len, 0);
+		PLTC_RETURN_STRINGL(plaintext, ciphertext_len, 0);
 #endif
 	} else if (!strncmp(PHP_TOMCRYPT_MODE_OCB, mode, mode_len)) {
 #ifdef LTC_OCB_MODE
@@ -1691,7 +1745,7 @@ PHP_FUNCTION(tomcrypt_cipher_decrypt)
 			RETURN_FALSE;
 		}
 
-		RETURN_STRINGL(plaintext, ciphertext_len, 0);
+		PLTC_RETURN_STRINGL(plaintext, ciphertext_len, 0);
 #endif
 	}
 
@@ -1759,13 +1813,13 @@ static void php_tomcrypt_do_hash(INTERNAL_FUNCTION_PARAMETERS, int isfilename, z
 	hash[hash_descriptor[index].hashsize] = '\0';
 
 	if (raw_output) {
-		RETURN_STRINGL(hash, hash_descriptor[index].hashsize, 1);
+		PLTC_RETURN_STRINGL(hash, hash_descriptor[index].hashsize, 1);
 	} else {
 		char *hex_digest = safe_emalloc(hash_descriptor[index].hashsize, 2, 1);
 
 		php_tomcrypt_bin2hex(hex_digest, (unsigned char *) hash, hash_descriptor[index].hashsize);
 		hex_digest[2 * hash_descriptor[index].hashsize] = '\0';
-		RETURN_STRINGL(hex_digest, 2 * hash_descriptor[index].hashsize, 0);
+		PLTC_RETURN_STRINGL(hex_digest, 2 * hash_descriptor[index].hashsize, 0);
 	}
 }
 /* }}} */
@@ -1788,7 +1842,7 @@ PHP_FUNCTION(tomcrypt_hash_name)
 		RETURN_FALSE;
 	}
 
-	RETVAL_STRING(hash_descriptor[index].name, 1);
+	PLTC_RETVAL_STRING(hash_descriptor[index].name, 1);
 }
 /* }}} */
 
@@ -1931,13 +1985,13 @@ static void php_tomcrypt_do_mac(INTERNAL_FUNCTION_PARAMETERS, php_tomcrypt_mac *
 	mac[macsize] = '\0';
 
 	if (raw_output) {
-		RETURN_STRINGL(mac, macsize, 1);
+		PLTC_RETURN_STRINGL(mac, macsize, 1);
 	} else {
 		char *hex_digest = safe_emalloc(macsize, 2, 1);
 
 		php_tomcrypt_bin2hex(hex_digest, (unsigned char *) mac, macsize);
 		hex_digest[2 * macsize] = '\0';
-		RETURN_STRINGL(hex_digest, 2 * macsize, 0);
+		PLTC_RETURN_STRINGL(hex_digest, 2 * macsize, 0);
 	}
 }
 /* }}} */
@@ -2169,7 +2223,7 @@ PHP_FUNCTION(tomcrypt_rng_name)
 		RETURN_FALSE;
 	}
 
-	RETVAL_STRING(prng_descriptor[index].name, 1);
+	PLTC_RETVAL_STRING(prng_descriptor[index].name, 1);
 }
 /* }}} */
 
@@ -2217,7 +2271,7 @@ PHP_FUNCTION(tomcrypt_rng_get_bytes)
 	size = (int) prng_descriptor[index].read(buffer, size,
 		&php_tomcrypt_rngs[index2].state);
 	buffer[size] = '\0';
-	RETVAL_STRINGL(buffer, size, 0);
+	PLTC_RETVAL_STRINGL(buffer, size, 0);
 }
 /* }}} */
 
