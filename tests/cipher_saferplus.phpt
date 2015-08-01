@@ -23,8 +23,8 @@ tomcrypt - SAFERPLUS cipher
     $ct     = tomcrypt_cipher_encrypt($cipher, $key, $pt, TOMCRYPT_MODE_ECB);
     var_dump(bin2hex($ct));
 
-    $pt     = tomcrypt_cipher_decrypt($cipher, $key, $ct, TOMCRYPT_MODE_ECB);
-    var_dump(bin2hex($pt));
+    $pt2    = tomcrypt_cipher_decrypt($cipher, $key, $ct, TOMCRYPT_MODE_ECB);
+    var_dump($pt === $pt2);
 ?>
 --EXPECT--
 bool(true)
@@ -34,5 +34,5 @@ int(16)
 int(32)
 int(8)
 string(32) "b79de3bf2c061291cdd35f27a45045ba"
-string(32) "48692c2068656c6c6f20776f726c6421"
+bool(true)
 

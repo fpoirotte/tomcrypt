@@ -26,8 +26,8 @@ tomcrypt - RC2 cipher
     $ct     = tomcrypt_cipher_encrypt($cipher, $key, $pt, TOMCRYPT_MODE_ECB);
     var_dump(bin2hex($ct));
 
-    $pt     = tomcrypt_cipher_decrypt($cipher, $key, $ct, TOMCRYPT_MODE_ECB);
-    var_dump(bin2hex($pt));
+    $pt2    = tomcrypt_cipher_decrypt($cipher, $key, $ct, TOMCRYPT_MODE_ECB);
+    var_dump($pt === $pt2);
 ?>
 --EXPECT--
 bool(true)
@@ -37,5 +37,5 @@ int(8)
 int(128)
 int(16)
 string(32) "120f07b22dc1c279ed986b7ea38ea028"
-string(32) "48692c2068656c6c6f20776f726c6421"
+bool(true)
 

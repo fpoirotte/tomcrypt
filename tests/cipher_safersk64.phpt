@@ -1,16 +1,14 @@
 --TEST--
-tomcrypt - SAFER128 cipher
+tomcrypt - SAFERSK64 cipher
 --SKIPIF--
 <?php
     if (!extension_loaded("tomcrypt")) print "skip extension not loaded";
-    if (!defined('TOMCRYPT_CIPHER_SAFER128')) print "skip cipher not available";
+    if (!defined('TOMCRYPT_CIPHER_SAFERSK64')) print "skip cipher not available";
     if (!defined('TOMCRYPT_MODE_ECB')) print "skip mode not available";
 ?>
---XFAIL--
-No access to alternative implementation for test vector comparison
 --FILE--
 <?php
-    $cipher = TOMCRYPT_CIPHER_SAFER128;
+    $cipher = TOMCRYPT_CIPHER_SAFERSK64;
     var_dump(
         in_array($cipher, tomcrypt_list_ciphers()),
         tomcrypt_cipher_name($cipher),
@@ -20,21 +18,23 @@ No access to alternative implementation for test vector comparison
         tomcrypt_cipher_default_rounds($cipher)
     );
 
-    $pt     = 'Hi, hello world!';
-    $key    = 'something secret';
+    // Test vectors from Handbook of Applied Cryptography
+    // by Alfred J. Menezes, Paul C. van Oorschot, Scott A. Vanstone
+    $pt     = "\x01\x02\x03\x04\x05\x06\x07\x08";
+    $key    = "\x01\x02\x03\x04\x05\x06\x07\x08";
     $ct     = tomcrypt_cipher_encrypt($cipher, $key, $pt, TOMCRYPT_MODE_ECB);
     var_dump(bin2hex($ct));
 
-    $pt     = tomcrypt_cipher_decrypt($cipher, $key, $ct, TOMCRYPT_MODE_ECB);
-    var_dump(bin2hex($pt));
+    $pt2    = tomcrypt_cipher_decrypt($cipher, $key, $ct, TOMCRYPT_MODE_ECB);
+    var_dump($pt === $pt2);
 ?>
 --EXPECT--
 bool(true)
-string(8) "rc5"
+string(10) "safer-sk64"
 int(8)
 int(8)
-int(56)
-int(16)
-string(32) "af1e06dcdc8d7c198e19e7850bccc71c"
-string(32) "48692c2068656c6c6f20776f726c6421"
+int(8)
+int(6)
+string(16) "5fce9ba258438c7"
+bool(true)
 

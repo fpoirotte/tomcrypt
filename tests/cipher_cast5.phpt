@@ -23,8 +23,8 @@ tomcrypt - CAST5 cipher
     $ct     = tomcrypt_cipher_encrypt($cipher, $key, $pt, TOMCRYPT_MODE_ECB);
     var_dump(bin2hex($ct));
 
-    var_dump(bin2hex($pt));
-    $pt     = tomcrypt_cipher_decrypt($cipher, $key, $ct, TOMCRYPT_MODE_ECB);
+    $pt2    = tomcrypt_cipher_decrypt($cipher, $key, $ct, TOMCRYPT_MODE_ECB);
+    var_dump($pt === $pt2);
 ?>
 --EXPECT--
 bool(true)
@@ -34,5 +34,5 @@ int(5)
 int(16)
 int(16)
 string(32) "b5efaa3e36aeae77ae49635b38ef2cec"
-string(32) "48692c2068656c6c6f20776f726c6421"
+bool(true)
 

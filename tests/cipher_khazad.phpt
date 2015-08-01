@@ -6,8 +6,6 @@ tomcrypt - KHAZAD cipher
     if (!defined('TOMCRYPT_CIPHER_KHAZAD')) print "skip cipher not available";
     if (!defined('TOMCRYPT_MODE_ECB')) print "skip mode not available";
 ?>
---XFAIL--
-No access to alternative implementation for test vector comparison
 --FILE--
 <?php
     $cipher = TOMCRYPT_CIPHER_KHAZAD;
@@ -20,21 +18,22 @@ No access to alternative implementation for test vector comparison
         tomcrypt_cipher_default_rounds($cipher)
     );
 
-    $pt     = 'Hi, hello world!';
-    $key    = 'something secret';
+    // Test vectors from https://www.cosic.esat.kuleuven.be/nessie/testvectors/
+    $pt     = "\x42\x42\x42\x42\x42\x42\x42\x42";
+    $key    = "\x42\x42\x42\x42\x42\x42\x42\x42\x42\x42\x42\x42\x42\x42\x42\x42";
     $ct     = tomcrypt_cipher_encrypt($cipher, $key, $pt, TOMCRYPT_MODE_ECB);
     var_dump(bin2hex($ct));
 
-    $pt     = tomcrypt_cipher_decrypt($cipher, $key, $ct, TOMCRYPT_MODE_ECB);
-    var_dump(bin2hex($pt));
+    $pt2    = tomcrypt_cipher_decrypt($cipher, $key, $ct, TOMCRYPT_MODE_ECB);
+    var_dump($pt === $pt2);
 ?>
 --EXPECT--
 bool(true)
-string(8) "rc5"
+string(6) "khazad"
 int(8)
-int(8)
-int(56)
 int(16)
-string(32) "af1e06dcdc8d7c198e19e7850bccc71c"
-string(32) "48692c2068656c6c6f20776f726c6421"
+int(16)
+int(8)
+string(16) "f2398bab23277fb9"
+bool(true)
 
