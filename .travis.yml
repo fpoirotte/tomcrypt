@@ -1,6 +1,8 @@
 language: php
-sudo: true
 
+addons:
+    apt:
+        packages: libtomcrypt-dev
 
 php:
     - 5.3
@@ -11,15 +13,13 @@ php:
 
 matrix:
     allow_failures:
-    - php: nightly
+        - php: nightly
 
 notifications:
     email: false
     irc: "irc.iiens.net#Clicky"
 
 before_install:
-    - sudo apt-get update -qq
-    - sudo apt-get install -y libtomcrypt-dev
     - export TEST_PHP_EXECUTABLE=`which php`
     - export TEST_PHP_SRCDIR=`pwd`
     - export REPORT_EXIT_STATUS=1
