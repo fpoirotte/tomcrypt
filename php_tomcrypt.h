@@ -26,7 +26,7 @@
 #endif
 
 #define PHP_TOMCRYPT_EXTNAME        "tomcrypt"
-#define PHP_TOMCRYPT_VERSION        "0.1.0"
+#define PHP_TOMCRYPT_VERSION        "0.2.0"
 
 /* MAC protocols */
 #define PHP_TOMCRYPT_MAC_HMAC       "hmac"
@@ -64,10 +64,6 @@ extern zend_module_entry tomcrypt_module_entry;
 
 /* Miscelleanous functions */
 PHP_FUNCTION(tomcrypt_strerror);
-#ifdef LTC_BASE64
-PHP_FUNCTION(tomcrypt_base64_encode);
-PHP_FUNCTION(tomcrypt_base64_decode);
-#endif
 
 /* Various lists */
 PHP_FUNCTION(tomcrypt_list_modes);
@@ -93,31 +89,9 @@ PHP_FUNCTION(tomcrypt_hash_digest_size);
 PHP_FUNCTION(tomcrypt_hash_string);
 PHP_FUNCTION(tomcrypt_hash_file);
 
-/* xMAC-related functions */
-#ifdef LTC_HMAC
-PHP_FUNCTION(tomcrypt_hmac_string);
-PHP_FUNCTION(tomcrypt_hmac_file);
-#endif
-#ifdef LTC_OMAC
-PHP_FUNCTION(tomcrypt_cmac_string);
-PHP_FUNCTION(tomcrypt_cmac_file);
-#endif
-#ifdef LTC_PMAC
-PHP_FUNCTION(tomcrypt_pmac_string);
-PHP_FUNCTION(tomcrypt_pmac_file);
-#endif
-#ifdef LTC_PELICAN
-PHP_FUNCTION(tomcrypt_pelican_string);
-PHP_FUNCTION(tomcrypt_pelican_file);
-#endif
-#ifdef LTC_XCBC
-PHP_FUNCTION(tomcrypt_xcbc_string);
-PHP_FUNCTION(tomcrypt_xcbc_file);
-#endif
-#ifdef LTC_F9_MODE
-PHP_FUNCTION(tomcrypt_f9_string);
-PHP_FUNCTION(tomcrypt_f9_file);
-#endif
+/* MAC-related functions */
+PHP_FUNCTION(tomcrypt_mac_string);
+PHP_FUNCTION(tomcrypt_mac_file);
 
 /* RNG-related functions */
 PHP_FUNCTION(tomcrypt_rng_name);
