@@ -21,6 +21,8 @@
 #endif
 
 #include "php.h"
+#include "SAPI.h"
+#include "ext/standard/html.h"
 #include "ext/standard/info.h"
 
 #if HAVE_LIBTOMCRYPT
@@ -77,10 +79,16 @@
 }
 #endif
 
-#if (PHP_MAJOR_VERSION >= 5)
+#if (PHP_VERSION_ID >= 50000)
 # define DEFAULT_CONTEXT FG(default_context)
 #else
 # define DEFAULT_CONTEXT NULL
+#endif
+
+#if (PHP_VERSION_ID < 50400)
+# define CHECK_NULL_PATH(p, l) (strlen(p) != (size_t)l)
+# define str_efree(s) { efree(s); }
+# define php_output_write php_body_write
 #endif
 
 #ifdef ZEND_ENGINE_3
@@ -560,8 +568,9 @@ PHP_MINIT_FUNCTION(tomcrypt)
 {
 	int i;
 
-	REGISTER_LONG_CONSTANT("TOMCRYPT_VERSION_NUMBER", CRYPT, CONST_PERSISTENT | CONST_CS);
-	REGISTER_STRING_CONSTANT("TOMCRYPT_VERSION_TEXT", SCRYPT, CONST_PERSISTENT | CONST_CS);
+	REGISTER_LONG_CONSTANT("LIBTOMCRYPT_VERSION_NUMBER", CRYPT, CONST_PERSISTENT | CONST_CS);
+	REGISTER_STRING_CONSTANT("LIBTOMCRYPT_VERSION_TEXT", SCRYPT, CONST_PERSISTENT | CONST_CS);
+	REGISTER_STRING_CONSTANT("TOMCRYPT_VERSION", PHP_TOMCRYPT_VERSION, CONST_PERSISTENT | CONST_CS);
 
 	/* Cipher modes */
 #ifdef LTC_ECB_MODE
@@ -792,12 +801,66 @@ PHP_MSHUTDOWN_FUNCTION(tomcrypt)
  */
 PHP_MINFO_FUNCTION(tomcrypt)
 {
+	char *cr, *lf;
+	const char *end, *start = crypt_build_settings;
+	TSRMLS_FETCH();
+
 	php_info_print_table_start();
 	php_info_print_table_header(2, "libtomcrypt support", "enabled");
-	php_info_print_table_header(2, "extension version", PHP_TOMCRYPT_VERSION);
-	php_info_print_table_header(2, "libtomcrypt header version", SCRYPT);
-	php_info_print_table_header(2, "library configuration", crypt_build_settings);
+	php_info_print_table_row(2, "extension version", PHP_TOMCRYPT_VERSION);
+	php_info_print_table_row(2, "library version", SCRYPT);
 	php_info_print_table_end();
+
+	php_info_print_box_start(0);
+	while (start != NULL && *start) {
+		cr = index(start, '\r');
+		lf = index(start, '\n');
+
+		if (cr == NULL) {
+			end = lf;
+		} else if (lf == NULL) {
+			end = cr;
+		} else {
+			end = (cr < lf) ? cr : lf;
+		}
+
+		if (end == NULL)
+			end = index(start, '\0');
+
+		if (!sapi_module.phpinfo_as_text) {
+#if (PHP_VERSION_ID >= 70000)
+			zend_string *new_str;
+
+			new_str = php_escape_html_entities((unsigned char *) start, end - start, 0, ENT_QUOTES, "utf-8" TSRMLS_CC);
+			php_output_write(ZSTR_VAL(new_str), ZSTR_LEN(new_str));
+			zend_string_free(new_str);
+#else
+#if (PHP_VERSION_ID < 50400)
+			int new_len;
+#else
+			size_t new_len;
+#endif
+			char *new_str;
+
+			new_str = php_escape_html_entities((unsigned char *) start, end - start, &new_len, 0, ENT_QUOTES, "utf-8" TSRMLS_CC);
+			php_output_write(new_str, new_len TSRMLS_CC);
+			str_efree(new_str);
+#endif
+		} else {
+			php_output_write(start, end - start TSRMLS_CC);
+		}
+
+		if (!*end)
+			break;
+
+        PUTS(!sapi_module.phpinfo_as_text ?"<br />" : "\n");
+
+		start = end + 1;
+		if ((*start == '\r' || *start == '\n') && *start != *(start-1)) {
+			start++;
+		}
+	}
+	php_info_print_box_end();
 }
 /* }}} */
 

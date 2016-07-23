@@ -19,11 +19,16 @@
 #ifndef PHP_TOMCRYPT_H
 #define PHP_TOMCRYPT_H
 
-#if HAVE_LIBMCRYPT
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#if HAVE_LIBTOMCRYPT
 
 #ifdef ZTS
 #include "TSRM.h"
 #endif
+
 
 #define PHP_TOMCRYPT_EXTNAME        "tomcrypt"
 #define PHP_TOMCRYPT_VERSION        "0.2.0"
