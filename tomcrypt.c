@@ -608,6 +608,7 @@ PHP_MINIT_FUNCTION(tomcrypt)
 #endif
 #ifdef LTC_RC4
 	TOMCRYPT_ADD_CIPHER(RC4, rc4_cipher_desc);
+	TOMCRYPT_ADD_CIPHER(ARCFOUR, rc4_cipher_desc);
 #endif
 #ifdef LTC_RC5
 	TOMCRYPT_ADD_CIPHER(RC5, rc5_desc);
