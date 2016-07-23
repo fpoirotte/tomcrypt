@@ -187,21 +187,15 @@ int rc4_cipher_setup(const unsigned char *key, int keylen, int num_rounds, symme
 }
 
 /**
-  Encrypts a block of text with LTC_RC4
-  @param pt The input plaintext (1 byte)
-  @param ct The output ciphertext (1 byte)
+  Encrypts/decrypts a block of text with LTC_RC4
+  @param pt The input data (1 byte)
+  @param ct The output data (1 byte)
   @param skey The key as scheduled
   @return CRYPT_OK if successful
 */
-#ifdef LTC_CLEAN_STACK
-static int _rc4_cipher_ecb_encrypt( const unsigned char *pt,
-                                    unsigned char *ct,
-                                    symmetric_key *skey)
-#else
-int rc4_cipher_ecb_encrypt( const unsigned char *pt,
+int rc4_cipher_ecb( const unsigned char *pt,
                             unsigned char *ct,
                             symmetric_key *skey)
-#endif
 {
     unsigned char tmp = '\0';
     if (rc4_read(&tmp, 1, (prng_state *) skey->data) != 1)
@@ -210,54 +204,6 @@ int rc4_cipher_ecb_encrypt( const unsigned char *pt,
     tmp = '\0';
     return CRYPT_OK;
 }
-
-#ifdef LTC_CLEAN_STACK
-int rc4_cipher_ecb_encrypt( const unsigned char *pt,
-                            unsigned char *ct,
-                            symmetric_key *skey)
-{
-    int err = _rc4_cipher_ecb_encrypt(pt, ct, skey);
-    burn_stack(sizeof(unsigned *) + sizeof(unsigned) * 5);
-    return err;
-}
-#endif
-
-
-/**
-  Decrypts a block of text with LTC_RC4
-  @param ct The input ciphertext (1 byte)
-  @param pt The output plaintext (1 byte)
-  @param skey The key as scheduled
-  @return CRYPT_OK if successful
-*/
-#ifdef LTC_CLEAN_STACK
-static int _rc4_cipher_ecb_decrypt( const unsigned char *ct,
-                                    unsigned char *pt,
-                                    symmetric_key *skey)
-#else
-int rc4_cipher_ecb_decrypt( const unsigned char *ct,
-                            unsigned char *pt,
-                            symmetric_key *skey)
-#endif
-{
-    unsigned char tmp = '\0';
-    if (rc4_read(&tmp, 1, (prng_state *) skey->data) != 1)
-        return CRYPT_ERROR;
-    *pt = *ct ^ tmp;
-    tmp = '\0';
-    return CRYPT_OK;
-}
-
-#ifdef LTC_CLEAN_STACK
-int rc4_cipher_ecb_decrypt( const unsigned char *ct,
-                            unsigned char *pt,
-                            symmetric_key *skey)
-{
-    int err = _rc4_cipher_ecb_decrypt(ct, pt, skey);
-    burn_stack(sizeof(unsigned *) + sizeof(unsigned) * 4 + sizeof(int));
-    return err;
-}
-#endif
 
 /**
   Performs a self-test of the LTC_RC4 block cipher
@@ -297,8 +243,8 @@ const struct ltc_cipher_descriptor rc4_cipher_desc = {
    "rc4",
    123, 1, 256, 1, 1,
    &rc4_cipher_setup,
-   &rc4_cipher_ecb_encrypt,
-   &rc4_cipher_ecb_decrypt,
+   &rc4_cipher_ecb,
+   &rc4_cipher_ecb,
    &rc4_cipher_test,
    &rc4_cipher_done,
    &rc4_cipher_keysize,
