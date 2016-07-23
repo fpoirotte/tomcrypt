@@ -560,22 +560,6 @@ PHP_MINIT_FUNCTION(tomcrypt)
 {
 	int i;
 
-/*	TOMCRYPT_CIPHER(ARCFOUR_IV, "arcfour-iv");*/
-/*	TOMCRYPT_CIPHER(ARCFOUR, "arcfour");*/
-/*	TOMCRYPT_CIPHER(CAST_128, "cast-128");*/
-/*	TOMCRYPT_CIPHER(CAST_256, "cast-256");*/
-/*	TOMCRYPT_CIPHER(CRYPT, "crypt");*/
-/*	TOMCRYPT_CIPHER(ENIGNA, "crypt");*/
-/*	TOMCRYPT_CIPHER(GOST, "gost");*/
-/*	TOMCRYPT_CIPHER(LOKI97, "loki97");*/
-/*	TOMCRYPT_CIPHER(PANAMA, "panama");*/
-/*	TOMCRYPT_CIPHER(SERPENT, "serpent");*/
-/*	TOMCRYPT_CIPHER(THREEWAY, "threeway");*/
-/*	TOMCRYPT_CIPHER(WAKE, "wake");*/
-/*	TOMCRYPT_CIPHER(IDEA, "idea");*/
-/*	TOMCRYPT_CIPHER(MARS, "mars");*/
-
-
 	/* Cipher modes */
 #ifdef LTC_ECB_MODE
 	TOMCRYPT_ADD_MODE(ECB);
