@@ -1,16 +1,16 @@
 --TEST--
-tomcrypt - SAFERSK64 cipher
+tomcrypt - RC4 cipher
 --SKIPIF--
 <?php
     if (!extension_loaded("tomcrypt")) print "skip extension not loaded";
-    if (!defined('TOMCRYPT_CIPHER_SAFERSK64')) print "skip cipher not available";
+    if (!defined('TOMCRYPT_CIPHER_RC4')) print "skip cipher not available";
     if (!defined('TOMCRYPT_MODE_ECB')) print "skip mode not available";
 ?>
 --XFAIL--
-libtomcrypt's implementation does not seem to match specifications
+this extension's implementation does not match the specifications for now
 --FILE--
 <?php
-    $cipher = TOMCRYPT_CIPHER_SAFERSK64;
+    $cipher = TOMCRYPT_CIPHER_RC4;
     var_dump(
         in_array($cipher, tomcrypt_list_ciphers()),
         tomcrypt_cipher_name($cipher),
@@ -20,10 +20,9 @@ libtomcrypt's implementation does not seem to match specifications
         tomcrypt_cipher_default_rounds($cipher)
     );
 
-    // Test vectors from Handbook of Applied Cryptography
-    // by Alfred J. Menezes, Paul C. van Oorschot, Scott A. Vanstone
-    $pt     = "\x01\x02\x03\x04\x05\x06\x07\x08";
-    $key    = "\x01\x02\x03\x04\x05\x06\x07\x08";
+    // Test vectors generated with openssl
+    $pt     = "something secret";
+    $key    = "abcde";
     $ct     = tomcrypt_cipher_encrypt($cipher, $key, $pt, TOMCRYPT_MODE_ECB);
     var_dump(bin2hex($ct));
 
@@ -32,11 +31,11 @@ libtomcrypt's implementation does not seem to match specifications
 ?>
 --EXPECT--
 bool(true)
-string(10) "safer-sk64"
-int(8)
-int(8)
-int(8)
-int(6)
-string(16) "5fce9ba258438c7"
+string(3) "rc4"
+int(1)
+int(1)
+int(256)
+int(1)
+string(16) "9a0d9f11584393f5b6448443801dbd96"
 bool(true)
 

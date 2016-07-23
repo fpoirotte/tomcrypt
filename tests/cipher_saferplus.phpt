@@ -6,6 +6,8 @@ tomcrypt - SAFERPLUS cipher
     if (!defined('TOMCRYPT_CIPHER_SAFERPLUS')) print "skip cipher not available";
     if (!defined('TOMCRYPT_MODE_ECB')) print "skip mode not available";
 ?>
+--XFAIL--
+libtomcrypt's implementation does not seem to match specifications
 --FILE--
 <?php
     $cipher = TOMCRYPT_CIPHER_SAFERPLUS;
