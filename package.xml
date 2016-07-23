@@ -8,27 +8,48 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
  <name>tomcrypt</name>
  <channel>pecl.php.net</channel>
  <summary>PHP bindings for libtomcrypt</summary>
- <description>
-  Provides a replacement API for the old mcrypt extension.
- </description>
+ <description>The tomcrypt extension provides features similar
+to the old mcrypt extension, using libtomcrypt as its backend.
+
+The following features are currently supported:
+
+* Encryption/decryption, using various ciphers &amp; operation modes,
+  including Authenticated Encryption with Associated Data (AEAD)
+* Hashing algorithms (MD5, SHA-1, SHA-256, etc.)
+* Several algorithms to generate authentication codes (MAC, HMAC, PMAC, etc.)
+* (Pseudo-)Random Number Generators
+</description>
  <lead>
   <name>François Poirotte</name>
   <user>Clicky</user>
   <email>clicky@erebot.net</email>
   <active>yes</active>
  </lead>
- <date>2015-05-17</date>
- <time>20:36:00</time>
+ <date>2016-07-23</date>
+ <time>18:35:00</time>
  <version>
-  <release>0.1.0</release>
-  <api>0.1</api>
+  <release>0.2.0</release>
+  <api>0.2.0</api>
  </version>
  <stability>
   <release>beta</release>
   <api>stable</api>
  </stability>
  <license uri="http://www.php.net/license/3_01.txt">PHP</license>
- <notes>Initial Release.
+ <notes>Sat, Jul 23, 2016 - tomcrypt 0.2.0
+
+= Fixed bugs:
+
+  - Fixed compilation with PHP 5.3 - 7.1.0alpha3
+
++ Changes:
+
+  - New API for MAC functions
+  - Merged HMAC into MAC functions
+
+- Removed features:
+
+  - Removed the old base64 functions since PHP already provides some
  </notes>
  <contents>
   <dir name="/">
@@ -40,8 +61,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
  <dependencies>
   <required>
    <php>
-    <min>5.0.0</min>
-    <max>6.0.0</max>
+    <min>5.3.0</min>
+    <max>7.1.0</max>
    </php>
    <pearinstaller>
     <min>1.4.0a2</min>
@@ -50,4 +71,21 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
  </dependencies>
  <providesextension>tomcrypt</providesextension>
  <extsrcrelease />
+ <changelog>
+  <release>
+   <date>2015-05-17</date>
+   <time>20:36:00</time>
+   <version>
+    <release>0.1.0</release>
+    <api>0.1.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.php.net/license/3_01.txt">PHP</license>
+   <notes>Initial Release.
+   </notes>
+  </release>
+ </changelog>
 </package>
