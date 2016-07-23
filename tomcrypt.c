@@ -35,6 +35,125 @@
 # include "ext/standard/php_smart_str.h"
 #endif
 
+#ifdef ZEND_ENGINE_3
+# define GET_OPT_STRING(arr, key, dest, destlen, defval) { \
+	zend_string *str = zend_string_init(key, sizeof(key)-1, 0); \
+	zval *item; \
+	if (arr && (item = zend_hash_find(Z_ARRVAL_P(arr), str)) != NULL && Z_TYPE_P(item) == IS_STRING) { \
+		dest = Z_STRVAL_P(item); \
+		destlen = Z_STRLEN_P(item); \
+	} else { \
+		dest = defval; \
+		destlen = (defval == NULL) ? 0 : sizeof(defval); \
+	} \
+	zend_string_release(str); \
+}
+# define GET_OPT_LONG(arr, key, dest, defval)	{ \
+	zend_string *str = zend_string_init(key, sizeof(key)-1, 0); \
+	zval *item; \
+	if (arr && (item = zend_hash_find(Z_ARRVAL_P(arr), str)) != NULL && Z_TYPE_P(item) == IS_LONG) \
+		dest = Z_LVAL_P(item); \
+	else \
+		dest = defval; \
+	zend_string_release(str); \
+}
+#else
+# define GET_OPT_STRING(arr, key, dest, destlen, defval) { \
+	zval **item; \
+	if (arr && zend_hash_find(Z_ARRVAL_P(arr), key, sizeof(key), (void**)&item) == SUCCESS && Z_TYPE_PP(item) == IS_STRING) { \
+		dest = Z_STRVAL_PP(item); \
+		destlen = Z_STRLEN_PP(item); \
+	} else { \
+		dest = defval; \
+		destlen = (defval == NULL) ? 0 : sizeof(defval); \
+	} \
+}
+# define GET_OPT_LONG(arr, key, dest, defval)	{ \
+	zval **item; \
+	if (arr && zend_hash_find(Z_ARRVAL_P(arr), key, sizeof(key), (void**)&item) == SUCCESS && Z_TYPE_PP(item) == IS_LONG) \
+		dest = Z_LVAL_PP(item); \
+	else \
+		dest = defval; \
+}
+#endif
+
+#if (PHP_MAJOR_VERSION >= 5)
+# define DEFAULT_CONTEXT FG(default_context)
+#else
+# define DEFAULT_CONTEXT NULL
+#endif
+
+#ifdef ZEND_ENGINE_3
+typedef zend_long   pltc_long;
+typedef size_t      pltc_size;
+# define PLTC_RETVAL_STRING(s, ex) { \
+    RETVAL_STRING(s);                \
+    if (!ex) efree(s);               \
+  }
+# define PLTC_RETVAL_STRINGL(s, len, ex) { \
+    RETVAL_STRINGL(s, len);                \
+    if (!ex) efree(s);                     \
+  }
+# define pltc_add_index_string(zv, idx, s, ex) { \
+    add_index_string(zv, idx, s);                \
+    if (!ex) efree(s);                           \
+  }
+# define pltc_add_assoc_stringl(zv, key, s, len, ex) { \
+    add_assoc_stringl(zv, key, s, len);                \
+    if (!ex) efree(s);                           \
+  }
+#else
+typedef long        pltc_long;
+typedef int         pltc_size;
+# define PLTC_RETVAL_STRING(s, ex)       RETVAL_STRING(s, ex)
+# define PLTC_RETVAL_STRINGL(s, len, ex) RETVAL_STRINGL(s, len, ex)
+# define pltc_add_index_string(zv, idx, s, ex) add_index_string(zv, idx, s, ex)
+# define pltc_add_assoc_stringl(zv, key, s, len, ex) add_assoc_stringl(zv, key, s, len, ex)
+#endif
+
+#define PLTC_RETURN_STRING(s, ex) { \
+    PLTC_RETVAL_STRING(s, ex);      \
+    return;                         \
+}
+#define PLTC_RETURN_STRINGL(s, len, ex) { \
+    PLTC_RETVAL_STRINGL(s, len, ex);      \
+    return;                               \
+}
+
+#define TOMCRYPT_ADD_CIPHER(cname, desc) \
+	if (register_cipher(&desc) == -1) { \
+		return FAILURE; \
+	} \
+	REGISTER_STRING_CONSTANT("TOMCRYPT_CIPHER_" #cname, desc.name, CONST_PERSISTENT)
+
+#define TOMCRYPT_ADD_HASH(cname, desc) \
+	if (register_hash(&desc) == -1) { \
+		return FAILURE; \
+	} \
+	REGISTER_STRING_CONSTANT("TOMCRYPT_HASH_" #cname, desc.name, CONST_PERSISTENT)
+
+#define TOMCRYPT_ADD_MODE(mode) \
+	REGISTER_STRING_CONSTANT("TOMCRYPT_MODE_" #mode, PHP_TOMCRYPT_MODE_ ##mode , CONST_PERSISTENT)
+
+#define TOMCRYPT_ADD_MAC(mac) \
+	REGISTER_STRING_CONSTANT("TOMCRYPT_MAC_" #mac, PHP_TOMCRYPT_MAC_ ##mac , CONST_PERSISTENT)
+
+#define TOMCRYPT_ADD_RNG(rng, desc) \
+	if (register_prng(&desc) == -1) { \
+		return FAILURE; \
+	} \
+	REGISTER_STRING_CONSTANT("TOMCRYPT_RNG_" #rng, PHP_TOMCRYPT_RNG_ ##rng , CONST_PERSISTENT)
+
+#define APPEND_MODE(mode) \
+	pltc_add_index_string(return_value, i++, PHP_TOMCRYPT_MODE_ ## mode, 1);
+
+#define APPEND_MAC(mac) \
+	pltc_add_index_string(return_value, i++, PHP_TOMCRYPT_MAC_ ## mac, 1);
+
+#define APPEND_RNG(rng) \
+	pltc_add_index_string(return_value, i++, PHP_TOMCRYPT_RNG_ ## rng, 1);
+
+
 
 #ifdef LTC_RC4
 int rc4_cipher_setup(const unsigned char *key, int keylen, int num_rounds, symmetric_key *skey)
@@ -305,50 +424,6 @@ typedef union _php_tomcrypt_mac_state {
 
 
 
-#if (PHP_MAJOR_VERSION >= 5)
-# define DEFAULT_CONTEXT FG(default_context)
-#else
-# define DEFAULT_CONTEXT NULL
-#endif
-
-#ifdef ZEND_ENGINE_3
-typedef zend_long   pltc_long;
-typedef size_t      pltc_size;
-# define PLTC_RETVAL_STRING(s, ex) { \
-    RETVAL_STRING(s);                \
-    if (!ex) efree(s);               \
-  }
-# define PLTC_RETVAL_STRINGL(s, len, ex) { \
-    RETVAL_STRINGL(s, len);                \
-    if (!ex) efree(s);                     \
-  }
-# define pltc_add_index_string(zv, idx, s, ex) { \
-    add_index_string(zv, idx, s);                \
-    if (!ex) efree(s);                           \
-  }
-# define pltc_add_assoc_stringl(zv, key, s, len, ex) { \
-    add_assoc_stringl(zv, key, s, len);                \
-    if (!ex) efree(s);                           \
-  }
-#else
-typedef long        pltc_long;
-typedef int         pltc_size;
-# define PLTC_RETVAL_STRING(s, ex)       RETVAL_STRING(s, ex)
-# define PLTC_RETVAL_STRINGL(s, len, ex) RETVAL_STRINGL(s, len, ex)
-# define pltc_add_index_string(zv, idx, s, ex) add_index_string(zv, idx, s, ex)
-# define pltc_add_assoc_stringl(zv, key, s, len, ex) add_assoc_stringl(zv, key, s, len, ex)
-#endif
-
-#define PLTC_RETURN_STRING(s, ex) { \
-    PLTC_RETVAL_STRING(s, ex);      \
-    return;                         \
-}
-#define PLTC_RETURN_STRINGL(s, len, ex) { \
-    PLTC_RETVAL_STRINGL(s, len, ex);      \
-    return;                               \
-}
-
-
 /* {{{ arginfo */
 
 /* Misc. */
@@ -532,30 +607,6 @@ zend_module_entry tomcrypt_module_entry = {
 #ifdef COMPILE_DL_TOMCRYPT
 ZEND_GET_MODULE(tomcrypt)
 #endif
-
-#define TOMCRYPT_ADD_CIPHER(cname, desc) \
-	if (register_cipher(&desc) == -1) { \
-		return FAILURE; \
-	} \
-	REGISTER_STRING_CONSTANT("TOMCRYPT_CIPHER_" #cname, desc.name, CONST_PERSISTENT)
-
-#define TOMCRYPT_ADD_HASH(cname, desc) \
-	if (register_hash(&desc) == -1) { \
-		return FAILURE; \
-	} \
-	REGISTER_STRING_CONSTANT("TOMCRYPT_HASH_" #cname, desc.name, CONST_PERSISTENT)
-
-#define TOMCRYPT_ADD_MODE(mode) \
-	REGISTER_STRING_CONSTANT("TOMCRYPT_MODE_" #mode, PHP_TOMCRYPT_MODE_ ##mode , CONST_PERSISTENT)
-
-#define TOMCRYPT_ADD_MAC(mac) \
-	REGISTER_STRING_CONSTANT("TOMCRYPT_MAC_" #mac, PHP_TOMCRYPT_MAC_ ##mac , CONST_PERSISTENT)
-
-#define TOMCRYPT_ADD_RNG(rng, desc) \
-	if (register_prng(&desc) == -1) { \
-		return FAILURE; \
-	} \
-	REGISTER_STRING_CONSTANT("TOMCRYPT_RNG_" #rng, PHP_TOMCRYPT_RNG_ ##rng , CONST_PERSISTENT)
 
 /* {{{ PHP_MINIT_FUNCTION
  */
@@ -849,9 +900,6 @@ PHP_FUNCTION(tomcrypt_list_modes)
 
 	array_init(return_value);
 
-#define APPEND_MODE(mode) \
-	pltc_add_index_string(return_value, i++, PHP_TOMCRYPT_MODE_ ## mode, 1);
-
 #ifdef LTC_CBC_MODE
 	APPEND_MODE(CBC);
 #endif
@@ -927,9 +975,6 @@ PHP_FUNCTION(tomcrypt_list_macs)
 
 	array_init(return_value);
 
-#define APPEND_MAC(mac) \
-	pltc_add_index_string(return_value, i++, PHP_TOMCRYPT_MAC_ ## mac, 1);
-
 #ifdef LTC_HMAC
 	APPEND_MAC(HMAC);
 #endif
@@ -958,9 +1003,6 @@ PHP_FUNCTION(tomcrypt_list_rngs)
 	int   i = 0;
 
 	array_init(return_value);
-
-#define APPEND_RNG(rng) \
-	pltc_add_index_string(return_value, i++, PHP_TOMCRYPT_RNG_ ## rng, 1);
 
 #ifdef LTC_YARROW
 	APPEND_RNG(YARROW);
@@ -1126,47 +1168,6 @@ PHP_FUNCTION(tomcrypt_cipher_default_rounds)
 }
 /* }}} */
 
-#ifdef ZEND_ENGINE_3
-# define GET_OPT_STRING(arr, key, dest, destlen, defval) { \
-	zend_string *str = zend_string_init(key, sizeof(key)-1, 0); \
-	zval *item; \
-	if (arr && (item = zend_hash_find(Z_ARRVAL_P(arr), str)) != NULL && Z_TYPE_P(item) == IS_STRING) { \
-		dest = Z_STRVAL_P(item); \
-		destlen = Z_STRLEN_P(item); \
-	} else { \
-		dest = defval; \
-		destlen = (defval == NULL) ? 0 : sizeof(defval); \
-	} \
-	zend_string_release(str); \
-}
-# define GET_OPT_LONG(arr, key, dest, defval)	{ \
-	zend_string *str = zend_string_init(key, sizeof(key)-1, 0); \
-	zval *item; \
-	if (arr && (item = zend_hash_find(Z_ARRVAL_P(arr), str)) != NULL && Z_TYPE_P(item) == IS_LONG) \
-		dest = Z_LVAL_P(item); \
-	else \
-		dest = defval; \
-	zend_string_release(str); \
-}
-#else
-# define GET_OPT_STRING(arr, key, dest, destlen, defval) { \
-	zval **item; \
-	if (arr && zend_hash_find(Z_ARRVAL_P(arr), key, sizeof(key), (void**)&item) == SUCCESS && Z_TYPE_PP(item) == IS_STRING) { \
-		dest = Z_STRVAL_PP(item); \
-		destlen = Z_STRLEN_PP(item); \
-	} else { \
-		dest = defval; \
-		destlen = (defval == NULL) ? 0 : sizeof(defval); \
-	} \
-}
-# define GET_OPT_LONG(arr, key, dest, defval)	{ \
-	zval **item; \
-	if (arr && zend_hash_find(Z_ARRVAL_P(arr), key, sizeof(key), (void**)&item) == SUCCESS && Z_TYPE_PP(item) == IS_LONG) \
-		dest = Z_LVAL_PP(item); \
-	else \
-		dest = defval; \
-}
-#endif
 
 /* {{{ proto int tomcrypt_cipher_encrypt(string cipher, string key,
                                          string plaintext, string mode,
