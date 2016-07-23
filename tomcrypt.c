@@ -803,7 +803,6 @@ PHP_MINFO_FUNCTION(tomcrypt)
 {
 	char *cr, *lf;
 	const char *end, *start = crypt_build_settings;
-	TSRMLS_FETCH();
 
 	php_info_print_table_start();
 	php_info_print_table_header(2, "libtomcrypt support", "enabled");
