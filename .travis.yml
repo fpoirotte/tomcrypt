@@ -12,12 +12,8 @@ php:
     - 5.5
     - 5.6
     - 7.0
+    - 7.1
     - nightly
-
-matrix:
-    allow_failures:
-        - php: 7.0
-        - php: nightly
 
 notifications:
     email: false
