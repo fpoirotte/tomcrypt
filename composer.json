@@ -1,5 +1,5 @@
 {
-    "name": "tomcrypt",
+    "name": "fpoirotte/tomcrypt",
     "version": "0.2.0",
     "type": "extension",
     "stability": "beta",
