@@ -44,6 +44,7 @@ The following features are currently supported:
 </notes>
  <contents>
   <dir name="/">
+   <file name="LICENSE.txt" role="doc" />
    <file name="config.m4" role="src" />
    <file name="tomcrypt.c" role="src" />
    <file name="php_tomcrypt.h" role="src" />
