@@ -1,3 +1,14 @@
+Version: 0.2.1
+Date: 2016-11-13 10:35:00
+Stability: beta
+
+notes: Sat, Nov 13, 2016 - tomcrypt 0.2.1
+
+= Fixed bugs:
+
+  - Fixed composer.json to include vendor name in package name
+
+
 Version: 0.2.0
 Date: 2016-07-23 18:35:00
 Stability: beta
@@ -18,12 +29,9 @@ notes: Sat, Jul 23, 2016 - tomcrypt 0.2.0
   - Removed the old base64 functions since PHP already provides some
 
 
-
 Version: 0.1.0
 Date: 2015-05-17 20:36:00
 Stability: beta
 
 notes: Initial Release.
-
-
 

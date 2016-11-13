@@ -25,10 +25,10 @@ The following features are currently supported:
   <email>clicky@erebot.net</email>
   <active>yes</active>
  </lead>
- <date>2016-07-23</date>
- <time>18:35:00</time>
+ <date>2016-11-13</date>
+ <time>10:35:00</time>
  <version>
-  <release>0.2.0</release>
+  <release>0.2.1</release>
   <api>0.2.0</api>
  </version>
  <stability>
@@ -36,21 +36,12 @@ The following features are currently supported:
   <api>stable</api>
  </stability>
  <license uri="http://www.php.net/license/3_01.txt">PHP</license>
- <notes>Sat, Jul 23, 2016 - tomcrypt 0.2.0
+ <notes>Sat, Nov 13, 2016 - tomcrypt 0.2.1
 
 = Fixed bugs:
 
-  - Fixed compilation with PHP 5.3 - 7.1.0alpha3
-
-+ Changes:
-
-  - New API for MAC functions
-  - Merged HMAC into MAC functions
-
-- Removed features:
-
-  - Removed the old base64 functions since PHP already provides some
- </notes>
+  - Fixed composer.json to include vendor name in package name
+</notes>
  <contents>
   <dir name="/">
    <file name="config.m4" role="src" />
@@ -73,6 +64,35 @@ The following features are currently supported:
  <extsrcrelease />
  <changelog>
   <release>
+ <date>2016-07-23</date>
+ <time>18:35:00</time>
+   <version>
+    <release>0.2.0</release>
+    <api>0.2.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.php.net/license/3_01.txt">PHP</license>
+ <notes>Sat, Jul 23, 2016 - tomcrypt 0.2.0
+
+= Fixed bugs:
+
+  - Fixed compilation with PHP 5.3 - 7.1.0alpha3
+
++ Changes:
+
+  - New API for MAC functions
+  - Merged HMAC into MAC functions
+
+- Removed features:
+
+  - Removed the old base64 functions since PHP already provides some</notes>
+  </release>
+
+
+  <release>
    <date>2015-05-17</date>
    <time>20:36:00</time>
    <version>
@@ -84,8 +104,7 @@ The following features are currently supported:
     <api>stable</api>
    </stability>
    <license uri="http://www.php.net/license/3_01.txt">PHP</license>
-   <notes>Initial Release.
-   </notes>
+   <notes>Initial Release.</notes>
   </release>
  </changelog>
 </package>
