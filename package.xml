@@ -26,9 +26,9 @@ The following features are currently supported:
   <active>yes</active>
  </lead>
  <date>2016-11-13</date>
- <time>10:35:00</time>
+ <time>10:50:00</time>
  <version>
-  <release>0.2.1</release>
+  <release>0.2.2</release>
   <api>0.2.0</api>
  </version>
  <stability>
@@ -40,7 +40,7 @@ The following features are currently supported:
 
 = Fixed bugs:
 
-  - Fixed composer.json to include vendor name in package name
+  - Fixed version mismatch in php_tomcrypt.h
 </notes>
  <contents>
   <dir name="/">
@@ -64,6 +64,26 @@ The following features are currently supported:
  <providesextension>tomcrypt</providesextension>
  <extsrcrelease />
  <changelog>
+  <release>
+ <date>2016-11-13</date>
+ <time>10:35:00</time>
+   <version>
+    <release>0.2.1</release>
+    <api>0.2.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.php.net/license/3_01.txt">PHP</license>
+ <notes>Sat, Nov 13, 2016 - tomcrypt 0.2.1
+
+= Fixed bugs:
+
+  - Fixed composer.json to include vendor name in package name</notes>
+  </release>
+
+
   <release>
  <date>2016-07-23</date>
  <time>18:35:00</time>
@@ -91,8 +111,6 @@ The following features are currently supported:
 
   - Removed the old base64 functions since PHP already provides some</notes>
   </release>
-
-
   <release>
    <date>2015-05-17</date>
    <time>20:36:00</time>
