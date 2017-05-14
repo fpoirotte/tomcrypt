@@ -34,7 +34,7 @@ You can install this extension using ``pear``:
 ..  sourcecode:: console
 
     pear download https://github.com/fpoirotte/tomcrypt/archive/master.tar.gz
-    tar zxvf master
+    tar zxvf master.tar.gz
     pear build tomcrypt-master/package.xml
 
 It will also try to add the extension to your ``php.ini`` automatically.
