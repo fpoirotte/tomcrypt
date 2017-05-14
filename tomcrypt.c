@@ -644,10 +644,9 @@ PHP_MINIT_FUNCTION(tomcrypt)
 #endif
 #ifdef LTC_RIJNDAEL
 	TOMCRYPT_ADD_CIPHER(RIJNDAEL, rijndael_desc);
-	TOMCRYPT_ADD_CIPHER(AES, aes_desc);
-/*	TOMCRYPT_ADD_CIPHER(RIJNDAEL_128, ...);*/
-/*	TOMCRYPT_ADD_CIPHER(RIJNDAEL_192, ...);*/
-/*	TOMCRYPT_ADD_CIPHER(RIJNDAEL_256, ...);*/
+	/* We just make AES an alias for Rijndael, even though LibTomCrypt
+	   actually comes with a separate cipher descriptor for AES. */
+	TOMCRYPT_ADD_CIPHER(AES, rijndael_desc);
 #endif
 #ifdef LTC_XTEA
 	TOMCRYPT_ADD_CIPHER(XTEA, xtea_desc);
@@ -676,7 +675,7 @@ PHP_MINIT_FUNCTION(tomcrypt)
 	TOMCRYPT_ADD_CIPHER(ANUBIS, anubis_desc);
 #endif
 #ifdef LTC_KSEED
-	TOMCRYPT_ADD_CIPHER(KSEED, kseed_desc);
+	TOMCRYPT_ADD_CIPHER(SEED, kseed_desc);
 #endif
 #ifdef LTC_KASUMI
 	TOMCRYPT_ADD_CIPHER(KASUMI, kasumi_desc);

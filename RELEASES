@@ -1,8 +1,21 @@
+Version: 0.2.3
+Date: 2017-05-14 19:15:00
+Stability: beta
+
+notes: Sun, May 14, 2017 - tomcrypt 0.2.3
+
++ Changes:
+
+  - Make TOMCRYPT_CIPHER_AES an alias for TOMCRYPT_CIPHER_RIJNDAEL
+  - Rename TOMCRYPT_CIPHER_KSEED into TOMCRYPT_CIPHER_SEED
+
+
+
 Version: 0.2.2
 Date: 2016-11-13 10:50:00
 Stability: beta
 
-notes: Sat, Nov 13, 2016 - tomcrypt 0.2.1
+notes: Sat, Nov 13, 2016 - tomcrypt 0.2.2
 
 = Fixed bugs:
 

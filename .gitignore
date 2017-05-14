@@ -30,6 +30,7 @@ libtool
 modules/
 tomcrypt.la
 tomcrypt.lo
+tomcrypt.loT
 
 # make test
 tests/*.sh

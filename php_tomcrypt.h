@@ -31,7 +31,7 @@
 
 
 #define PHP_TOMCRYPT_EXTNAME        "tomcrypt"
-#define PHP_TOMCRYPT_VERSION        "0.2.2"
+#define PHP_TOMCRYPT_VERSION        "0.2.3"
 
 /* MAC protocols */
 #define PHP_TOMCRYPT_MAC_HMAC       "hmac"

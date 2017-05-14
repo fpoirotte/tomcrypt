@@ -3,12 +3,12 @@ tomcrypt - KSEED cipher
 --SKIPIF--
 <?php
     if (!extension_loaded("tomcrypt")) print "skip extension not loaded";
-    if (!defined('TOMCRYPT_CIPHER_KSEED')) print "skip cipher not available";
+    if (!defined('TOMCRYPT_CIPHER_SEED')) print "skip cipher not available";
     if (!defined('TOMCRYPT_MODE_ECB')) print "skip mode not available";
 ?>
 --FILE--
 <?php
-    $cipher = TOMCRYPT_CIPHER_KSEED;
+    $cipher = TOMCRYPT_CIPHER_SEED;
     var_dump(
         in_array($cipher, tomcrypt_list_ciphers()),
         tomcrypt_cipher_name($cipher),
