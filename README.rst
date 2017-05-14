@@ -74,7 +74,6 @@ This extension also provides constants which can be used to refer to the various
 *   ``TOMCRYPT_CIPHER_DES``
 *   ``TOMCRYPT_CIPHER_KASUMI``
 *   ``TOMCRYPT_CIPHER_KHAZAD``
-*   ``TOMCRYPT_CIPHER_KSEED``
 *   ``TOMCRYPT_CIPHER_MULTI2``
 *   ``TOMCRYPT_CIPHER_NOEKEON``
 *   ``TOMCRYPT_CIPHER_RC2``
@@ -88,6 +87,7 @@ This extension also provides constants which can be used to refer to the various
 *   ``TOMCRYPT_CIPHER_SAFERPLUS``
 *   ``TOMCRYPT_CIPHER_SAFERSK128``
 *   ``TOMCRYPT_CIPHER_SAFERSK64``
+*   ``TOMCRYPT_CIPHER_SEED``
 *   ``TOMCRYPT_CIPHER_SKIPJACK``
 *   ``TOMCRYPT_CIPHER_TRIPLEDES``
 *   ``TOMCRYPT_CIPHER_TWOFISH``
@@ -100,8 +100,8 @@ The following constants are also provided:
 * ``TOMCRYPT_MODE_CCM``
 * ``TOMCRYPT_MODE_CFB``
 * ``TOMCRYPT_MODE_CTR``
-* ``TOMCRYPT_MODE_ECB``
 * ``TOMCRYPT_MODE_EAX``
+* ``TOMCRYPT_MODE_ECB``
 * ``TOMCRYPT_MODE_F8``
 * ``TOMCRYPT_MODE_GCM``
 * ``TOMCRYPT_MODE_LRW``

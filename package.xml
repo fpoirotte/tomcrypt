@@ -25,22 +25,23 @@ The following features are currently supported:
   <email>clicky@erebot.net</email>
   <active>yes</active>
  </lead>
- <date>2016-11-13</date>
- <time>10:50:00</time>
+ <date>2017-05-14</date>
+ <time>19:15:00</time>
  <version>
-  <release>0.2.2</release>
-  <api>0.2.0</api>
+  <release>0.2.3</release>
+  <api>0.2.3</api>
  </version>
  <stability>
   <release>beta</release>
   <api>stable</api>
  </stability>
  <license uri="http://www.php.net/license/3_01.txt">PHP</license>
- <notes>Sat, Nov 13, 2016 - tomcrypt 0.2.1
+ <notes>Sun, May 14, 2017 - tomcrypt 0.2.3
 
-= Fixed bugs:
++ Changes:
 
-  - Fixed version mismatch in php_tomcrypt.h
+  - Make TOMCRYPT_CIPHER_AES an alias for TOMCRYPT_CIPHER_RIJNDAEL
+  - Rename TOMCRYPT_CIPHER_KSEED into TOMCRYPT_CIPHER_SEED
 </notes>
  <contents>
   <dir name="/">
@@ -54,7 +55,7 @@ The following features are currently supported:
   <required>
    <php>
     <min>5.3.0</min>
-    <max>7.1.0</max>
+    <max>7.2.0</max>
    </php>
    <pearinstaller>
     <min>1.4.0a2</min>
@@ -64,6 +65,25 @@ The following features are currently supported:
  <providesextension>tomcrypt</providesextension>
  <extsrcrelease />
  <changelog>
+  <release>
+ <date>2016-11-13</date>
+ <time>10:50:00</time>
+ <version>
+  <release>0.2.2</release>
+  <api>0.2.0</api>
+ </version>
+ <stability>
+  <release>beta</release>
+  <api>stable</api>
+ </stability>
+ <license uri="http://www.php.net/license/3_01.txt">PHP</license>
+ <notes>Sat, Nov 13, 2016 - tomcrypt 0.2.2
+
+= Fixed bugs:
+
+  - Fixed version mismatch in php_tomcrypt.h
+</notes>
+  </release>
   <release>
  <date>2016-11-13</date>
  <time>10:35:00</time>
@@ -82,8 +102,6 @@ The following features are currently supported:
 
   - Fixed composer.json to include vendor name in package name</notes>
   </release>
-
-
   <release>
  <date>2016-07-23</date>
  <time>18:35:00</time>
