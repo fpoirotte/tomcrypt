@@ -33,7 +33,7 @@ You can install this extension using ``pear``:
 
 ..  sourcecode:: console
 
-    pear download https://github.com/fpoirotte/tomcrypt/archive/master.tar.gz
+    wget https://github.com/fpoirotte/tomcrypt/archive/master.tar.gz
     tar zxvf master.tar.gz
     pear install tomcrypt-master/package.xml
 
