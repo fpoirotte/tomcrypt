@@ -1805,7 +1805,8 @@ PHP_FUNCTION(tomcrypt_cipher_decrypt)
 	} else if (!strncmp(PHP_TOMCRYPT_MODE_OCB, mode, mode_len)) {
 #ifdef LTC_OCB_MODE
 		char          *nonce, *tag;
-		int            nonce_len, tag_len, res;
+		int            nonce_len, res;
+		unsigned long  tag_len;
 
 		GET_OPT_STRING(options, "nonce", nonce, nonce_len, NULL);
 		if (nonce_len != cipher_descriptor[index].block_length) {
@@ -1816,8 +1817,7 @@ PHP_FUNCTION(tomcrypt_cipher_decrypt)
 		}
 
 		if ((err = ocb_decrypt_verify_memory(index, key, key_len, nonce,
-			ciphertext, ciphertext_len, plaintext,
-			tag, (unsigned long) tag_len, &res)) != CRYPT_OK) {
+			ciphertext, ciphertext_len, plaintext, tag, tag_len, &res)) != CRYPT_OK) {
 			efree(ciphertext);
 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
 			RETURN_FALSE;
@@ -1846,13 +1846,13 @@ PHP_FUNCTION(tomcrypt_cipher_decrypt)
 /*    HASHES    */
 /****************/
 
-static void php_tomcrypt_do_hash(INTERNAL_FUNCTION_PARAMETERS, int isfilename, zend_bool raw_output_default) /* {{{ */
+static void php_tomcrypt_do_hash(INTERNAL_FUNCTION_PARAMETERS, int isfilename) /* {{{ */
 {
 	char       *algo, *data, hash[MAXBLOCKSIZE + 1];
 	pltc_size   algo_len, data_len;
 	int         index, err;
 	hash_state  md;
-	zend_bool   raw_output = raw_output_default;
+	zend_bool   raw_output = 0;
 	php_stream *stream = NULL;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss|b",
@@ -1979,7 +1979,7 @@ PHP_FUNCTION(tomcrypt_hash_digest_size)
    Compute the hash of a string using the specified algorithm */
 PHP_FUNCTION(tomcrypt_hash_string)
 {
-	php_tomcrypt_do_hash(INTERNAL_FUNCTION_PARAM_PASSTHRU, 0, 0);
+	php_tomcrypt_do_hash(INTERNAL_FUNCTION_PARAM_PASSTHRU, 0);
 }
 /* }}} */
 
@@ -1987,7 +1987,7 @@ PHP_FUNCTION(tomcrypt_hash_string)
    Compute the hash of a file using the specified algorithm */
 PHP_FUNCTION(tomcrypt_hash_file)
 {
-	php_tomcrypt_do_hash(INTERNAL_FUNCTION_PARAM_PASSTHRU, 1, 0);
+	php_tomcrypt_do_hash(INTERNAL_FUNCTION_PARAM_PASSTHRU, 1);
 }
 /* }}} */
 
@@ -1996,14 +1996,14 @@ PHP_FUNCTION(tomcrypt_hash_file)
 /*    MAC    */
 /*************/
 
-static void php_tomcrypt_do_mac(INTERNAL_FUNCTION_PARAMETERS, int isfilename, zend_bool raw_output_default)
+static void php_tomcrypt_do_mac(INTERNAL_FUNCTION_PARAMETERS, int isfilename)
 /* {{{ */
 {
 	char                   *algo, *cipher_hash, *key, *data, mac[MAXBLOCKSIZE + 1];
 	unsigned long           macsize = MAXBLOCKSIZE;
 	pltc_size               algo_len, cipher_hash_len, key_len, data_len;
 	int                     err, index = 0;
-	zend_bool               raw_output = raw_output_default;
+	zend_bool               raw_output = 0;
 	php_stream             *stream = NULL;
 	php_tomcrypt_mac_state  state;
 	php_tomcrypt_mac_desc  *desc = NULL;
@@ -2088,14 +2088,14 @@ static void php_tomcrypt_do_mac(INTERNAL_FUNCTION_PARAMETERS, int isfilename, ze
    Compute the Message Authentication Code of a string using the specified MAC algorithm and hash/cipher */
 PHP_FUNCTION(tomcrypt_mac_string)
 {
-	php_tomcrypt_do_mac(INTERNAL_FUNCTION_PARAM_PASSTHRU, 0, 0);
+	php_tomcrypt_do_mac(INTERNAL_FUNCTION_PARAM_PASSTHRU, 0);
 }
 
 /* {{{ proto int tomcrypt_mac_file(string algo, string cipher_hash, string key, string filename, bool raw_output = false)
    Compute the Message Authentication Code of a file using the specified MAC algorithm and hash/cipher */
 PHP_FUNCTION(tomcrypt_mac_file)
 {
-	php_tomcrypt_do_mac(INTERNAL_FUNCTION_PARAM_PASSTHRU, 1, 0);
+	php_tomcrypt_do_mac(INTERNAL_FUNCTION_PARAM_PASSTHRU, 1);
 }
 
 
