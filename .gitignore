@@ -12,6 +12,7 @@ config.sub
 config.h.in
 configure
 configure.in
+configure.ac
 install-sh
 
 # configure
