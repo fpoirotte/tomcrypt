@@ -767,6 +767,12 @@ PHP_MINIT_FUNCTION(tomcrypt)
 #ifdef LTC_SHA224
 	TOMCRYPT_ADD_HASH(SHA224, sha224_desc);
 #endif
+#if defined(LTC_SHA512_256) && defined(LTC_SHA512)
+	TOMCRYPT_ADD_HASH(SHA512_256, sha512_256_desc);
+#endif
+#if defined(LTC_SHA512_224) && defined(LTC_SHA512)
+	TOMCRYPT_ADD_HASH(SHA512_224, sha512_224_desc);
+#endif
 #ifdef LTC_SHA1
 	TOMCRYPT_ADD_HASH(SHA1, sha1_desc);
 #endif
@@ -796,6 +802,24 @@ PHP_MINIT_FUNCTION(tomcrypt)
 #endif
 #ifdef LTC_WHIRLPOOL
 	TOMCRYPT_ADD_HASH(WHIRLPOOL, whirlpool_desc);
+#endif
+#ifdef LTC_BLAKE2B
+	TOMCRYPT_ADD_HASH(BLAKE2B_512, blake2b_512_desc);
+	TOMCRYPT_ADD_HASH(BLAKE2B_384, blake2b_384_desc);
+	TOMCRYPT_ADD_HASH(BLAKE2B_256, blake2b_256_desc);
+	TOMCRYPT_ADD_HASH(BLAKE2B_160, blake2b_160_desc);
+#endif
+#ifdef LTC_BLAKE2S
+	TOMCRYPT_ADD_HASH(BLAKE2S_256, blake2s_256_desc);
+	TOMCRYPT_ADD_HASH(BLAKE2S_224, blake2s_224_desc);
+	TOMCRYPT_ADD_HASH(BLAKE2S_160, blake2s_160_desc);
+	TOMCRYPT_ADD_HASH(BLAKE2S_128, blake2s_128_desc);
+#endif
+#ifdef LTC_SHA3
+	TOMCRYPT_ADD_HASH(SHA3_512, sha3_512_desc);
+	TOMCRYPT_ADD_HASH(SHA3_384, sha3_384_desc);
+	TOMCRYPT_ADD_HASH(SHA3_256, sha3_256_desc);
+	TOMCRYPT_ADD_HASH(SHA3_224, sha3_224_desc);
 #endif
 
 
