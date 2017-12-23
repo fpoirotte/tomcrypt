@@ -797,9 +797,6 @@ PHP_MINIT_FUNCTION(tomcrypt)
 #ifdef LTC_WHIRLPOOL
 	TOMCRYPT_ADD_HASH(WHIRLPOOL, whirlpool_desc);
 #endif
-#ifdef LTC_CHC
-	TOMCRYPT_ADD_HASH(CHC, chc_desc);
-#endif
 
 
 	/* MACs */
