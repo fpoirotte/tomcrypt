@@ -29,6 +29,10 @@ notes: Sat, Dec 23, 2017 - tomcrypt 0.2.4
     - Blake2s
     - Poly1305
 
+= Fixed bugs:
+
+  - Fixed --with-tomcrypt=/custom/path not working properly
+
 
 Version: 0.2.3
 Date: 2017-05-14 19:15:00
