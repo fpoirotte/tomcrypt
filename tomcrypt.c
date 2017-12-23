@@ -266,6 +266,9 @@ typedef struct _php_tomcrypt_rng {
 } php_tomcrypt_rng;
 
 static php_tomcrypt_rng php_tomcrypt_rngs[] = {
+#ifdef LTC_CHACHA20_PRNG
+    { .name = PHP_TOMCRYPT_RNG_CHACHA20 },
+#endif
 #ifdef LTC_YARROW
 	{ .name = PHP_TOMCRYPT_RNG_YARROW },
 #endif
@@ -755,6 +758,9 @@ PHP_MINIT_FUNCTION(tomcrypt)
 
 
 	/* PRNGs */
+#ifdef LTC_CHACHA20_PRNG
+	TOMCRYPT_ADD_RNG(CHACHA20, chacha20_prng_desc);
+#endif
 #ifdef LTC_YARROW
 	TOMCRYPT_ADD_RNG(YARROW, yarrow_desc);
 #endif
@@ -999,6 +1005,9 @@ PHP_FUNCTION(tomcrypt_list_rngs)
 
 	array_init(return_value);
 
+#ifdef LTC_CHACHA20_PRNG
+    APPEND_RNG(CHACHA20);
+#endif
 #ifdef LTC_YARROW
 	APPEND_RNG(YARROW);
 #endif

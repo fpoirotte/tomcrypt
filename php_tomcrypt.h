@@ -58,6 +58,7 @@
 #define PHP_TOMCRYPT_MODE_OCB       "ocb"
 
 /* RNGs */
+#define PHP_TOMCRYPT_RNG_CHACHA20   "chacha20"
 #define PHP_TOMCRYPT_RNG_FORTUNA    "fortuna"
 #define PHP_TOMCRYPT_RNG_RC4        "rc4"
 #define PHP_TOMCRYPT_RNG_SOBER128   "sober128"
