@@ -287,6 +287,39 @@ static php_tomcrypt_rng php_tomcrypt_rngs[] = {
 	{ NULL }
 };
 
+
+#ifdef LTC_BLAKE2BMAC
+/**
+ * Wrapper around blake2bmac_init to keep the API
+ * consistent across all MAC algorithms.
+ */
+int _php_tomcrypt_blake2bmac_init(blake2bmac_state *state, int algo, const unsigned char *key, unsigned long keylen)
+{
+    return blake2bmac_init(state, key, keylen);
+}
+#endif
+#ifdef LTC_BLAKE2SMAC
+/**
+ * Wrapper around blake2smac_init to keep the API
+ * consistent across all MAC algorithms.
+ */
+int _php_tomcrypt_blake2smac_init(blake2smac_state *state, int algo, const unsigned char *key, unsigned long keylen)
+{
+    return blake2smac_init(state, key, keylen);
+}
+#endif
+#ifdef LTC_POLY1305
+/**
+ * Wrapper around poly1305_init to keep the API
+ * consistent across all MAC algorithms.
+ */
+int _php_tomcrypt_poly1305_init(poly1305_state *state, int algo, const unsigned char *key, unsigned long keylen)
+{
+    return poly1305_init(state, key, keylen);
+}
+#endif
+
+
 typedef int (*php_tomcrypt_mac_finder)(const char *name);
 typedef int (*php_tomcrypt_mac_init)(void *state, int algo, const unsigned char *key, unsigned long keylen);
 typedef int (*php_tomcrypt_mac_process)(void *state, const unsigned char *in, unsigned long inlen);
@@ -308,6 +341,24 @@ static php_tomcrypt_mac_desc php_tomcrypt_mac_descriptors[] = {
 		(php_tomcrypt_mac_init)    hmac_init,
 		(php_tomcrypt_mac_process) hmac_process,
 		(php_tomcrypt_mac_done)    hmac_done
+	},
+#endif
+#ifdef LTC_BLAKE2BMAC
+	{
+		PHP_TOMCRYPT_MAC_BLAKE2B,
+		(php_tomcrypt_mac_finder)  NULL,
+		(php_tomcrypt_mac_init)    _php_tomcrypt_blake2bmac_init,
+		(php_tomcrypt_mac_process) blake2bmac_process,
+		(php_tomcrypt_mac_done)    blake2bmac_done
+	},
+#endif
+#ifdef LTC_BLAKE2SMAC
+	{
+		PHP_TOMCRYPT_MAC_BLAKE2S,
+		(php_tomcrypt_mac_finder)  NULL,
+		(php_tomcrypt_mac_init)    _php_tomcrypt_blake2smac_init,
+		(php_tomcrypt_mac_process) blake2smac_process,
+		(php_tomcrypt_mac_done)    blake2smac_done
 	},
 #endif
 #ifdef LTC_OMAC
@@ -337,6 +388,15 @@ static php_tomcrypt_mac_desc php_tomcrypt_mac_descriptors[] = {
 		(php_tomcrypt_mac_done)    pelican_done
 	},
 #endif
+#ifdef LTC_POLY1305
+	{
+		PHP_TOMCRYPT_MAC_POLY1305,
+		(php_tomcrypt_mac_finder)  NULL,
+		(php_tomcrypt_mac_init)    _php_tomcrypt_poly1305_init,
+		(php_tomcrypt_mac_process) poly1305_process,
+		(php_tomcrypt_mac_done)    poly1305_done
+	},
+#endif
 #ifdef LTC_XCBC
 	{
 		PHP_TOMCRYPT_MAC_XCBC,
@@ -360,22 +420,28 @@ static php_tomcrypt_mac_desc php_tomcrypt_mac_descriptors[] = {
 
 typedef union _php_tomcrypt_mac_state {
 #ifdef LTC_HMAC
-	hmac_state      hmac;
+	hmac_state          hmac;
 #endif
-#ifdef LTC_OMAC
-	omac_state      omac;
+#ifdef LTC_BLAKE2BMAC
+	blake2bmac_state   blake2b;
+#endif
+#ifdef LTC_BLAKE2SMAC
+	blake2smac_state   blake2s;
 #endif
 #ifdef LTC_PMAC
-	pmac_state      pmac;
+	pmac_state          pmac;
 #endif
 #ifdef LTC_PELICAN
-	pelican_state   pelican;
+	pelican_state       pelican;
+#endif
+#ifdef LTC_POLY1305
+	poly1305_state      poly1305;
 #endif
 #ifdef LTC_XCBC
-	xcbc_state      xcbc;
+	xcbc_state          xcbc;
 #endif
 #ifdef LTC_F9_MODE
-	f9_state        f9;
+	f9_state            f9 ;
 #endif
 } php_tomcrypt_mac_state;
 
@@ -743,11 +809,20 @@ PHP_MINIT_FUNCTION(tomcrypt)
 #ifdef LTC_OMAC
 	TOMCRYPT_ADD_MAC(CMAC);
 #endif
+#ifdef LTC_BLAKE2BMAC
+	TOMCRYPT_ADD_MAC(BLAKE2B);
+#endif
+#ifdef LTC_BLAKE2SMAC
+	TOMCRYPT_ADD_MAC(BLAKE2S);
+#endif
 #ifdef LTC_PMAC
 	TOMCRYPT_ADD_MAC(PMAC);
 #endif
 #ifdef LTC_PELICAN
 	TOMCRYPT_ADD_MAC(PELICAN);
+#endif
+#ifdef LTC_POLY1305
+	TOMCRYPT_ADD_MAC(POLY1305);
 #endif
 #ifdef LTC_XCBC
 	TOMCRYPT_ADD_MAC(XCBC);
@@ -982,11 +1057,20 @@ PHP_FUNCTION(tomcrypt_list_macs)
 #ifdef LTC_OMAC
 	APPEND_MAC(CMAC);
 #endif
+#ifdef LTC_BLAKE2BMAC
+	APPEND_MAC(BLAKE2B);
+#endif
+#ifdef LTC_BLAKE2SMAC
+	APPEND_MAC(BLAKE2S);
+#endif
 #ifdef LTC_PMAC
 	APPEND_MAC(PMAC);
 #endif
 #ifdef LTC_PELICAN
 	APPEND_MAC(PELICAN);
+#endif
+#ifdef LTC_POLY1305
+	APPEND_MAC(POLY1305);
 #endif
 #ifdef LTC_XCBC
 	APPEND_MAC(XCBC);
@@ -2036,7 +2120,7 @@ static void php_tomcrypt_do_mac(INTERNAL_FUNCTION_PARAMETERS, int isfilename)
 		RETURN_FALSE;
 	}
 
-	if ((index = desc->finder(cipher_hash)) == -1) {
+	if (desc->finder != NULL && (index = desc->finder(cipher_hash)) == -1) {
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unknown cipher/hash: %s", cipher_hash);
 		RETURN_FALSE;
 	}
