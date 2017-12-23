@@ -96,19 +96,19 @@ typedef zend_long   pltc_long;
 typedef size_t      pltc_size;
 # define PLTC_RETVAL_STRING(s, ex) { \
     RETVAL_STRING(s);                \
-    if (!ex) efree(s);               \
+    if (!ex) efree((void *) s);      \
   }
 # define PLTC_RETVAL_STRINGL(s, len, ex) { \
     RETVAL_STRINGL(s, len);                \
-    if (!ex) efree(s);                     \
+    if (!ex) efree((void *) s);            \
   }
 # define pltc_add_index_string(zv, idx, s, ex) { \
     add_index_string(zv, idx, s);                \
-    if (!ex) efree(s);                           \
+    if (!ex) efree((void *) s);                  \
   }
 # define pltc_add_assoc_stringl(zv, key, s, len, ex) { \
     add_assoc_stringl(zv, key, s, len);                \
-    if (!ex) efree(s);                           \
+    if (!ex) efree((void *) s);                        \
   }
 #else
 typedef long        pltc_long;
@@ -132,13 +132,13 @@ typedef int         pltc_size;
 	if (register_cipher(&desc) == -1) { \
 		return FAILURE; \
 	} \
-	REGISTER_STRING_CONSTANT("TOMCRYPT_CIPHER_" #cname, desc.name, CONST_PERSISTENT | CONST_CS)
+	REGISTER_STRING_CONSTANT("TOMCRYPT_CIPHER_" #cname, (char *) desc.name, CONST_PERSISTENT | CONST_CS)
 
 #define TOMCRYPT_ADD_HASH(cname, desc) \
 	if (register_hash(&desc) == -1) { \
 		return FAILURE; \
 	} \
-	REGISTER_STRING_CONSTANT("TOMCRYPT_HASH_" #cname, desc.name, CONST_PERSISTENT | CONST_CS)
+	REGISTER_STRING_CONSTANT("TOMCRYPT_HASH_" #cname, (char *) desc.name, CONST_PERSISTENT | CONST_CS)
 
 #define TOMCRYPT_ADD_MODE(mode) \
 	REGISTER_STRING_CONSTANT("TOMCRYPT_MODE_" #mode, PHP_TOMCRYPT_MODE_ ##mode , CONST_PERSISTENT | CONST_CS)
