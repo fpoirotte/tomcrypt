@@ -36,7 +36,7 @@
 /* MAC protocols */
 #define PHP_TOMCRYPT_MAC_HMAC       "hmac"
 #define PHP_TOMCRYPT_MAC_BLAKE2B    "blake2b"
-#define PHP_TOMCRYPT_MAC_BLAKE2s    "blake2s"
+#define PHP_TOMCRYPT_MAC_BLAKE2S    "blake2s"
 #define PHP_TOMCRYPT_MAC_CMAC       "cmac"
 #define PHP_TOMCRYPT_MAC_PMAC       "pmac"
 #define PHP_TOMCRYPT_MAC_PELICAN    "pelican"

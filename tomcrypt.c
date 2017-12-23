@@ -295,7 +295,7 @@ static php_tomcrypt_rng php_tomcrypt_rngs[] = {
  */
 int _php_tomcrypt_blake2bmac_init(blake2bmac_state *state, int algo, const unsigned char *key, unsigned long keylen)
 {
-    return blake2bmac_init(state, key, keylen);
+    return blake2bmac_init(state, 64, key, keylen);
 }
 #endif
 #ifdef LTC_BLAKE2SMAC
@@ -305,7 +305,7 @@ int _php_tomcrypt_blake2bmac_init(blake2bmac_state *state, int algo, const unsig
  */
 int _php_tomcrypt_blake2smac_init(blake2smac_state *state, int algo, const unsigned char *key, unsigned long keylen)
 {
-    return blake2smac_init(state, key, keylen);
+    return blake2smac_init(state, 64, key, keylen);
 }
 #endif
 #ifdef LTC_POLY1305
