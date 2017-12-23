@@ -25,23 +25,25 @@ The following features are currently supported:
   <email>clicky@erebot.net</email>
   <active>yes</active>
  </lead>
- <date>2017-05-14</date>
- <time>19:15:00</time>
+ <date>2017-12-23</date>
+ <time>19:05:00</time>
  <version>
-  <release>0.2.3</release>
-  <api>0.2.3</api>
+  <release>0.2.4</release>
+  <api>0.2.4</api>
  </version>
  <stability>
   <release>beta</release>
   <api>stable</api>
  </stability>
  <license uri="http://www.php.net/license/3_01.txt">PHP</license>
- <notes>Sun, May 14, 2017 - tomcrypt 0.2.3
+ <notes>Sat, Dec 23, 2017 - tomcrypt 0.2.4
 
 + Changes:
 
-  - Make TOMCRYPT_CIPHER_AES an alias for TOMCRYPT_CIPHER_RIJNDAEL
-  - Rename TOMCRYPT_CIPHER_KSEED into TOMCRYPT_CIPHER_SEED
+  - Add support for new features from libtomcrypt 1.18:
+    - New PRNGs: ChaCha20
+    - New MACs: Blake2b, Blake2s and Poly1305
+  - Remove incomplete support for the Cipher Hash Construction
 </notes>
  <contents>
   <dir name="/">
@@ -65,6 +67,26 @@ The following features are currently supported:
  <providesextension>tomcrypt</providesextension>
  <extsrcrelease />
  <changelog>
+  <release>
+ <date>2017-05-14</date>
+ <time>19:15:00</time>
+ <version>
+  <release>0.2.3</release>
+  <api>0.2.3</api>
+ </version>
+ <stability>
+  <release>beta</release>
+  <api>stable</api>
+ </stability>
+ <license uri="http://www.php.net/license/3_01.txt">PHP</license>
+ <notes>Sun, May 14, 2017 - tomcrypt 0.2.3
+
++ Changes:
+
+  - Make TOMCRYPT_CIPHER_AES an alias for TOMCRYPT_CIPHER_RIJNDAEL
+  - Rename TOMCRYPT_CIPHER_KSEED into TOMCRYPT_CIPHER_SEED
+</notes>
+  </release>
   <release>
  <date>2016-11-13</date>
  <time>10:50:00</time>
