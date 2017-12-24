@@ -40,10 +40,34 @@ The following features are currently supported:
 
 + Changes:
 
-  - Add support for new features from libtomcrypt 1.18:
-    - New PRNGs: ChaCha20
-    - New MACs: Blake2b, Blake2s and Poly1305
-  - Remove incomplete support for the Cipher Hash Construction
+  - Removed buggy (incomplete) support for the Cipher Hash Construction
+  - Added support for the following Ciphers:
+    - Camellia
+  - Added support for the following Pseudo-Random Number Generators:
+    - ChaCha20
+  - Added support for the following hashing algorithms:
+      - SHA512-256
+      - SHA512-224
+      - Blake2b-160
+      - Blake2b-256
+      - Blake2b-256
+      - Blake2b-512
+      - Blake2s-128
+      - Blake2s-160
+      - Blake2s-224
+      - Blake2s-256
+      - SHA3-224
+      - SHA3-256
+      - SHA3-384
+      - SHA3-512
+  - Added support for the following Message Authentication Codes:
+    - Blake2b
+    - Blake2s
+    - Poly1305
+
+= Fixed bugs:
+
+  - Fixed --with-tomcrypt=/custom/path not working properly
 </notes>
  <contents>
   <dir name="/">

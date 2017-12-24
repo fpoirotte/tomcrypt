@@ -752,6 +752,9 @@ PHP_MINIT_FUNCTION(tomcrypt)
 #ifdef LTC_MULTI2
 	TOMCRYPT_ADD_CIPHER(MULTI2, multi2_desc);
 #endif
+#ifdef LTC_CAMELLIA
+	TOMCRYPT_ADD_CIPHER(CAMELLIA, multi2_desc);
+#endif
 
 
 	/* Hashes */

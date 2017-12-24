@@ -6,10 +6,12 @@ notes: Sat, Dec 23, 2017 - tomcrypt 0.2.4
 
 + Changes:
 
-  - Remove buggy (incomplete) support for the Cipher Hash Construction
-  - Add support for the following Pseudo-Random Number Generators:
+  - Removed buggy (incomplete) support for the Cipher Hash Construction
+  - Added support for the following Ciphers:
+    - Camellia
+  - Added support for the following Pseudo-Random Number Generators:
     - ChaCha20
-  - Add support for the following hashing algorithms:
+  - Added support for the following hashing algorithms:
       - SHA512-256
       - SHA512-224
       - Blake2b-160
@@ -24,7 +26,7 @@ notes: Sat, Dec 23, 2017 - tomcrypt 0.2.4
       - SHA3-256
       - SHA3-384
       - SHA3-512
-  - Add support for the following Message Authentication Codes:
+  - Added support for the following Message Authentication Codes:
     - Blake2b
     - Blake2s
     - Poly1305
