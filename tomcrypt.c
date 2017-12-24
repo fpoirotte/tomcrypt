@@ -681,6 +681,12 @@ PHP_MINIT_FUNCTION(tomcrypt)
 #ifdef LTC_OCB_MODE
 	TOMCRYPT_ADD_MODE(OCB);
 #endif
+#ifdef LTC_OCB3_MODE
+	TOMCRYPT_ADD_MODE(OCB3);
+#endif
+#ifdef LTC_CHACHA20POLY1305_MODE
+	TOMCRYPT_ADD_MODE(CHACHA20POLY1305);
+#endif
 
 
 	/* Ciphers */
@@ -1032,6 +1038,12 @@ PHP_FUNCTION(tomcrypt_list_modes)
 #ifdef LTC_XTS_MODE
 	APPEND_MODE(XTS);
 #endif
+#ifdef LTC_OCB3_MODE
+	APPEND_MODE(OCB3);
+#endif
+#ifdef LTC_CHACHA20POLY1305_MODE
+	APPEND_MODE(CHACHA20POLY1305)
+#endif
 }
 /* }}} */
 
@@ -1277,7 +1289,7 @@ PHP_FUNCTION(tomcrypt_cipher_default_rounds)
 /* }}} */
 
 
-/* {{{ proto int tomcrypt_cipher_encrypt(string cipher, string key,
+/* {{{ proto int tomcrypt_cipher_encrypt(string cipher = null, string key,
                                          string plaintext, string mode,
                                         &array options = array())
    Encrypt some data */
@@ -1288,14 +1300,17 @@ PHP_FUNCTION(tomcrypt_cipher_encrypt)
 	zval      *options = NULL;
 	int        index, err, num_rounds = 0;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ssss|a!",
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s!sss|a!",
 		&cipher, &cipher_len, &key, &key_len, &plaintext, &plaintext_len,
 		&mode, &mode_len, &options) == FAILURE) {
 		return;
 	}
 	GET_OPT_LONG(options, "rounds", num_rounds, 0);
 
-	if ((index = find_cipher(cipher)) == -1) {
+    /* ChaCha20-Poly1305 uses a fixed algorithm and does not require
+     * the caller to specify an additional cipher. */
+	if (strncmp(PHP_TOMCRYPT_MODE_CHACHA20POLY1305, mode, mode_len) &&
+	    (!cipher || (index = find_cipher(cipher)) == -1)) {
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unknown cipher: %s", cipher);
 		RETURN_FALSE;
 	}
@@ -1602,6 +1617,69 @@ PHP_FUNCTION(tomcrypt_cipher_encrypt)
 		}
 		PLTC_RETURN_STRINGL(ciphertext, plaintext_len, 0);
 #endif
+	} else if (!strncmp(PHP_TOMCRYPT_MODE_OCB, mode, mode_len)) {
+#ifdef LTC_OCB3_MODE
+		char          *nonce, *authdata, tag[MAXBLOCKSIZE + 1];
+		int            nonce_len, authdata_len;
+		unsigned long  tag_len;
+
+		GET_OPT_STRING(options, "nonce", nonce, nonce_len, NULL);
+		GET_OPT_STRING(options, "authdata", authdata, authdata_len, NULL);
+		GET_OPT_LONG(options, "taglen", tag_len, 0);
+
+		if (nonce_len < 1 || nonce_len > 15) {
+			efree(ciphertext);
+			php_error_docref(NULL TSRMLS_CC, E_WARNING,
+			    "Invalid nonce size (%d), should be 1-15 bytes long",
+				nonce_len);
+			RETURN_FALSE;
+		}
+
+		if (taglen < 0 || taglen > 16) {
+			efree(ciphertext);
+			php_error_docref(NULL TSRMLS_CC, E_WARNING,
+			    "Invalid tag length (%d), should be between 0 and 16",
+				tag_len);
+			RETURN_FALSE;
+		}
+
+		if ((err = ocb3_encrypt_authenticate_memory(index, key, key_len, nonce, nonce_len,
+			authdata, authdata_len, plaintext, plaintext_len, ciphertext, tag, &tag_len)) != CRYPT_OK) {
+			efree(ciphertext);
+			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
+			RETURN_FALSE;
+		}
+
+		/* Write the tag back. */
+		if (options) {
+			tag[tag_len] = '\0';
+			pltc_add_assoc_stringl(options, "tag", tag, tag_len, 1);
+		}
+		PLTC_RETURN_STRINGL(ciphertext, plaintext_len, 0);
+#endif
+	} else if (!strncmp(PHP_TOMCRYPT_MODE_CHACHA20POLY1305, mode, mode_len)) {
+#ifdef LTC_CHACHA20POLY1305_MODE
+		char          *iv, *authdata, tag[MAXBLOCKSIZE + 1];
+		int            iv_len, authdata_len;
+		unsigned long  tag_len;
+
+		GET_OPT_STRING(options, "iv", iv, iv_len, NULL);
+		GET_OPT_STRING(options, "authdata", authdata, authdata_len, NULL);
+
+		if ((err = chacha20poly1305_memory(key, key_len, iv, iv_len, authdata, authdata_len,
+			plaintext, plaintext_len, ciphertext, tag, &tag_len, CHACHA20POLY1305_ENCRYPT)) != CRYPT_OK) {
+			efree(ciphertext);
+			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
+			RETURN_FALSE;
+		}
+
+		/* Write the tag back. */
+		if (options) {
+			tag[tag_len] = '\0';
+			pltc_add_assoc_stringl(options, "tag", tag, tag_len, 1);
+		}
+		PLTC_RETURN_STRINGL(ciphertext, plaintext_len, 0);
+#endif
 	}
 
 	/* Unsupported mode (invalid name, not compiled, etc.) */
@@ -1611,7 +1689,7 @@ PHP_FUNCTION(tomcrypt_cipher_encrypt)
 }
 /* }}} */
 
-/* {{{ proto int tomcrypt_cipher_decrypt(string cipher, string key,
+/* {{{ proto int tomcrypt_cipher_decrypt(string cipher = null, string key,
                                          string ciphertext, string mode,
                                          array options = array())
    Encrypt some data */
@@ -1622,14 +1700,17 @@ PHP_FUNCTION(tomcrypt_cipher_decrypt)
 	zval      *options = NULL;
 	int        index, err, num_rounds = 0;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ssss|a!",
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s!sss|a!",
 		&cipher, &cipher_len, &key, &key_len, &ciphertext, &ciphertext_len,
 		&mode, &mode_len, &options) == FAILURE) {
 		return;
 	}
 	GET_OPT_LONG(options, "rounds", num_rounds, 0);
 
-	if ((index = find_cipher(cipher)) == -1) {
+    /* ChaCha20-Poly1305 uses a fixed algorithm and does not require
+     * the caller to specify an additional cipher. */
+	if (strncmp(PHP_TOMCRYPT_MODE_CHACHA20POLY1305, mode, mode_len) &&
+	    (!cipher || (index = find_cipher(cipher)) == -1)) {
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unknown cipher: %s", cipher);
 		RETURN_FALSE;
 	}
@@ -1938,6 +2019,72 @@ PHP_FUNCTION(tomcrypt_cipher_decrypt)
 
 		/* Tag verification failed. */
 		if (res != 1) {
+			efree(ciphertext);
+			php_error_docref(NULL TSRMLS_CC, E_WARNING, "Tag verification failed");
+			RETURN_FALSE;
+		}
+
+		PLTC_RETURN_STRINGL(plaintext, ciphertext_len, 0);
+#endif
+	} else if (!strncmp(PHP_TOMCRYPT_MODE_OCB, mode, mode_len)) {
+#ifdef LTC_OCB3_MODE
+		char          *nonce, *authdata, *tag, tag2[MAXBLOCKSIZE + 1];
+		int            nonce_len, authdata_len, status;
+		unsigned long  tag2_len;
+
+		GET_OPT_STRING(options, "nonce", nonce, nonce_len, NULL);
+		GET_OPT_STRING(options, "authdata", authdata, authdata_len, NULL);
+		GET_OPT_STRING(options, "tag", tag, tag_len, NULL);
+
+		if (nonce_len < 1 || nonce_len > 15) {
+			efree(ciphertext);
+			php_error_docref(NULL TSRMLS_CC, E_WARNING,
+			    "Invalid nonce size (%d), should be 1-15 bytes long",
+				nonce_len);
+			RETURN_FALSE;
+		}
+
+		if (taglen < 0 || taglen > 16) {
+			efree(ciphertext);
+			php_error_docref(NULL TSRMLS_CC, E_WARNING,
+			    "Invalid tag length (%d), should be between 0 and 16",
+				tag_len);
+			RETURN_FALSE;
+		}
+
+		if ((err = ocb3_decrypt_verify_memory(index, key, key_len, iv, iv_len, authdata, authdata_len,
+			ciphertext, ciphertext_len, plaintext, tag2, &tag2_len, status)) != CRYPT_OK) {
+			efree(ciphertext);
+			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
+			RETURN_FALSE;
+		}
+
+		if (status != 1) {
+			efree(ciphertext);
+			php_error_docref(NULL TSRMLS_CC, E_WARNING, "Tag verification failed");
+			RETURN_FALSE;
+		}
+
+		PLTC_RETURN_STRINGL(plaintext, ciphertext_len, 0);
+#endif
+	} else if (!strncmp(PHP_TOMCRYPT_MODE_CHACHA20POLY1305, mode, mode_len)) {
+#ifdef LTC_CHACHA20POLY1305_MODE
+		char          *iv, *authdata, *tag, tag2[MAXBLOCKSIZE + 1];
+		int            iv_len, authdata_len, tag_len;
+		unsigned long  tag2_len;
+
+		GET_OPT_STRING(options, "iv", iv, iv_len, NULL);
+		GET_OPT_STRING(options, "authdata", authdata, authdata_len, NULL);
+		GET_OPT_STRING(options, "tag", tag, tag_len, NULL);
+
+		if ((err = chacha20poly1305_memory(key, key_len, iv, iv_len, authdata, authdata_len,
+			ciphertext, ciphertext_len, plaintext, tag2, &tag2_len, CHACHA20POLY1305_DECRYPT)) != CRYPT_OK) {
+			efree(ciphertext);
+			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
+			RETURN_FALSE;
+		}
+
+		if (tag2_len != tag_len || memcmp(tag, tag2, tag_len)) {
 			efree(ciphertext);
 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "Tag verification failed");
 			RETURN_FALSE;

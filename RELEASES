@@ -30,6 +30,9 @@ notes: Sat, Dec 23, 2017 - tomcrypt 0.2.4
     - Blake2b
     - Blake2s
     - Poly1305
+  - Added support for the following modes of operation:
+    - ChaCha20-Poly1305
+    - OCB3
 
 = Fixed bugs:
 

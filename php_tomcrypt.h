@@ -55,10 +55,12 @@
 #define PHP_TOMCRYPT_MODE_XTS       "xts"
 
 /* AEAD modes */
-#define PHP_TOMCRYPT_MODE_CCM       "ccm"
-#define PHP_TOMCRYPT_MODE_GCM       "gcm"
-#define PHP_TOMCRYPT_MODE_EAX       "eax"
-#define PHP_TOMCRYPT_MODE_OCB       "ocb"
+#define PHP_TOMCRYPT_MODE_CCM               "ccm"
+#define PHP_TOMCRYPT_MODE_GCM               "gcm"
+#define PHP_TOMCRYPT_MODE_EAX               "eax"
+#define PHP_TOMCRYPT_MODE_OCB               "ocb"
+#define PHP_TOMCRYPT_MODE_OCB3              "ocb3"
+#define PHP_TOMCRYPT_MODE_CHACHA20POLY1305  "chacha20poly1305"
 
 /* RNGs */
 #define PHP_TOMCRYPT_RNG_CHACHA20   "chacha20"

@@ -64,6 +64,9 @@ The following features are currently supported:
     - Blake2b
     - Blake2s
     - Poly1305
+  - Added support for the following modes of operation:
+    - ChaCha20-Poly1305
+    - OCB3
 
 = Fixed bugs:
 
