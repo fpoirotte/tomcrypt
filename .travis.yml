@@ -30,6 +30,7 @@ install:
     - ./configure
     - make
     - make install
+    - echo "extension=tomcrypt.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
 script:
-    - make test
+    - php run-tests.php -c /dev/null -d extension_dir=$(pwd)/modules -d extension=tomcrypt.so -q --show-diff
