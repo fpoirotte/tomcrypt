@@ -21,6 +21,7 @@
 
 #include "php.h"
 #include "SAPI.h"
+#include "ext/standard/file.h"
 
 #ifdef ZEND_ENGINE_3
 # include "ext/standard/php_smart_string.h"
