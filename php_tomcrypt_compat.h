@@ -55,6 +55,7 @@
 		dest = defval; \
 	zend_string_release(str); \
 }
+#define PLTC_REGISTER_STRING_CONSTANT(name, str, flags)  zend_register_string_constant((name), strlen(name), (str), (flags), module_number TSRMLS_CC)
 #else
 # define GET_OPT_STRING(arr, key, dest, destlen, defval) { \
 	zval **item; \
@@ -73,6 +74,7 @@
 	else \
 		dest = defval; \
 }
+#define PLTC_REGISTER_STRING_CONSTANT(name, str, flags)  zend_register_string_constant((name), strlen(name)+1, (str), (flags), module_number TSRMLS_CC)
 #endif
 
 #if (PHP_VERSION_ID >= 50000)

@@ -82,8 +82,8 @@ int init_prngs(int module_number TSRMLS_DC)
 	unsigned short i;
 
 	for (i = 0; php_tomcrypt_rngs[i].php_const != NULL; i++) {
-		zend_register_string_constant(php_tomcrypt_rngs[i].php_const, strlen(php_tomcrypt_rngs[i].php_const),
-			(char *) php_tomcrypt_rngs[i].php_value, CONST_PERSISTENT | CONST_CS, module_number TSRMLS_CC);
+	    PLTC_REGISTER_STRING_CONSTANT(php_tomcrypt_rngs[i].php_const,
+	        (char *) php_tomcrypt_rngs[i].php_value, CONST_PERSISTENT | CONST_CS);
 
 		if (php_tomcrypt_rngs[i].desc == NULL) {
 			continue;
