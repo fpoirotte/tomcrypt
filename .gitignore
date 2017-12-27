@@ -41,3 +41,8 @@ tests/*.out
 tests/*.exp
 tests/*.php
 tmp-php.ini
+
+# releases
+*.tar.gz
+*.tgz
+*.zip

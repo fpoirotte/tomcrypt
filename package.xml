@@ -8,15 +8,15 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
  <name>tomcrypt</name>
  <channel>pecl.php.net</channel>
  <summary>PHP bindings for libtomcrypt</summary>
- <description>The tomcrypt extension provides features similar
-to the old mcrypt extension, using libtomcrypt as its backend.
+ <description>The tomcrypt extension provides cryptographic functions
+similar to OpenSSL, using libtomcrypt as its backend.
 
 The following features are currently supported:
 
-* Encryption/decryption, using various ciphers &amp; operation modes,
+* Encryption/decryption algorithms, using various ciphers &amp; operation modes,
   including Authenticated Encryption with Associated Data (AEAD)
 * Hashing algorithms (MD5, SHA-1, SHA-256, etc.)
-* Several algorithms to generate authentication codes (MAC, HMAC, PMAC, etc.)
+* Several algorithms to generate authentication codes (CMAC, HMAC, PMAC, etc.)
 * (Pseudo-)Random Number Generators
 </description>
  <lead>
@@ -25,22 +25,23 @@ The following features are currently supported:
   <email>clicky@erebot.net</email>
   <active>yes</active>
  </lead>
- <date>2017-12-23</date>
- <time>19:05:00</time>
+ <date>2017-12-30</date>
+ <time>23:59:59</time>
  <version>
-  <release>0.2.4</release>
-  <api>0.2.4</api>
+  <release>0.3.0</release>
+  <api>0.3.0</api>
  </version>
  <stability>
   <release>beta</release>
   <api>stable</api>
  </stability>
  <license uri="http://www.php.net/license/3_01.txt">PHP</license>
- <notes>Sat, Dec 23, 2017 - tomcrypt 0.2.4
+ <notes>Sat, Dec 30, 2017 - tomcrypt 0.3.0
 
 + Changes:
 
-  - Removed buggy (incomplete) support for the Cipher Hash Construction
+  - Added support for LibTomCrypt v1.18
+  - Added support for pkg-config
   - Added support for the following Ciphers:
     - Camellia
   - Added support for the following Pseudo-Random Number Generators:
@@ -67,17 +68,58 @@ The following features are currently supported:
   - Added support for the following modes of operation:
     - ChaCha20-Poly1305
     - OCB3
+  - Splitted the code into various modules to make it easier to add support
+    for new algorithms in the future
 
 = Fixed bugs:
 
   - Fixed --with-tomcrypt=/custom/path not working properly
+  - Fixed the test vector used for several tests (XTEA, MULTI2, NOEKEON)
+
+- Removed features:
+
+  - Removed buggy (incomplete) support for the Cipher Hash Construction
+  - Removed the tomcrypt_cipher_name(), tomcrypt_hash_name() and
+    tomcrypt_rng_name() functions. They were pretty much useless
+    since you already had to know the object's name to call them.
+  - Removed buggy RC4 stream cipher implementation (a proper
+    implementation is now provided with LibTomCrypt v1.18+).
 </notes>
  <contents>
   <dir name="/">
-   <file name="LICENSE.txt" role="doc" />
-   <file name="config.m4" role="src" />
-   <file name="tomcrypt.c" role="src" />
-   <file name="php_tomcrypt.h" role="src" />
+   <file role="doc" name="LICENSE.txt"/>
+   <file role="src" name="config.m4"/>
+   <file role="src" name="config.w32"/>
+   <file role="src" name="tomcrypt.c"/>
+   <file role="src" name="tomcrypt_cipher.c"/>
+   <file role="src" name="tomcrypt_hash.c"/>
+   <file role="src" name="tomcrypt_mac.c"/>
+   <file role="src" name="tomcrypt_misc.c"/>
+   <file role="src" name="tomcrypt_mode.c"/>
+   <file role="src" name="tomcrypt_rng.c"/>
+   <file role="src" name="php_tomcrypt_cipher.h"/>
+   <file role="src" name="php_tomcrypt_compat.h"/>
+   <file role="src" name="php_tomcrypt_crypt.h"/>
+   <file role="src" name="php_tomcrypt_crypt_cbc.h"/>
+   <file role="src" name="php_tomcrypt_crypt_ccm.h"/>
+   <file role="src" name="php_tomcrypt_crypt_cfb.h"/>
+   <file role="src" name="php_tomcrypt_crypt_chacha20poly1305.h"/>
+   <file role="src" name="php_tomcrypt_crypt_ctr.h"/>
+   <file role="src" name="php_tomcrypt_crypt_eax.h"/>
+   <file role="src" name="php_tomcrypt_crypt_ecb.h"/>
+   <file role="src" name="php_tomcrypt_crypt_f8.h"/>
+   <file role="src" name="php_tomcrypt_crypt_gcm.h"/>
+   <file role="src" name="php_tomcrypt_crypt_lrw.h"/>
+   <file role="src" name="php_tomcrypt_crypt_ocb.h"/>
+   <file role="src" name="php_tomcrypt_crypt_ocb3.h"/>
+   <file role="src" name="php_tomcrypt_crypt_ofb.h"/>
+   <file role="src" name="php_tomcrypt_crypt_xts.h"/>
+   <file role="src" name="php_tomcrypt.h"/>
+   <file role="src" name="php_tomcrypt_hash.h"/>
+   <file role="src" name="php_tomcrypt_mac.h"/>
+   <file role="src" name="php_tomcrypt_mode.h"/>
+   <file role="src" name="php_tomcrypt_rng.h"/>
+   <file role="src" name="php_tomcrypt_utils.h"/>
   </dir>
  </contents>
  <dependencies>

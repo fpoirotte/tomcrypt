@@ -1,7 +1,5 @@
 Re-add support for Cipher Hash Construction (CHC)
 
-Add support for the OCB3 mode
-
 Add support for stream ciphers :
 * ChaCha20
 * RC4
