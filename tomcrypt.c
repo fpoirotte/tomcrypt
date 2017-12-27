@@ -218,11 +218,11 @@ PHP_MINIT_FUNCTION(tomcrypt)
 
     /* Initialize the various components.
        PRNGs must be initialized last due to dependencies. */
-	if (init_ciphers(module_number) != 0 ||
-		init_hashes(module_number) != 0 ||
-		init_macs(module_number) != 0 ||
-		init_modes(module_number) != 0 ||
-		init_prngs(module_number) != 0) {
+	if (init_ciphers(module_number TSRMLS_CC) != 0 ||
+		init_hashes(module_number TSRMLS_CC) != 0 ||
+		init_macs(module_number TSRMLS_CC) != 0 ||
+		init_modes(module_number TSRMLS_CC) != 0 ||
+		init_prngs(module_numberTSRMLS_CC) != 0) {
 		return FAILURE;
 	}
 

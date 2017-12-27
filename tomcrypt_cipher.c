@@ -179,7 +179,7 @@
 	} \
 	REGISTER_STRING_CONSTANT("TOMCRYPT_CIPHER_" # cname, PHP_TOMCRYPT_CIPHER_ ## cname, CONST_PERSISTENT | CONST_CS);
 
-int init_ciphers(int module_number)
+int init_ciphers(int module_number TSRMLS_DC)
 {
 	TOMCRYPT_DEFINE_CIPHER(3DES);
 	TOMCRYPT_DEFINE_CIPHER(AES);

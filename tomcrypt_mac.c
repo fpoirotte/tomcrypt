@@ -170,7 +170,7 @@ static struct {
 };
 
 
-int init_macs(int module_number)
+int init_macs(int module_number TSRMLS_DC)
 {
 	TOMCRYPT_DEFINE_MAC(BLAKE2B);
 	TOMCRYPT_DEFINE_MAC(BLAKE2S);

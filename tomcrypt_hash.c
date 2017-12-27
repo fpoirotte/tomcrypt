@@ -160,7 +160,7 @@
 	} \
 	REGISTER_STRING_CONSTANT("TOMCRYPT_HASH_" # alg, PHP_TOMCRYPT_HASH_ ## alg, CONST_PERSISTENT | CONST_CS);
 
-int init_hashes(int module_number)
+int init_hashes(int module_number TSRMLS_DC)
 {
 	TOMCRYPT_DEFINE_HASH(BLAKE2B_160);
 	TOMCRYPT_DEFINE_HASH(BLAKE2B_256);
