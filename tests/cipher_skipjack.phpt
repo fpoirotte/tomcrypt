@@ -3,15 +3,12 @@ tomcrypt - SKIPJACK cipher
 --SKIPIF--
 <?php
     if (!extension_loaded("tomcrypt")) print "skip extension not loaded";
-    if (!defined('TOMCRYPT_CIPHER_SKIPJACK')) print "skip cipher not available";
-    if (!defined('TOMCRYPT_MODE_ECB')) print "skip mode not available";
 ?>
 --FILE--
 <?php
     $cipher = TOMCRYPT_CIPHER_SKIPJACK;
     var_dump(
         in_array($cipher, tomcrypt_list_ciphers()),
-        tomcrypt_cipher_name($cipher),
         tomcrypt_cipher_block_size($cipher),
         tomcrypt_cipher_min_key_size($cipher),
         tomcrypt_cipher_max_key_size($cipher),
@@ -30,7 +27,6 @@ tomcrypt - SKIPJACK cipher
 ?>
 --EXPECT--
 bool(true)
-string(8) "skipjack"
 int(8)
 int(10)
 int(10)

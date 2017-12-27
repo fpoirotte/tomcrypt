@@ -3,8 +3,6 @@ tomcrypt - NOEKEON cipher
 --SKIPIF--
 <?php
     if (!extension_loaded("tomcrypt")) print "skip extension not loaded";
-    if (!defined('TOMCRYPT_CIPHER_NOEKEON')) print "skip cipher not available";
-    if (!defined('TOMCRYPT_MODE_ECB')) print "skip mode not available";
 ?>
 --XFAIL--
 libtomcrypt's implementation does not match the NESSIE submission
@@ -13,7 +11,6 @@ libtomcrypt's implementation does not match the NESSIE submission
     $cipher = TOMCRYPT_CIPHER_NOEKEON;
     var_dump(
         in_array($cipher, tomcrypt_list_ciphers()),
-        tomcrypt_cipher_name($cipher),
         tomcrypt_cipher_block_size($cipher),
         tomcrypt_cipher_min_key_size($cipher),
         tomcrypt_cipher_max_key_size($cipher),
@@ -31,7 +28,6 @@ libtomcrypt's implementation does not match the NESSIE submission
 ?>
 --EXPECT--
 bool(true)
-string(7) "noekeon"
 int(16)
 int(16)
 int(16)

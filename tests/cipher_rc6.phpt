@@ -3,15 +3,12 @@ tomcrypt - RC6 cipher
 --SKIPIF--
 <?php
     if (!extension_loaded("tomcrypt")) print "skip extension not loaded";
-    if (!defined('TOMCRYPT_CIPHER_RC6')) print "skip cipher not available";
-    if (!defined('TOMCRYPT_MODE_ECB')) print "skip mode not available";
 ?>
 --FILE--
 <?php
     $cipher = TOMCRYPT_CIPHER_RC6;
     var_dump(
         in_array($cipher, tomcrypt_list_ciphers()),
-        tomcrypt_cipher_name($cipher),
         tomcrypt_cipher_block_size($cipher),
         tomcrypt_cipher_min_key_size($cipher),
         tomcrypt_cipher_max_key_size($cipher),
@@ -29,7 +26,6 @@ tomcrypt - RC6 cipher
 ?>
 --EXPECT--
 bool(true)
-string(3) "rc6"
 int(16)
 int(8)
 int(128)
