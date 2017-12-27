@@ -10,7 +10,7 @@ tomcrypt - XTEA cipher
         // In LibTomCrypt <= 1.17, the implementation was broken.
         $hash = "2526d5df8f9a228cf20ba90982aed4a5e951ac5f";
         print "skip XTEA is broken in this version of LibTomCrypt " .
-            "(see https://github.com/libtom/libtomcrypt/commit/$hash)"
+            "(see https://github.com/libtom/libtomcrypt/commit/$hash)";
     }
 ?>
 --FILE--
