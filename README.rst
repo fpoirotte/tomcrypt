@@ -11,11 +11,11 @@ I made this extension for two reasons:
 
 *   First, I wanted to learn how to write a PHP extension.
 
-*   Secondly, there has been discussion recently on the ``php.internals``
-    mailing list to remove the bundled ``mcrypt`` extension from PHP 7.0+.
+*   The ``mcrypt`` extension was deprecated in PHP 7.0-7.1 and it has been
+    completely removed from PHP 7.2.
 
-    While I agree with the rationale behind that discussion (libmcrypt
-    seems to have been abandoned since a few years), I also needed a
+    While I agree with the rationale behind that decision
+    (libmcrypt has not been maintained since 2007), I also needed a
     replacement for some of my own projects. Therefore, I decided to
     look for a crypto library with:
 
@@ -70,6 +70,7 @@ This extension also provides constants which can be used to refer to the various
 *   ``TOMCRYPT_CIPHER_AES``
 *   ``TOMCRYPT_CIPHER_ANUBIS``
 *   ``TOMCRYPT_CIPHER_BLOWFISH``
+*   ``TOMCRYPT_CIPHER_CAMELLIA``
 *   ``TOMCRYPT_CIPHER_CAST5``
 *   ``TOMCRYPT_CIPHER_DES``
 *   ``TOMCRYPT_CIPHER_KASUMI``
@@ -99,6 +100,7 @@ The following constants are also provided:
 * ``TOMCRYPT_MODE_CBC``
 * ``TOMCRYPT_MODE_CCM``
 * ``TOMCRYPT_MODE_CFB``
+* ``TOMCRYPT_MODE_CHACHA20POLY1305``
 * ``TOMCRYPT_MODE_CTR``
 * ``TOMCRYPT_MODE_EAX``
 * ``TOMCRYPT_MODE_ECB``
@@ -106,6 +108,7 @@ The following constants are also provided:
 * ``TOMCRYPT_MODE_GCM``
 * ``TOMCRYPT_MODE_LRW``
 * ``TOMCRYPT_MODE_OCB``
+* ``TOMCRYPT_MODE_OCB3``
 * ``TOMCRYPT_MODE_OFB``
 * ``TOMCRYPT_MODE_XTS``
 
@@ -152,7 +155,14 @@ Use ``tomcrypt_list_hashes()`` to get a list of supported hashing algorithms.
 Like with ciphers, several constants are provided to refer to the various
 known hashing algorithms:
 
-*   ``TOMCRYPT_HASH_CHC``
+*   ``TOMCRYPT_HASH_BLAKE2B_160``
+*   ``TOMCRYPT_HASH_BLAKE2B_256``
+*   ``TOMCRYPT_HASH_BLAKE2B_384``
+*   ``TOMCRYPT_HASH_BLAKE2B_512``
+*   ``TOMCRYPT_HASH_BLAKE2S_128``
+*   ``TOMCRYPT_HASH_BLAKE2S_160``
+*   ``TOMCRYPT_HASH_BLAKE2S_224``
+*   ``TOMCRYPT_HASH_BLAKE2S_256``
 *   ``TOMCRYPT_HASH_MD2``
 *   ``TOMCRYPT_HASH_MD4``
 *   ``TOMCRYPT_HASH_MD5``
@@ -200,17 +210,23 @@ using the following code:
 Use ``tomcrypt_list_macs()`` for a list of MAC algorithms supported by your
 platform. The following constants are also provided:
 
+*   ``TOMCRYPT_MAC_BLAKE2B``
+*   ``TOMCRYPT_MAC_BLAKE2S``
 *   ``TOMCRYPT_MAC_CMAC``
 *   ``TOMCRYPT_MAC_F9``
 *   ``TOMCRYPT_MAC_HMAC``
 *   ``TOMCRYPT_MAC_PELICAN``
 *   ``TOMCRYPT_MAC_PMAC``
+*   ``TOMCRYPT_MAC_POLY1305``
 *   ``TOMCRYPT_MAC_XCBC``
 
-Each of these MAC algorithms requires an additional algorithm to be given:
+Most of these MAC algorithms require an additional algorithm to be given:
 
-*   Either an hashing algorithm (when using ``TOMCRYPT_MAC_HMAC``)
-*   Or a cipher algorithm (when using any other MAC algorithm)
+*   ``TOMCRYPT_MAC_BLAKE2B``, ``TOMCRYPT_MAC_BLAKE2S`` and
+    ``TOMCRYPT_MAC_POLY1305``: no additional algorithm is necessary
+    (i.e. you may pass ``null`` instead of an algorithm)
+*   ``TOMCRYPT_MAC_HMAC``: some hashing algorithm must be passed
+*   other MAC algorithms: a cipher must be passed
 
 Please refer to the documentation on `Encryption`_ and `Hashing`_ for more
 information about supported algorithms.
@@ -232,8 +248,9 @@ The following code can be used to generate (pseudo-)random number generators:
         $random = tomcrypt_rng_get_bytes(42, TOMCRYPT_RNG_SECURE);
     ?>
 
-Various types of (pseudo-)random number generators are available:
+Various algorithms of (pseudo-)random number generators are available:
 
+*   ``TOMCRYPT_RNG_CHACHA20``
 *   ``TOMCRYPT_RNG_FORTUNA``
 *   ``TOMCRYPT_RNG_RC4``
 *   ``TOMCRYPT_RNG_SECURE``
@@ -253,8 +270,8 @@ The extension should compile and run just fine under Windows.
 Unfortunately, I do not have access to Windows development tools
 and cannot compile a binary release for Windows users.
 
-If you manage to compile the extension on Windows, please let me know through
-`GitHub's issue tracker <https://github.com/fpoirotte/tomcrypt/issues>`.
+If you manage to compile the extension on Windows, please let us know through
+`our issue tracker <https://github.com/fpoirotte/tomcrypt/issues>`.
 
 License
 -------
