@@ -19,6 +19,8 @@
 #ifndef PHP_TOMCRYPT_CIPHER_H
 #define PHP_TOMCRYPT_CIPHER_H
 
+#include "php_tomcrypt_compat.h"
+
 #define PHP_TOMCRYPT_CIPHER_3DES        "3des"
 #define PHP_TOMCRYPT_CIPHER_AES         "aes"
 #define PHP_TOMCRYPT_CIPHER_ANUBIS      "anubis"
@@ -49,6 +51,6 @@
 #define PHP_TOMCRYPT_CIPHER_TWOFISH     "twofish"
 #define PHP_TOMCRYPT_CIPHER_XTEA        "xtea"
 
-int init_ciphers(int module_number);
+int init_ciphers(int module_number TSRMLS_DC);
 
 #endif /* PHP_TOMCRYPT_CIPHER_H */

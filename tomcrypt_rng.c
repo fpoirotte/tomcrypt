@@ -17,7 +17,6 @@
 */
 
 #include <tomcrypt.h>
-#include "php_tomcrypt_compat.h"
 #include "php_tomcrypt_rng.h"
 
 #ifdef LTC_CHACHA20_PRNG

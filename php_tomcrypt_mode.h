@@ -19,6 +19,8 @@
 #ifndef PHP_TOMCRYPT_MODE_H
 #define PHP_TOMCRYPT_MODE_H
 
+#include "php_tomcrypt_compat.h"
+
 #define PHP_TOMCRYPT_MODE_CBC               "cbc"
 #define PHP_TOMCRYPT_MODE_CCM               "ccm"
 #define PHP_TOMCRYPT_MODE_CFB               "cfb"
@@ -34,6 +36,6 @@
 #define PHP_TOMCRYPT_MODE_OFB               "ofb"
 #define PHP_TOMCRYPT_MODE_XTS               "xts"
 
-int init_modes(int module_number);
+int init_modes(int module_number TSRMLS_DC);
 
 #endif /* PHP_TOMCRYPT_MODE_H */

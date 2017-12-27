@@ -19,6 +19,8 @@
 #ifndef PHP_TOMCRYPT_HASH_H
 #define PHP_TOMCRYPT_HASH_H
 
+#include "php_tomcrypt_compat.h"
+
 #define PHP_TOMCRYPT_HASH_BLAKE2B_160   "blake2b-160"
 #define PHP_TOMCRYPT_HASH_BLAKE2B_256   "blake2b-256"
 #define PHP_TOMCRYPT_HASH_BLAKE2B_384   "blake2b-384"
@@ -48,6 +50,6 @@
 #define PHP_TOMCRYPT_HASH_TIGER         "tiger"
 #define PHP_TOMCRYPT_HASH_WHIRLPOOL     "whirlpool"
 
-int init_hashes(int module_number);
+int init_hashes(int module_number TSRMLS_DC);
 
 #endif /* PHP_TOMCRYPT_HASH_H */

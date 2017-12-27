@@ -17,7 +17,6 @@
 */
 
 #include <tomcrypt.h>
-#include "php_tomcrypt_compat.h"
 #include "php_tomcrypt_mac.h"
 #include "php_tomcrypt_utils.h"
 
