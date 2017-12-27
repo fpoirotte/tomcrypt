@@ -29,9 +29,9 @@ libtool
 # make
 .libs/
 modules/
-tomcrypt.la
-tomcrypt.lo
-tomcrypt.loT
+*.la
+*.lo
+*.loT
 
 # make test
 tests/*.sh
