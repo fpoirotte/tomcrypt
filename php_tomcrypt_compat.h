@@ -19,6 +19,10 @@
 #ifndef PHP_TOMCRYPT_COMPAT_H
 #define PHP_TOMCRYPT_COMPAT_H
 
+#ifdef ZTS
+#include "TSRM.h"
+#endif
+
 #include "php.h"
 #include "SAPI.h"
 #include "ext/standard/file.h"

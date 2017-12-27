@@ -222,7 +222,7 @@ PHP_MINIT_FUNCTION(tomcrypt)
 		init_hashes(module_number TSRMLS_CC) != 0 ||
 		init_macs(module_number TSRMLS_CC) != 0 ||
 		init_modes(module_number TSRMLS_CC) != 0 ||
-		init_prngs(module_numberTSRMLS_CC) != 0) {
+		init_prngs(module_number TSRMLS_CC) != 0) {
 		return FAILURE;
 	}
 
