@@ -3,23 +3,26 @@ tomcrypt - XTEA cipher
 --SKIPIF--
 <?php
     if (!extension_loaded("tomcrypt")) print "skip extension not loaded";
-    if (!defined('TOMCRYPT_CIPHER_XTEA')) print "skip cipher not available";
-    if (!defined('TOMCRYPT_MODE_ECB')) print "skip mode not available";
+    elseif (version_compare(LIBTOMCRYPT_VERSION_TEXT, '1.18', '<')) {
+        // In LibTomCrypt <= 1.17, the result is returned
+        // using the wrong endianness.
+        $hash = "2526d5df8f9a228cf20ba90982aed4a5e951ac5f";
+        print "XTEA is broken in this version of LibTomCrypt " .
+               "(see https://github.com/libtom/libtomcrypt/commit/$hash)"
+    }
 ?>
 --FILE--
 <?php
     $cipher = TOMCRYPT_CIPHER_XTEA;
     var_dump(
         in_array($cipher, tomcrypt_list_ciphers()),
-        tomcrypt_cipher_name($cipher),
         tomcrypt_cipher_block_size($cipher),
         tomcrypt_cipher_min_key_size($cipher),
         tomcrypt_cipher_max_key_size($cipher),
         tomcrypt_cipher_default_rounds($cipher)
     );
 
-    // Test vectors from http://forums.phpfreaks.com/topic/262043-xtea-encryptiondecryption/?p=1342856
-    // Note: libtomcrypt uses native-endianness while the above uses big-endian.
+    // Test vector from http://forums.phpfreaks.com/topic/262043-xtea/?p=1342856
     $pt     = "\x41\x41\x41\x41\x41\x41\x41\x41";
     $key    = "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
     $ct     = tomcrypt_cipher_encrypt($cipher, $key, $pt, TOMCRYPT_MODE_ECB);
@@ -30,11 +33,10 @@ tomcrypt - XTEA cipher
 ?>
 --EXPECT--
 bool(true)
-string(4) "xtea"
 int(8)
 int(16)
 int(16)
 int(32)
-string(16) "5a3723ed2d8c1a82"
+string(16) "ed23375a821a8c2d"
 bool(true)
 
