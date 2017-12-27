@@ -4,8 +4,7 @@ tomcrypt - XTEA cipher
 <?php
     if (!extension_loaded("tomcrypt")) print "skip extension not loaded";
     elseif (version_compare(LIBTOMCRYPT_VERSION_TEXT, '1.18', '<')) {
-        // In LibTomCrypt <= 1.17, the result is returned
-        // using the wrong endianness.
+        // In LibTomCrypt <= 1.17, the implementation was broken.
         $hash = "2526d5df8f9a228cf20ba90982aed4a5e951ac5f";
         print "XTEA is broken in this version of LibTomCrypt " .
                "(see https://github.com/libtom/libtomcrypt/commit/$hash)"

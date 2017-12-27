@@ -3,6 +3,12 @@ tomcrypt - MULTI2 cipher
 --SKIPIF--
 <?php
     if (!extension_loaded("tomcrypt")) print "skip extension not loaded";
+    elseif (version_compare(LIBTOMCRYPT_VERSION_TEXT, '1.18', '<')) {
+        // In LibTomCrypt <= 1.17, the implementation was broken.
+        $hash = "21ddcf35681916c091ae91e7e8e5bd6bdf8ab51d";
+        print "Multi2 is broken in this version of LibTomCrypt " .
+               "(see https://github.com/libtom/libtomcrypt/commit/$hash)"
+    }
 ?>
 --FILE--
 <?php
