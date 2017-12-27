@@ -2,19 +2,21 @@
 tomcrypt - MULTI2 cipher
 --SKIPIF--
 <?php
-    if (!extension_loaded("tomcrypt")) print "skip extension not loaded";
-    elseif (version_compare(LIBTOMCRYPT_VERSION_TEXT, '1.18', '<')) {
+    if (!extension_loaded("tomcrypt")) {
+        die "skip extension not loaded";
+    } elseif (!in_array(TOMCRYPT_CIPHER_MULTI2, tomcrypt_list_ciphers())) {
+        die "cipher not available";
+    } elseif (version_compare(LIBTOMCRYPT_VERSION_TEXT, '1.18', '<')) {
         // In LibTomCrypt <= 1.17, the implementation was broken.
         $hash = "21ddcf35681916c091ae91e7e8e5bd6bdf8ab51d";
-        print "Multi2 is broken in this version of LibTomCrypt " .
-               "(see https://github.com/libtom/libtomcrypt/commit/$hash)"
+        die "Multi2 is broken in this version of LibTomCrypt " .
+            "(see https://github.com/libtom/libtomcrypt/commit/$hash)";
     }
 ?>
 --FILE--
 <?php
     $cipher = TOMCRYPT_CIPHER_MULTI2;
     var_dump(
-        in_array($cipher, tomcrypt_list_ciphers()),
         tomcrypt_cipher_block_size($cipher),
         tomcrypt_cipher_min_key_size($cipher),
         tomcrypt_cipher_max_key_size($cipher),
@@ -31,7 +33,6 @@ tomcrypt - MULTI2 cipher
     var_dump($pt === $pt2);
 ?>
 --EXPECT--
-bool(true)
 int(8)
 int(40)
 int(40)

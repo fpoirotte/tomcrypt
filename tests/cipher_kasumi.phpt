@@ -2,13 +2,16 @@
 tomcrypt - KASUMI cipher
 --SKIPIF--
 <?php
-    if (!extension_loaded("tomcrypt")) print "skip extension not loaded";
+    if (!extension_loaded("tomcrypt")) {
+        die "skip extension not loaded";
+    } elseif (!in_array(TOMCRYPT_CIPHER_KASUMI, tomcrypt_list_ciphers())) {
+        die "cipher not available";
+    }
 ?>
 --FILE--
 <?php
     $cipher = TOMCRYPT_CIPHER_KASUMI;
     var_dump(
-        in_array($cipher, tomcrypt_list_ciphers()),
         tomcrypt_cipher_block_size($cipher),
         tomcrypt_cipher_min_key_size($cipher),
         tomcrypt_cipher_max_key_size($cipher),
@@ -25,7 +28,6 @@ tomcrypt - KASUMI cipher
     var_dump($pt === $pt2);
 ?>
 --EXPECT--
-bool(true)
 int(8)
 int(16)
 int(16)
