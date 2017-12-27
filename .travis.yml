@@ -29,7 +29,7 @@ install:
     - phpize
     - ./configure
     - make
+    - make install
 
 script:
-    - php -c /dev/null -d extension_dir=./modules -d extension=tomcrypt.so -r 'var_dump("modes:", tomcrypt_list_modes(), "ciphers:", tomcrypt_list_ciphers(), "hashes:", tomcrypt_list_hashes(), "MACs:", tomcrypt_list_macs(), "RNGs:", tomcrypt_list_rngs());'
-    - php -c /dev/null -d extension_dir=./modules -d extension=tomcrypt.so run-tests.php -c /dev/null -d extension_dir=./modules -d extension=tomcrypt.so -q --show-diff
+    - make test
