@@ -23,6 +23,7 @@ before_install:
     - export TEST_PHP_EXECUTABLE=`which php`
     - export TEST_PHP_SRCDIR=`pwd`
     - export REPORT_EXIT_STATUS=1
+    - export NO_INTERACTION=1
 
 install:
     - phpize
@@ -30,4 +31,4 @@ install:
     - make
 
 script:
-    - php -c /dev/null -d extension_dir=./modules -d extension=tomcrypt.so run-tests.php -c /dev/null -d extension_dir=./modules -d extension=tomcrypt.so -q
+    - php -c /dev/null -d extension_dir=./modules -d extension=tomcrypt.so run-tests.php -c /dev/null -d extension_dir=./modules -d extension=tomcrypt.so -q --show-diff
