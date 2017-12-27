@@ -3,13 +3,13 @@ tomcrypt - Camellia cipher
 --SKIPIF--
 <?php
     if (!extension_loaded("tomcrypt")) {
-        die "skip extension not loaded";
+        print "skip extension not loaded";
     } elseif (!in_array(TOMCRYPT_CIPHER_NOEKEON, tomcrypt_list_ciphers())) {
-        die "cipher not available";
+        print "skip cipher not available";
     } elseif (version_compare(LIBTOMCRYPT_VERSION_TEXT, '1.18', '<')) {
         // In LibTomCrypt <= 1.17, the implementation was broken.
         $hash = "45dcbc654d5867bb5ee475b9b1be0b2c3959d0de";
-        die "Camellia is broken in this version of LibTomCrypt " .
+        print "skip Camellia is broken in this version of LibTomCrypt " .
             "(see https://github.com/libtom/libtomcrypt/commit/$hash)";
     }
 ?>

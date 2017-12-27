@@ -3,9 +3,9 @@ tomcrypt - SAFER128 cipher
 --SKIPIF--
 <?php
     if (!extension_loaded("tomcrypt")) {
-        die "skip extension not loaded";
+        print "skip extension not loaded";
     } elseif (!in_array(TOMCRYPT_CIPHER_SAFERSK128, tomcrypt_list_ciphers())) {
-        die "cipher not available";
+        print "skip cipher not available";
     }
 ?>
 --XFAIL--
