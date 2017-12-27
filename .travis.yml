@@ -31,4 +31,5 @@ install:
     - make
 
 script:
+    - php -c /dev/null -d extension_dir=./modules -d extension=tomcrypt.so --re tomcrypt
     - php -c /dev/null -d extension_dir=./modules -d extension=tomcrypt.so run-tests.php -c /dev/null -d extension_dir=./modules -d extension=tomcrypt.so -q --show-diff
