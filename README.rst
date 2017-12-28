@@ -281,7 +281,7 @@ public domain / `WTFPL <http://sam.zoy.org/wtfpl/>`_ license.
 php_tomcrypt is released under version 3.01 of the
 `PHP <http://www.php.net/license/3_01.txt>`_ license.
 
-..  |badges-travis| image:: https://travis-ci.org/fpoirotte/tomcrypt.svg
+..  |badge-travis| image:: https://travis-ci.org/fpoirotte/tomcrypt.svg
     :alt: Travis-CI (unknown)
     :target: http://travis-ci.org/fpoirotte/tomcrypt
 
