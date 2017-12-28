@@ -18,6 +18,7 @@ static void php_tomcrypt_xcrypt_xts(PLTC_CRYPT_PARAM)
 
 	if (key2_len != key_len) {
 		efree(output);
+		TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid length for key2 (%d), expected %d", key2_len, key_len);
 		RETURN_FALSE;
 	}
@@ -25,6 +26,7 @@ static void php_tomcrypt_xcrypt_xts(PLTC_CRYPT_PARAM)
 	/* XTS uses a fixed-length tweak value. */
 	if (tweak_len != 16) {
 		efree(output);
+		TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid tweak size (%d), expected %d",	tweak_len, 16);
 		RETURN_FALSE;
 	}
@@ -49,6 +51,7 @@ static void php_tomcrypt_xcrypt_xts(PLTC_CRYPT_PARAM)
 
 error:
 	efree(output);
+	TOMCRYPT_G(last_error) = err;
 	php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
 	RETURN_FALSE;
 #endif

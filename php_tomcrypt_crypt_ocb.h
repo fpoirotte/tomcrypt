@@ -17,6 +17,7 @@ static void php_tomcrypt_xcrypt_ocb(PLTC_CRYPT_PARAM)
 
 	if (nonce_len != cipher_descriptor[cipher].block_length) {
 		efree(output);
+		TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid nonce size (%d), expected %d", nonce_len, cipher_descriptor[cipher].block_length);
 		RETURN_FALSE;
 	}
@@ -25,6 +26,7 @@ static void php_tomcrypt_xcrypt_ocb(PLTC_CRYPT_PARAM)
 		if ((err = ocb_encrypt_authenticate_memory(cipher, key, key_len, nonce,
 		    input, input_len, output, out_tag, &out_tag_len)) != CRYPT_OK) {
 		    efree(output);
+			TOMCRYPT_G(last_error) = err;
 		    php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
 		    RETURN_FALSE;
 	    }
@@ -38,6 +40,7 @@ static void php_tomcrypt_xcrypt_ocb(PLTC_CRYPT_PARAM)
 		if ((err = ocb_decrypt_verify_memory(cipher, key, key_len, nonce,
 			input, input_len, output, in_tag, (unsigned long) in_tag_len, &res)) != CRYPT_OK) {
 			efree(output);
+			TOMCRYPT_G(last_error) = err;
 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
 			RETURN_FALSE;
 		}
@@ -45,6 +48,7 @@ static void php_tomcrypt_xcrypt_ocb(PLTC_CRYPT_PARAM)
 	    /* Tag verification failed. */
 		if (res != 1) {
 			efree(output);
+			TOMCRYPT_G(last_error) = CRYPT_ERROR;
 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "Tag verification failed");
 			RETURN_FALSE;
 		}

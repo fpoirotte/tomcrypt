@@ -220,19 +220,20 @@ static void php_tomcrypt_do_mac(INTERNAL_FUNCTION_PARAMETERS, int isfilename)
 	}
 
 	if (index == -1) {
+		TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unknown MAC algorithm: %s", algo);
 		RETURN_FALSE;
 	}
 
 	if (php_tomcrypt_mac_descriptors[index].find != NULL &&
 	    (i = php_tomcrypt_mac_descriptors[index].find(cipher_hash)) == -1) {
+		TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unknown cipher/hash: %s", cipher_hash);
 		RETURN_FALSE;
 	}
 
 	if ((err = php_tomcrypt_mac_descriptors[index].init(&state, i, key, key_len)) != CRYPT_OK) {
-		php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
-		RETURN_FALSE;
+		goto error;
 	}
 
 	if (isfilename) {
@@ -251,21 +252,18 @@ static void php_tomcrypt_do_mac(INTERNAL_FUNCTION_PARAMETERS, int isfilename)
 
 		while ((n = php_stream_read(stream, buf, sizeof(buf))) > 0) {
 			if ((err = php_tomcrypt_mac_descriptors[index].process(&state, (unsigned char *) buf, n)) != CRYPT_OK) {
-				php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
-				RETURN_FALSE;
+				goto error;
 			}
 		}
 		php_stream_close(stream);
 	} else {
 		if ((err = php_tomcrypt_mac_descriptors[index].process(&state, data, data_len)) != CRYPT_OK) {
-			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
-			RETURN_FALSE;
+			goto error;
 		}
 	}
 
 	if ((err = php_tomcrypt_mac_descriptors[index].done(&state, mac, &macsize)) != CRYPT_OK) {
-		php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
-		RETURN_FALSE;
+		goto error;
 	}
 
 	mac[macsize] = '\0';
@@ -279,6 +277,11 @@ static void php_tomcrypt_do_mac(INTERNAL_FUNCTION_PARAMETERS, int isfilename)
 		hex_digest[2 * macsize] = '\0';
 		PLTC_RETURN_STRINGL(hex_digest, 2 * macsize, 0);
 	}
+
+error:
+	TOMCRYPT_G(last_error) = err;
+	php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
+	RETURN_FALSE;
 }
 /* }}} */
 

@@ -220,6 +220,7 @@ static void php_tomcrypt_do_hash(INTERNAL_FUNCTION_PARAMETERS, int isfilename) /
 	}
 
 	if ((index = find_hash(algo)) == -1) {
+		TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unknown hashing algorithm: %s", algo);
 		RETURN_FALSE;
 	}
@@ -241,6 +242,7 @@ static void php_tomcrypt_do_hash(INTERNAL_FUNCTION_PARAMETERS, int isfilename) /
 
 		while ((n = php_stream_read(stream, buf, sizeof(buf))) > 0) {
 			if ((err = hash_descriptor[index].process(&md, (unsigned char *) buf, n)) != CRYPT_OK) {
+				TOMCRYPT_G(last_error) = err;
 				php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
 				RETURN_FALSE;
 			}
@@ -248,6 +250,7 @@ static void php_tomcrypt_do_hash(INTERNAL_FUNCTION_PARAMETERS, int isfilename) /
 		php_stream_close(stream);
 	} else {
 		if ((err = hash_descriptor[index].process(&md, data, data_len)) != CRYPT_OK) {
+			TOMCRYPT_G(last_error) = err;
 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
 			RETURN_FALSE;
 		}
@@ -282,6 +285,7 @@ PHP_FUNCTION(tomcrypt_hash_block_size)
 	}
 
 	if ((index = find_hash(algo)) == -1) {
+		TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unknown hashing algorithm: %s", algo);
 		RETURN_FALSE;
 	}
@@ -304,6 +308,7 @@ PHP_FUNCTION(tomcrypt_hash_digest_size)
 	}
 
 	if ((index = find_hash(algo)) == -1) {
+		TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unknown hashing algorithm: %s", algo);
 		RETURN_FALSE;
 	}

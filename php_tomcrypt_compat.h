@@ -126,4 +126,17 @@ typedef int         pltc_size;
     return;                               \
 }
 
+/* Module globals */
+ZEND_BEGIN_MODULE_GLOBALS(tomcrypt)
+        int last_error;
+ZEND_END_MODULE_GLOBALS(tomcrypt)
+ZEND_EXTERN_MODULE_GLOBALS(tomcrypt)
+
+
+#ifdef ZTS
+# define TOMCRYPT_G(v) TSRMG(tomcrypt_globals_id, zend_tomcrypt_globals *, v)
+#else
+# define TOMCRYPT_G(v)     (tomcrypt_globals.v)
+#endif
+
 #endif /* PHP_TOMCRYPT_COMPAT_H */

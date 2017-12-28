@@ -17,6 +17,7 @@ static void php_tomcrypt_xcrypt_ofb(PLTC_CRYPT_PARAM)
 
 	if (iv_len != cipher_descriptor[cipher].block_length) {
 		efree(output);
+		TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid iv size (%d), expected %d", iv_len, cipher_descriptor[cipher].block_length);
 		RETURN_FALSE;
 	}
@@ -42,6 +43,7 @@ static void php_tomcrypt_xcrypt_ofb(PLTC_CRYPT_PARAM)
 
 error:
 	efree(output);
+	TOMCRYPT_G(last_error) = err;
 	php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
 	RETURN_FALSE;
 #endif

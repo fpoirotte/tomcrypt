@@ -70,6 +70,9 @@ The following features are currently supported:
     - OCB3
   - Splitted the code into various modules to make it easier to add support
     for new algorithms in the future
+  - Renamed tomcrypt_strerror() into tomcrypt_error() and added tomcrypt_errno()
+    to retrieve the error number for the last LibTomCrypt function that failed,
+    making tomcrypt_error() actually useful.
 
 = Fixed bugs:
 

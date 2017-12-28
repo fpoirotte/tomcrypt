@@ -237,6 +237,7 @@ PHP_FUNCTION(tomcrypt_cipher_block_size)
 	}
 
 	if ((index = find_cipher(cipher)) == -1) {
+		TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unknown cipher: %s", cipher);
 		RETURN_FALSE;
 	}
@@ -260,6 +261,7 @@ PHP_FUNCTION(tomcrypt_cipher_adapt_key_size)
 	}
 
 	if ((index = find_cipher(cipher)) == -1) {
+		TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unknown cipher: %s", cipher);
 		RETURN_FALSE;
 	}
@@ -268,6 +270,7 @@ PHP_FUNCTION(tomcrypt_cipher_adapt_key_size)
 	size = (keysize < 0 || keysize >= 0xFFFFFFFF) ? 0 : (int) keysize;
 
 	if ((err = cipher_descriptor[index].keysize(&size)) != CRYPT_OK) {
+		TOMCRYPT_G(last_error) = err;
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
 		RETURN_FALSE;
 	}
@@ -290,6 +293,7 @@ PHP_FUNCTION(tomcrypt_cipher_min_key_size)
 	}
 
 	if ((index = find_cipher(cipher)) == -1) {
+		TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unknown cipher: %s", cipher);
 		RETURN_FALSE;
 	}
@@ -312,6 +316,7 @@ PHP_FUNCTION(tomcrypt_cipher_max_key_size)
 	}
 
 	if ((index = find_cipher(cipher)) == -1) {
+		TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unknown cipher: %s", cipher);
 		RETURN_FALSE;
 	}
@@ -334,6 +339,7 @@ PHP_FUNCTION(tomcrypt_cipher_default_rounds)
 	}
 
 	if ((index = find_cipher(cipher)) == -1) {
+		TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unknown cipher: %s", cipher);
 		RETURN_FALSE;
 	}
@@ -360,6 +366,7 @@ static void php_tomcrypt_do_crypt(INTERNAL_FUNCTION_PARAMETERS, int direction)
      * the caller to specify an additional cipher. */
 	if (strncmp(PHP_TOMCRYPT_MODE_CHACHA20POLY1305, mode, mode_len) &&
 	    (!ciphername || (cipher = find_cipher(ciphername)) == -1)) {
+		TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unknown cipher: %s", ciphername);
 		RETURN_FALSE;
 	}
@@ -382,6 +389,7 @@ static void php_tomcrypt_do_crypt(INTERNAL_FUNCTION_PARAMETERS, int direction)
 	PLTC_CRYPT_HANDLER(PHP_TOMCRYPT_MODE_XTS,              php_tomcrypt_xcrypt_xts)
 
 	/* Unsupported mode (invalid name, not compiled, etc.) */
+	TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
 	php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unsupported mode: %s", mode);
 	RETURN_FALSE;
 }

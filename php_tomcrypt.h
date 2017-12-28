@@ -25,10 +25,6 @@
 
 #if HAVE_LIBTOMCRYPT
 
-#ifdef ZTS
-#include "TSRM.h"
-#endif
-
 
 #define PHP_TOMCRYPT_EXTNAME        "tomcrypt"
 #define PHP_TOMCRYPT_VERSION        "0.3.0"
@@ -37,7 +33,8 @@ extern zend_module_entry tomcrypt_module_entry;
 #define tomcrypt_module_ptr &tomcrypt_module_entry
 
 /* Miscelleanous functions */
-PHP_FUNCTION(tomcrypt_strerror);
+PHP_FUNCTION(tomcrypt_error);
+PHP_FUNCTION(tomcrypt_errno);
 
 /* Modes-related functions */
 PHP_FUNCTION(tomcrypt_list_modes);

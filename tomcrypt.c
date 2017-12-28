@@ -36,12 +36,18 @@
 #include "php_tomcrypt_mac.h"
 #include "php_tomcrypt_mode.h"
 
+ZEND_DECLARE_MODULE_GLOBALS(tomcrypt)
+static PHP_MINFO_FUNCTION(tomcrypt);
+static PHP_GINIT_FUNCTION(tomcrypt);
 
 /* {{{ arginfo */
 
 /* Misc. */
-ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_strerror, 0, 0, 1)
+ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_error, 0, 0, 1)
 	ZEND_ARG_INFO(0, errno)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_errno, 0, 0, 0)
 ZEND_END_ARG_INFO()
 
 
@@ -150,7 +156,8 @@ ZEND_END_ARG_INFO()
 
 const zend_function_entry tomcrypt_functions[] = { /* {{{ */
 	/* Misc. */
-	PHP_FE(tomcrypt_strerror,				arginfo_tomcrypt_strerror)
+	PHP_FE(tomcrypt_error,					arginfo_tomcrypt_error)
+	PHP_FE(tomcrypt_errno,					arginfo_tomcrypt_errno)
 
 	/* Lists */
 	PHP_FE(tomcrypt_list_modes,				arginfo_tomcrypt_list_modes)
@@ -199,16 +206,27 @@ zend_module_entry tomcrypt_module_entry = {
 	NULL, /* RSHUTDOWN */
 	PHP_MINFO(tomcrypt),
 	PHP_TOMCRYPT_VERSION,
-	STANDARD_MODULE_PROPERTIES,
+	PHP_MODULE_GLOBALS(tomcrypt),
+	PHP_GINIT(tomcrypt),
+	NULL,
+	NULL,
+	STANDARD_MODULE_PROPERTIES_EX
 };
 
 #ifdef COMPILE_DL_TOMCRYPT
 ZEND_GET_MODULE(tomcrypt)
 #endif
 
+/* {{{ */
+static PHP_GINIT_FUNCTION(tomcrypt)
+{
+        tomcrypt_globals->last_error = CRYPT_OK;
+}
+/* }}} */
+
 /* {{{ PHP_MINIT_FUNCTION
  */
-PHP_MINIT_FUNCTION(tomcrypt)
+static PHP_MINIT_FUNCTION(tomcrypt)
 {
 	int i;
 
@@ -232,7 +250,7 @@ PHP_MINIT_FUNCTION(tomcrypt)
 
 /* {{{ PHP_MSHUTDOWN_FUNCTION
  */
-PHP_MSHUTDOWN_FUNCTION(tomcrypt)
+static PHP_MSHUTDOWN_FUNCTION(tomcrypt)
 {
 	return deinit_prngs() ? FAILURE : SUCCESS;
 }
@@ -240,7 +258,7 @@ PHP_MSHUTDOWN_FUNCTION(tomcrypt)
 
 /* {{{ PHP_MINFO_FUNCTION
  */
-PHP_MINFO_FUNCTION(tomcrypt)
+static PHP_MINFO_FUNCTION(tomcrypt)
 {
 	char *cr, *lf;
 	const char *end, *start = crypt_build_settings;

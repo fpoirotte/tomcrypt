@@ -35,6 +35,7 @@ static void php_tomcrypt_xcrypt_ecb(PLTC_CRYPT_PARAM)
 
 error:
 	efree(output);
+	TOMCRYPT_G(last_error) = err;
 	php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
 	RETURN_FALSE;
 #endif

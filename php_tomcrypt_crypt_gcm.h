@@ -19,6 +19,7 @@ static void php_tomcrypt_xcrypt_gcm(PLTC_CRYPT_PARAM)
 	if ((err = gcm_memory(cipher, key, key_len, iv, iv_len, authdata, authdata_len,
 		input, input_len, output, out_tag, &out_tag_len, direction)) != CRYPT_OK) {
 		efree(output);
+		TOMCRYPT_G(last_error) = err;
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
 		RETURN_FALSE;
 	}
@@ -32,6 +33,7 @@ static void php_tomcrypt_xcrypt_gcm(PLTC_CRYPT_PARAM)
     } else {
 		if (in_tag_len != out_tag_len || memcmp(out_tag, in_tag, out_tag_len)) {
 			efree(output);
+			TOMCRYPT_G(last_error) = CRYPT_ERROR;
 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "Tag verification failed");
 			RETURN_FALSE;
 		}

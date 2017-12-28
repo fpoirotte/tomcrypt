@@ -19,9 +19,21 @@
 #include <tomcrypt.h>
 #include "php_tomcrypt_compat.h"
 
-/* {{{ proto string tomcrypt_strerror(int errno)
+ZEND_EXTERN_MODULE_GLOBALS(tomcrypt)
+
+/* {{{ proto int tomcrypt_errno()
+   Retrieve the error number returned by the last LibTomCrypt
+   function that failed. */
+PHP_FUNCTION(tomcrypt_errno)
+{
+	RETURN_LONG(TOMCRYPT_G(last_error));
+}
+/* }}} */
+
+
+/* {{{ proto string tomcrypt_error(int errno)
    Retrieve the error message for the given errno */
-PHP_FUNCTION(tomcrypt_strerror)
+PHP_FUNCTION(tomcrypt_error)
 {
 	pltc_long   err;
 
