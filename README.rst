@@ -1,7 +1,7 @@
 php_tomcrypt
 ============
 
-PHP bindings for `libtomcrypt <http://www.libtom.net/>`.
+PHP bindings for `libtomcrypt <http://www.libtom.net/>`_.
 
 Badges: |badge-travis|
 
@@ -236,7 +236,7 @@ information about supported algorithms.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This extension can provide you with data generated at random, as an alternative
-to `openssl_random_pseudo_bytes() <http://php.net/openssl_random_pseudo_bytes>`.
+to `openssl_random_pseudo_bytes() <http://php.net/openssl_random_pseudo_bytes>`_.
 
 The following code can be used to generate (pseudo-)random number generators:
 
@@ -271,14 +271,15 @@ Unfortunately, I do not have access to Windows development tools
 and cannot compile a binary release for Windows users.
 
 If you manage to compile the extension on Windows, please let us know through
-`our issue tracker <https://github.com/fpoirotte/tomcrypt/issues>`.
+`our issue tracker <https://github.com/fpoirotte/tomcrypt/issues>`_.
 
 License
 -------
-libtomcrypt is released under the `WTFPL <http://sam.zoy.org/wtfpl/>` license.
+libtomcrypt is released under the a dual
+public domain / `WTFPL <http://sam.zoy.org/wtfpl/>`_ license.
 
 php_tomcrypt is released under version 3.01 of the
-`PHP <http://www.php.net/license/3_01.txt>` license.
+`PHP <http://www.php.net/license/3_01.txt>`_ license.
 
 ..  |badges-travis| image:: https://travis-ci.org/fpoirotte/tomcrypt.svg
     :alt: Travis-CI (unknown)
