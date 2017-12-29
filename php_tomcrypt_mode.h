@@ -34,6 +34,7 @@
 #define PHP_TOMCRYPT_MODE_OCB               "ocb"
 #define PHP_TOMCRYPT_MODE_OCB3              "ocb3"
 #define PHP_TOMCRYPT_MODE_OFB               "ofb"
+#define PHP_TOMCRYPT_MODE_STREAM            "stream" /* Hack for stream ciphers */
 #define PHP_TOMCRYPT_MODE_XTS               "xts"
 
 int init_modes(int module_number TSRMLS_DC);

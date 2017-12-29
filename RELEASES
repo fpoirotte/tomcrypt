@@ -6,13 +6,16 @@ notes: Sat, Dec 30, 2017 - tomcrypt 0.3.0
 
 + Changes:
 
-  - Added support for LibTomCrypt v1.18
+  - Improved support for LibTomCrypt v1.18
   - Added support for pkg-config
-  - Added support for the following Ciphers:
-    - Camellia
-  - Added support for the following Pseudo-Random Number Generators:
+  - Added support for these Ciphers (requires LTC v1.18+)
+    - Camellia (block cipher)
+    - ChaCha (stream cipher)
+    - RC4, aka. Arcfour (stream cipher)
+    - Sober128 (stream cipher)
+  - Added support for these Pseudo-Random Number Generators (requires LTC v1.18+)
     - ChaCha20
-  - Added support for the following hashing algorithms:
+  - Added support for these hashing algorithms (requires LTC v1.18+)
       - SHA512-256
       - SHA512-224
       - Blake2b-160
@@ -27,13 +30,14 @@ notes: Sat, Dec 30, 2017 - tomcrypt 0.3.0
       - SHA3-256
       - SHA3-384
       - SHA3-512
-  - Added support for the following Message Authentication Codes:
+  - Added support for these Message Authentication Codes (requires LTC v1.18+)
     - Blake2b
     - Blake2s
     - Poly1305
-  - Added support for the following modes of operation:
+  - Added support for these modes of operation (requires LTC v1.18+)
     - ChaCha20-Poly1305
     - OCB3
+    - Stream (for stream ciphers)
   - Splitted the code into various modules to make it easier to add support
     for new algorithms in the future
   - Renamed tomcrypt_strerror() into tomcrypt_error()

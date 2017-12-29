@@ -46,6 +46,10 @@ error:
 	TOMCRYPT_G(last_error) = err;
 	php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
 	RETURN_FALSE;
+#else
+	TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
+	php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unsupported mode");
+	RETURN_FALSE;
 #endif
 }
 

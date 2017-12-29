@@ -33,6 +33,7 @@
 #include "php_tomcrypt_crypt_ocb.h"
 #include "php_tomcrypt_crypt_ocb3.h"
 #include "php_tomcrypt_crypt_ofb.h"
+#include "php_tomcrypt_crypt_stream.h"
 #include "php_tomcrypt_crypt_xts.h"
 
 #ifdef LTC_RIJNDAEL
@@ -64,6 +65,9 @@
 #else
 #define PHP_TOMCRYPT_DESC_CIPHER_CAST5 NULL
 #endif
+
+/* Hack for the ChaCha stream cipher. */
+#define PHP_TOMCRYPT_DESC_CIPHER_CHACHA NULL
 
 #ifdef LTC_DES
 #define PHP_TOMCRYPT_DESC_CIPHER_DES       &des_desc
@@ -104,6 +108,9 @@
 #else
 #define PHP_TOMCRYPT_DESC_CIPHER_RC2 NULL
 #endif
+
+/* Hack for the RC4 stream cipher. */
+#define PHP_TOMCRYPT_DESC_CIPHER_RC4 NULL
 
 #ifdef LTC_RC5
 #define PHP_TOMCRYPT_DESC_CIPHER_RC5 &rc5_desc
@@ -159,6 +166,9 @@
 #define PHP_TOMCRYPT_DESC_CIPHER_SKIPJACK NULL
 #endif
 
+/* Hack for the Sober128 stream cipher. */
+#define PHP_TOMCRYPT_DESC_CIPHER_SOBER128 NULL
+
 #ifdef LTC_TWOFISH
 #define PHP_TOMCRYPT_DESC_CIPHER_TWOFISH &twofish_desc
 #else
@@ -186,12 +196,14 @@ int init_ciphers(int module_number TSRMLS_DC)
 	TOMCRYPT_DEFINE_CIPHER(BLOWFISH);
 	TOMCRYPT_DEFINE_CIPHER(CAMELLIA);
 	TOMCRYPT_DEFINE_CIPHER(CAST5);
+	TOMCRYPT_DEFINE_CIPHER(CHACHA); /* Stream cipher */
 	TOMCRYPT_DEFINE_CIPHER(DES);
 	TOMCRYPT_DEFINE_CIPHER(KASUMI);
 	TOMCRYPT_DEFINE_CIPHER(KHAZAD);
 	TOMCRYPT_DEFINE_CIPHER(MULTI2);
 	TOMCRYPT_DEFINE_CIPHER(NOEKEON);
 	TOMCRYPT_DEFINE_CIPHER(RC2);
+	TOMCRYPT_DEFINE_CIPHER(RC4); /* Stream cipher */
 	TOMCRYPT_DEFINE_CIPHER(RC5);
 	TOMCRYPT_DEFINE_CIPHER(RC6);
 	TOMCRYPT_DEFINE_CIPHER(RIJNDAEL);
@@ -204,6 +216,7 @@ int init_ciphers(int module_number TSRMLS_DC)
 	TOMCRYPT_DEFINE_CIPHER(SAFERSK128);
 	TOMCRYPT_DEFINE_CIPHER(SEED);
 	TOMCRYPT_DEFINE_CIPHER(SKIPJACK);
+	TOMCRYPT_DEFINE_CIPHER(SOBER128); /* Stream cipher */
 	TOMCRYPT_DEFINE_CIPHER(TRIPLEDES);
 	TOMCRYPT_DEFINE_CIPHER(TWOFISH);
 	TOMCRYPT_DEFINE_CIPHER(XTEA);
@@ -362,13 +375,41 @@ static void php_tomcrypt_do_crypt(INTERNAL_FUNCTION_PARAMETERS, int direction)
 		RETURN_FALSE;
 	}
 
-    /* ChaCha20-Poly1305 uses a fixed algorithm and does not require
-     * the caller to specify an additional cipher. */
-	if (strncmp(PHP_TOMCRYPT_MODE_CHACHA20POLY1305, mode, mode_len) &&
-	    (!ciphername || (cipher = find_cipher(ciphername)) == -1)) {
+	if (!strncmp(PHP_TOMCRYPT_MODE_CHACHA20POLY1305, mode, mode_len)) {
+		/* ChaCha20-Poly1305 uses a fixed algorithm and does not require
+		   the caller to specify an additional cipher.
+		   So, we do nothing here. */
+	} else if (!ciphername) {
 		TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
-		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unknown cipher: %s", ciphername);
+		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid cipher");
 		RETURN_FALSE;
+	} else if ((cipher = find_cipher(ciphername)) == -1) {
+		/* Only certain ciphers (stream ciphers) can be used in stream mode.
+		   Reciprocally, stream mode can only be used with stream ciphers.
+		   For now, we're forced to explicitly whitelist stream ciphers. */
+		int stream_mode = !strncmp(PHP_TOMCRYPT_MODE_STREAM, mode, mode_len);
+		if (!memcmp(ciphername, PHP_TOMCRYPT_CIPHER_RC4, sizeof(PHP_TOMCRYPT_CIPHER_RC4))) {
+			cipher = PHP_TOMCRYPT_STREAM_CIPHER_RC4;
+		} else if (!memcmp(ciphername, PHP_TOMCRYPT_CIPHER_CHACHA, sizeof(PHP_TOMCRYPT_CIPHER_CHACHA))) {
+			cipher = PHP_TOMCRYPT_STREAM_CIPHER_CHACHA;
+		} else if (!memcmp(ciphername, PHP_TOMCRYPT_CIPHER_SOBER128, sizeof(PHP_TOMCRYPT_CIPHER_SOBER128))) {
+			cipher = PHP_TOMCRYPT_STREAM_CIPHER_SOBER128;
+		}
+
+		if (stream_mode && cipher == -1) {
+			TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
+			php_error_docref(NULL TSRMLS_CC, E_WARNING, "TOMCRYPT_MODE_STREAM can only be used with stream ciphers");
+			RETURN_FALSE;
+		} else if (!stream_mode && cipher < -1) {
+			TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
+			php_error_docref(NULL TSRMLS_CC, E_WARNING, "This cipher can only be used with TOMCRYPT_MODE_STREAM");
+			RETURN_FALSE;
+		} else {
+			/* The given cipher is really invalid. */
+			TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
+			php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unsupported cipher");
+			RETURN_FALSE;
+		}
 	}
 
 	/* Loop through the handlers in order of decreasing likelihood. */
@@ -386,11 +427,12 @@ static void php_tomcrypt_do_crypt(INTERNAL_FUNCTION_PARAMETERS, int direction)
 	PLTC_CRYPT_HANDLER(PHP_TOMCRYPT_MODE_OCB,              php_tomcrypt_xcrypt_ocb)
 	PLTC_CRYPT_HANDLER(PHP_TOMCRYPT_MODE_OCB3,             php_tomcrypt_xcrypt_ocb3)
 	PLTC_CRYPT_HANDLER(PHP_TOMCRYPT_MODE_OFB,              php_tomcrypt_xcrypt_ofb)
+	PLTC_CRYPT_HANDLER(PHP_TOMCRYPT_MODE_STREAM,           php_tomcrypt_xcrypt_stream)
 	PLTC_CRYPT_HANDLER(PHP_TOMCRYPT_MODE_XTS,              php_tomcrypt_xcrypt_xts)
 
 	/* Unsupported mode (invalid name, not compiled, etc.) */
 	TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
-	php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unsupported mode: %s", mode);
+	php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unsupported mode");
 	RETURN_FALSE;
 }
 

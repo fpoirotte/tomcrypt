@@ -103,6 +103,9 @@
 #define PHP_TOMCRYPT_DESC_MODE_XTS 0
 #endif
 
+/* Hack to support stream ciphers */
+#define PHP_TOMCRYPT_DESC_MODE_STREAM 1
+
 #define TOMCRYPT_DEFINE_MODE(mode) { \
 	.php_const = "TOMCRYPT_MODE_" # mode, \
 	.php_value = PHP_TOMCRYPT_MODE_ ## mode, \
@@ -127,6 +130,7 @@ static struct {
 	TOMCRYPT_DEFINE_MODE(OCB),
 	TOMCRYPT_DEFINE_MODE(OCB3),
 	TOMCRYPT_DEFINE_MODE(OFB),
+	TOMCRYPT_DEFINE_MODE(STREAM),
 	TOMCRYPT_DEFINE_MODE(XTS),
 	{ NULL }
 };

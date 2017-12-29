@@ -55,6 +55,10 @@ static void php_tomcrypt_xcrypt_ocb(PLTC_CRYPT_PARAM)
     }
 
 	PLTC_RETURN_STRINGL(output, input_len, 0);
+#else
+	TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
+	php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unsupported mode");
+	RETURN_FALSE;
 #endif
 }
 

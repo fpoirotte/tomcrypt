@@ -27,12 +27,14 @@
 #define PHP_TOMCRYPT_CIPHER_BLOWFISH    "blowfish"
 #define PHP_TOMCRYPT_CIPHER_CAMELLIA    "camellia"
 #define PHP_TOMCRYPT_CIPHER_CAST5       "cast5"
+#define PHP_TOMCRYPT_CIPHER_CHACHA      "chacha" /* Stream cipher */
 #define PHP_TOMCRYPT_CIPHER_DES         "des"
 #define PHP_TOMCRYPT_CIPHER_KASUMI      "kasumi"
 #define PHP_TOMCRYPT_CIPHER_KHAZAD      "khazad"
 #define PHP_TOMCRYPT_CIPHER_MULTI2      "multi2"
 #define PHP_TOMCRYPT_CIPHER_NOEKEON     "noekeon"
 #define PHP_TOMCRYPT_CIPHER_RC2         "rc2"
+#define PHP_TOMCRYPT_CIPHER_RC4         "arcfour" /* Stream cipher */
 #define PHP_TOMCRYPT_CIPHER_RC5         "rc5"
 #define PHP_TOMCRYPT_CIPHER_RC6         "rc6"
 /* We just make Rijndael an alias for AES.
@@ -47,6 +49,7 @@
 #define PHP_TOMCRYPT_CIPHER_SAFERSK128  "safer-sk128"
 #define PHP_TOMCRYPT_CIPHER_SEED        "seed"
 #define PHP_TOMCRYPT_CIPHER_SKIPJACK    "skipjack"
+#define PHP_TOMCRYPT_CIPHER_SOBER128    "sober128" /* Stream cipher */
 #define PHP_TOMCRYPT_CIPHER_TRIPLEDES   "3des"
 #define PHP_TOMCRYPT_CIPHER_TWOFISH     "twofish"
 #define PHP_TOMCRYPT_CIPHER_XTEA        "xtea"
