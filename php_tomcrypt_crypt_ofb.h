@@ -5,9 +5,11 @@
 static void php_tomcrypt_xcrypt_ofb(PLTC_CRYPT_PARAM)
 {
 #ifdef LTC_OFB_MODE
-	symmetric_OFB  ctx;
-	char          *output, *iv;
-	int            err, iv_len, num_rounds;
+	symmetric_OFB   ctx;
+	char           *output, *iv;
+	int             err;
+	pltc_size       iv_len;
+	pltc_long       num_rounds;
 
 	GET_OPT_STRING(options, "iv", iv, iv_len, NULL);
 	GET_OPT_LONG(options, "rounds", num_rounds, 0);

@@ -5,9 +5,11 @@
 static void php_tomcrypt_xcrypt_ctr(PLTC_CRYPT_PARAM)
 {
 #ifdef LTC_CTR_MODE
-	symmetric_CTR  ctx;
-	char          *output, *iv;
-	int            err, iv_len, ctr_mode, num_rounds;
+	symmetric_CTR   ctx;
+	char           *output, *iv;
+	int             err;
+	pltc_size       iv_len;
+	pltc_long       num_rounds, ctr_mode;
 
 	GET_OPT_STRING(options, "iv", iv, iv_len, NULL);
 	GET_OPT_LONG(options, "ctr_mode", ctr_mode, 0);

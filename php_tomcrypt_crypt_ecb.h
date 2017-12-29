@@ -5,9 +5,10 @@
 static void php_tomcrypt_xcrypt_ecb(PLTC_CRYPT_PARAM)
 {
 #ifdef LTC_ECB_MODE
-	symmetric_ECB  ctx;
-	char          *output;
-	int            err, num_rounds;
+	symmetric_ECB   ctx;
+	char           *output;
+	pltc_long       num_rounds;
+	int             err;
 
 	GET_OPT_LONG(options, "rounds", num_rounds, 0);
 

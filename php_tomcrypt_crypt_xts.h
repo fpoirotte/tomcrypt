@@ -5,9 +5,11 @@
 static void php_tomcrypt_xcrypt_xts(PLTC_CRYPT_PARAM)
 {
 #ifdef LTC_XTS_MODE
-	symmetric_xts  ctx;
-	char          *output, *key2, *tweak;
-	int            err, key2_len, tweak_len, num_rounds;
+	symmetric_xts   ctx;
+	char           *output, *key2, *tweak;
+	int             err;
+	pltc_size       key2_len, tweak_len;
+	pltc_long       num_rounds;
 
 	GET_OPT_STRING(options, "key2", key2, key2_len, NULL);
 	GET_OPT_LONG(options, "rounds", num_rounds, 0);

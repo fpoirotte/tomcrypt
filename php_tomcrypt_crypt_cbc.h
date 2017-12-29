@@ -7,9 +7,11 @@ ZEND_EXTERN_MODULE_GLOBALS(tomcrypt)
 static void php_tomcrypt_xcrypt_cbc(PLTC_CRYPT_PARAM)
 {
 #ifdef LTC_CBC_MODE
-	symmetric_CBC  ctx;
-	char          *output, *iv;
-	int            err, iv_len, num_rounds = 0;
+	symmetric_CBC   ctx;
+	char           *output, *iv;
+	int             err;
+	pltc_long       num_rounds;
+	pltc_size       iv_len;
 
 	GET_OPT_STRING(options, "iv", iv, iv_len, NULL);
 	GET_OPT_LONG(options, "rounds", num_rounds, 0);

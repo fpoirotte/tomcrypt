@@ -17,9 +17,10 @@ static void php_tomcrypt_xcrypt_stream_chacha(PLTC_CRYPT_PARAM)
 {
 #ifdef LTC_CHACHA
     chacha_state state;
-	char          *output, *nonce;
-	int            err, nonce_len, num_rounds;
-	pltc_long      counter;
+	char           *output, *nonce;
+	int             err, num_rounds;
+	pltc_size       nonce_len;
+	pltc_long       counter;
 
 	GET_OPT_STRING(options, "nonce", nonce, nonce_len, NULL);
 	GET_OPT_LONG(options, "counter", counter, 0);
@@ -67,8 +68,8 @@ static void php_tomcrypt_xcrypt_stream_rc4(PLTC_CRYPT_PARAM)
 {
 #ifdef LTC_RC4_STREAM
     rc4_state state;
-	char          *output;
-	int            err;
+	char           *output;
+	int             err;
 
 	output = emalloc(input_len + 1);
 	output[input_len] = '\0';
@@ -104,8 +105,9 @@ static void php_tomcrypt_xcrypt_stream_sober128(PLTC_CRYPT_PARAM)
 {
 #if defined(LTC_SOBER128) && defined(LTC_SOBER128_STREAM)
     sober128_state state;
-	char          *output, *nonce;
-	int            err, nonce_len;
+	char           *output, *nonce;
+	int             err;
+	pltc_size       nonce_len;
 
 	GET_OPT_STRING(options, "nonce", nonce, nonce_len, NULL);
 

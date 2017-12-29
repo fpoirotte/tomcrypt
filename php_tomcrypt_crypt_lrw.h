@@ -5,9 +5,11 @@
 static void php_tomcrypt_xcrypt_lrw(PLTC_CRYPT_PARAM)
 {
 #ifdef LTC_LRW_MODE
-	symmetric_LRW  ctx;
-	char          *output, *iv, *tweak;
-	int            err, iv_len, tweak_len, num_rounds;
+	symmetric_LRW   ctx;
+	char           *output, *iv, *tweak;
+	pltc_size       iv_len, tweak_len;
+	pltc_long       num_rounds;
+	int             err;
 
 	GET_OPT_STRING(options, "iv", iv, iv_len, NULL);
 	GET_OPT_LONG(options, "rounds", num_rounds, 0);

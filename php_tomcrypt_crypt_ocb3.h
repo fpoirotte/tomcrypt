@@ -5,9 +5,10 @@
 static void php_tomcrypt_xcrypt_ocb3(PLTC_CRYPT_PARAM)
 {
 #ifdef LTC_OCB3_MODE
-	char          *output, *nonce, *authdata, *in_tag, out_tag[MAXBLOCKSIZE + 1];
-	int            nonce_len, authdata_len, in_tag_len, err, res;
-	unsigned long  out_tag_len;
+	char           *output, *nonce, *authdata, *in_tag, out_tag[MAXBLOCKSIZE + 1];
+	pltc_size       nonce_len, authdata_len, in_tag_len;
+	int             err, res;
+	unsigned long   out_tag_len;
 
 	GET_OPT_STRING(options, "nonce", nonce, nonce_len, NULL);
 	GET_OPT_STRING(options, "authdata", authdata, authdata_len, NULL);

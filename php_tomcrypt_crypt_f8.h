@@ -5,9 +5,11 @@
 static void php_tomcrypt_xcrypt_f8(PLTC_CRYPT_PARAM)
 {
 #ifdef LTC_F8_MODE
-	symmetric_F8   ctx;
-	char          *output, *iv, *salt_key;
-	int            err, num_rounds, iv_len, salt_len;
+	symmetric_F8    ctx;
+	char           *output, *iv, *salt_key;
+	int             err;
+	pltc_long       num_rounds;
+	pltc_size       iv_len, salt_len;
 
 	GET_OPT_STRING(options, "iv", iv, iv_len, NULL);
 	GET_OPT_STRING(options, "salt_key", salt_key, salt_len, NULL);

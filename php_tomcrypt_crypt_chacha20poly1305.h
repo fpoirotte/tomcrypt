@@ -5,9 +5,10 @@
 static void php_tomcrypt_xcrypt_chacha20poly1305(PLTC_CRYPT_PARAM)
 {
 #ifdef LTC_CHACHA20POLY1305_MODE
-	char          *output, *iv, *authdata, *in_tag, out_tag[MAXBLOCKSIZE + 1];
-	int            iv_len, authdata_len, in_tag_len, err;
-	unsigned long  out_tag_len;
+	char           *output, *iv, *authdata, *in_tag, out_tag[MAXBLOCKSIZE + 1];
+	pltc_size       iv_len, authdata_len, in_tag_len;
+	int             err;
+	unsigned long   out_tag_len;
 
 	GET_OPT_STRING(options, "iv", iv, iv_len, NULL);
 	GET_OPT_STRING(options, "authdata", authdata, authdata_len, NULL);

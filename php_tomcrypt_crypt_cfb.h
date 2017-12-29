@@ -5,9 +5,11 @@
 static void php_tomcrypt_xcrypt_cfb(PLTC_CRYPT_PARAM)
 {
 #ifdef LTC_CFB_MODE
-	symmetric_CFB  ctx;
-	char          *output, *iv;
-	int            err, iv_len, num_rounds;
+	symmetric_CFB   ctx;
+	char           *output, *iv;
+	int             err;
+	pltc_long       num_rounds;
+	pltc_size       iv_len;
 
 	GET_OPT_STRING(options, "iv", iv, iv_len, NULL);
 	GET_OPT_LONG(options, "rounds", num_rounds, 0);
