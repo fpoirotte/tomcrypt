@@ -43,6 +43,9 @@ static PHP_GINIT_FUNCTION(tomcrypt);
 /* {{{ arginfo */
 
 /* Misc. */
+ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_clear, 0, 0, 0)
+ZEND_END_ARG_INFO()
+
 ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_error, 0, 0, 1)
 	ZEND_ARG_INFO(0, errno)
 ZEND_END_ARG_INFO()
@@ -156,6 +159,7 @@ ZEND_END_ARG_INFO()
 
 const zend_function_entry tomcrypt_functions[] = { /* {{{ */
 	/* Misc. */
+	PHP_FE(tomcrypt_clear,					arginfo_tomcrypt_clear)
 	PHP_FE(tomcrypt_error,					arginfo_tomcrypt_error)
 	PHP_FE(tomcrypt_errno,					arginfo_tomcrypt_errno)
 

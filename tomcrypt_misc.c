@@ -21,6 +21,15 @@
 
 ZEND_EXTERN_MODULE_GLOBALS(tomcrypt)
 
+/* {{{ proto void tomcrypt_clear_error()
+   Clear the last error returned by LibTomCrypt. */
+PHP_FUNCTION(tomcrypt_clear)
+{
+	TOMCRYPT_G(last_error) = 0;
+}
+/* }}} */
+
+
 /* {{{ proto int tomcrypt_errno()
    Retrieve the error number returned by the last LibTomCrypt
    function that failed. */

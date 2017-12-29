@@ -33,6 +33,7 @@ extern zend_module_entry tomcrypt_module_entry;
 #define tomcrypt_module_ptr &tomcrypt_module_entry
 
 /* Miscelleanous functions */
+PHP_FUNCTION(tomcrypt_clear);
 PHP_FUNCTION(tomcrypt_error);
 PHP_FUNCTION(tomcrypt_errno);
 
