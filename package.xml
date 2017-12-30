@@ -125,6 +125,7 @@ The following features are currently supported:
    <file role="src" name="php_tomcrypt_crypt_ocb.h"/>
    <file role="src" name="php_tomcrypt_crypt_ocb3.h"/>
    <file role="src" name="php_tomcrypt_crypt_ofb.h"/>
+   <file role="src" name="php_tomcrypt_crypt_stream.h"/>
    <file role="src" name="php_tomcrypt_crypt_xts.h"/>
    <file role="src" name="php_tomcrypt.h"/>
    <file role="src" name="php_tomcrypt_hash.h"/>
