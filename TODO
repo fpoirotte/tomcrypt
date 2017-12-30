@@ -11,5 +11,3 @@ Add support for ECC Diffie-Hellman Key Exchange (ECDH)
 Add support for Digital Signature Algorithm (DSA)
 
 Add support for Password-Based Cryptography
-
-Add support for Key Derivation Functions (KDF)

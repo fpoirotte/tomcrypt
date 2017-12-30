@@ -53,6 +53,14 @@ ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_errno, 0, 0, 0)
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_hkdf, 0, 0, 2)
+	ZEND_ARG_INFO(0, algo)
+	ZEND_ARG_INFO(0, input)
+	ZEND_ARG_INFO(0, length)
+	ZEND_ARG_INFO(0, salt)
+	ZEND_ARG_INFO(0, info)
+ZEND_END_ARG_INFO()
+
 
 /* Lists */
 ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_list_modes, 0, 0, 0)
@@ -162,6 +170,7 @@ const zend_function_entry tomcrypt_functions[] = { /* {{{ */
 	PHP_FE(tomcrypt_clear,					arginfo_tomcrypt_clear)
 	PHP_FE(tomcrypt_error,					arginfo_tomcrypt_error)
 	PHP_FE(tomcrypt_errno,					arginfo_tomcrypt_errno)
+	PHP_FE(tomcrypt_hkdf,					arginfo_tomcrypt_hkdf)
 
 	/* Lists */
 	PHP_FE(tomcrypt_list_modes,				arginfo_tomcrypt_list_modes)

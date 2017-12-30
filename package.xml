@@ -79,6 +79,8 @@ The following features are currently supported:
     LibTomCrypt function that failed, making tomcrypt_error() actually useful
   - Added tomcrypt_clear() to clear the last error returned by a LibTomCrypt
     function
+  - Added support for HKDF (Hash-based Key Derivation Function) through
+    the new tomcrypt_hkdf() function (requires LTC v1.18+)
     
 
 = Fixed bugs:

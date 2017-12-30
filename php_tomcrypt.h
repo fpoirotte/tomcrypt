@@ -36,6 +36,7 @@ extern zend_module_entry tomcrypt_module_entry;
 PHP_FUNCTION(tomcrypt_clear);
 PHP_FUNCTION(tomcrypt_error);
 PHP_FUNCTION(tomcrypt_errno);
+PHP_FUNCTION(tomcrypt_hkdf);
 
 /* Modes-related functions */
 PHP_FUNCTION(tomcrypt_list_modes);
