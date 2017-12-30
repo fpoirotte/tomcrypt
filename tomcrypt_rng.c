@@ -130,7 +130,7 @@ PHP_FUNCTION(tomcrypt_rng_get_bytes)
 	char           sprng[] = PHP_TOMCRYPT_RNG_SECURE;
 	char          *rng = sprng;
 	pltc_size      rng_len = sizeof(PHP_TOMCRYPT_RNG_SECURE);
-	int            i;
+	int            i, err;
 	pltc_long      size;
 	unsigned char *buffer;
 
@@ -145,19 +145,19 @@ PHP_FUNCTION(tomcrypt_rng_get_bytes)
 	}
 
 	for (i = 0; php_tomcrypt_rngs[i].php_const != NULL; i++) {
-		if (!strncmp(php_tomcrypt_rngs[i].php_value, rng, rng_len) &&
-			php_tomcrypt_rngs[i].desc != NULL) {
-
-			if ((TOMCRYPT_G(last_error) = php_tomcrypt_rngs[i].desc->ready(&php_tomcrypt_rngs[i].state)) != CRYPT_OK) {
-				RETURN_FALSE;
-			}
-
-			buffer = emalloc(size + 1);
-			size = (int) php_tomcrypt_rngs[i].desc->read(buffer, size, &php_tomcrypt_rngs[i].state);
-			buffer[size] = '\0';
-			PLTC_RETVAL_STRINGL(buffer, size, 0);
-			return;
+		if (strncmp(php_tomcrypt_rngs[i].php_value, rng, rng_len) || php_tomcrypt_rngs[i].desc == NULL) {
+			continue;
 		}
+
+		if ((err = php_tomcrypt_rngs[i].desc->ready(&php_tomcrypt_rngs[i].state)) != CRYPT_OK) {
+			TOMCRYPT_G(last_error) = err;
+			RETURN_FALSE;
+		}
+
+		buffer = emalloc(size + 1);
+		size = (int) php_tomcrypt_rngs[i].desc->read(buffer, size, &php_tomcrypt_rngs[i].state);
+		buffer[size] = '\0';
+		PLTC_RETURN_STRINGL(buffer, size, 0);
 	}
 
 	php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unknown RNG: %s", rng);
