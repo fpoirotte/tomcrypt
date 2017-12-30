@@ -7,12 +7,12 @@ addons:
         packages: libtomcrypt-dev
 
 php:
-    - 5.3
     - 5.4
     - 5.5
     - 5.6
     - 7.0
     - 7.1
+    - 7.2
     - nightly
 
 notifications:
@@ -23,11 +23,14 @@ before_install:
     - export TEST_PHP_EXECUTABLE=`which php`
     - export TEST_PHP_SRCDIR=`pwd`
     - export REPORT_EXIT_STATUS=1
+    - export NO_INTERACTION=1
 
 install:
     - phpize
     - ./configure
     - make
+    - make install
+    - echo "extension=tomcrypt.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/tomcrypt.ini
 
 script:
-    - php -c /dev/null -d extension_dir=./modules -d extension=tomcrypt.so run-tests.php -c /dev/null -d extension_dir=./modules -d extension=tomcrypt.so -q
+    - php run-tests.php -q --show-diff

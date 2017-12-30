@@ -1,3 +1,68 @@
+Version: 0.3.0
+Date: 2017-12-30 23:59:59
+Stability: beta
+
+notes: Sat, Dec 30, 2017 - tomcrypt 0.3.0
+
++ Changes:
+
+  - Improved support for LibTomCrypt v1.18
+  - Added support for pkg-config
+  - Added support for these Ciphers (requires LTC v1.18+)
+    - Camellia (block cipher)
+    - ChaCha (stream cipher)
+    - RC4, aka. Arcfour (stream cipher)
+    - Sober128 (stream cipher)
+  - Added support for these Pseudo-Random Number Generators (requires LTC v1.18+)
+    - ChaCha20
+  - Added support for these hashing algorithms (requires LTC v1.18+)
+      - SHA512-256
+      - SHA512-224
+      - Blake2b-160
+      - Blake2b-256
+      - Blake2b-256
+      - Blake2b-512
+      - Blake2s-128
+      - Blake2s-160
+      - Blake2s-224
+      - Blake2s-256
+      - SHA3-224
+      - SHA3-256
+      - SHA3-384
+      - SHA3-512
+  - Added support for these Message Authentication Codes (requires LTC v1.18+)
+    - Blake2b
+    - Blake2s
+    - Poly1305
+  - Added support for these modes of operation (requires LTC v1.18+)
+    - ChaCha20-Poly1305
+    - OCB3
+    - Stream (for stream ciphers)
+  - Splitted the code into various modules to make it easier to add support
+    for new algorithms in the future
+  - Renamed tomcrypt_strerror() into tomcrypt_error()
+  - Added tomcrypt_errno() to retrieve the error number for the last
+    LibTomCrypt function that failed, making tomcrypt_error() actually useful
+  - Added tomcrypt_clear() to clear the last error returned by a LibTomCrypt
+    function
+  - Added support for HKDF (Hash-based Key Derivation Function) through
+    the new tomcrypt_hkdf() function (requires LTC v1.18+)
+
+= Fixed bugs:
+
+  - Fixed --with-tomcrypt=/custom/path not working properly
+  - Fixed the test vector used for several tests (XTEA, MULTI2, NOEKEON)
+
+- Removed features:
+
+  - Removed buggy (incomplete) support for the Cipher Hash Construction
+  - Removed the tomcrypt_cipher_name(), tomcrypt_hash_name() and
+    tomcrypt_rng_name() functions. They were pretty much useless
+    since you already had to know the object's name to call them.
+  - Removed buggy RC4 stream cipher implementation (a proper
+    implementation is now provided with LibTomCrypt v1.18+).
+
+
 Version: 0.2.3
 Date: 2017-05-14 19:15:00
 Stability: beta

@@ -12,6 +12,7 @@ config.sub
 config.h.in
 configure
 configure.in
+configure.ac
 install-sh
 
 # configure
@@ -28,9 +29,9 @@ libtool
 # make
 .libs/
 modules/
-tomcrypt.la
-tomcrypt.lo
-tomcrypt.loT
+*.la
+*.lo
+*.loT
 
 # make test
 tests/*.sh
@@ -40,3 +41,8 @@ tests/*.out
 tests/*.exp
 tests/*.php
 tmp-php.ini
+
+# releases
+*.tar.gz
+*.tgz
+*.zip

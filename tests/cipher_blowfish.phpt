@@ -2,16 +2,16 @@
 tomcrypt - BLOWFISH cipher
 --SKIPIF--
 <?php
-    if (!extension_loaded("tomcrypt")) print "skip extension not loaded";
-    if (!defined('TOMCRYPT_CIPHER_BLOWFISH')) print "skip cipher not available";
-    if (!defined('TOMCRYPT_MODE_ECB')) print "skip mode not available";
+    if (!extension_loaded("tomcrypt")) {
+        print "skip extension not loaded";
+    } elseif (!in_array(TOMCRYPT_CIPHER_BLOWFISH, tomcrypt_list_ciphers())) {
+        print "skip cipher not available";
+    }
 ?>
 --FILE--
 <?php
     $cipher = TOMCRYPT_CIPHER_BLOWFISH;
     var_dump(
-        in_array($cipher, tomcrypt_list_ciphers()),
-        tomcrypt_cipher_name($cipher),
         tomcrypt_cipher_block_size($cipher),
         tomcrypt_cipher_min_key_size($cipher),
         tomcrypt_cipher_max_key_size($cipher),
@@ -27,8 +27,6 @@ tomcrypt - BLOWFISH cipher
     var_dump($pt === $pt2);
 ?>
 --EXPECT--
-bool(true)
-string(8) "blowfish"
 int(8)
 int(8)
 int(56)

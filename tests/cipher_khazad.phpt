@@ -2,16 +2,16 @@
 tomcrypt - KHAZAD cipher
 --SKIPIF--
 <?php
-    if (!extension_loaded("tomcrypt")) print "skip extension not loaded";
-    if (!defined('TOMCRYPT_CIPHER_KHAZAD')) print "skip cipher not available";
-    if (!defined('TOMCRYPT_MODE_ECB')) print "skip mode not available";
+    if (!extension_loaded("tomcrypt")) {
+        print "skip extension not loaded";
+    } elseif (!in_array(TOMCRYPT_CIPHER_KHAZAD, tomcrypt_list_ciphers())) {
+        print "skip cipher not available";
+    }
 ?>
 --FILE--
 <?php
     $cipher = TOMCRYPT_CIPHER_KHAZAD;
     var_dump(
-        in_array($cipher, tomcrypt_list_ciphers()),
-        tomcrypt_cipher_name($cipher),
         tomcrypt_cipher_block_size($cipher),
         tomcrypt_cipher_min_key_size($cipher),
         tomcrypt_cipher_max_key_size($cipher),
@@ -28,8 +28,6 @@ tomcrypt - KHAZAD cipher
     var_dump($pt === $pt2);
 ?>
 --EXPECT--
-bool(true)
-string(6) "khazad"
 int(8)
 int(16)
 int(16)
