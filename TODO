@@ -1,10 +1,5 @@
 Re-add support for Cipher Hash Construction (CHC)
 
-Add support for stream ciphers :
-* ChaCha20
-* RC4
-* Sober128
-
 Add support for Public Key Cryptography (RSA)
 
 Add support for Diffie-Hellman Key Exchange (DH)

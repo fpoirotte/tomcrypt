@@ -72,12 +72,14 @@ This extension also provides constants which can be used to refer to the various
 *   ``TOMCRYPT_CIPHER_BLOWFISH``
 *   ``TOMCRYPT_CIPHER_CAMELLIA``
 *   ``TOMCRYPT_CIPHER_CAST5``
+*   ``TOMCRYPT_CIPHER_CHACHA``
 *   ``TOMCRYPT_CIPHER_DES``
 *   ``TOMCRYPT_CIPHER_KASUMI``
 *   ``TOMCRYPT_CIPHER_KHAZAD``
 *   ``TOMCRYPT_CIPHER_MULTI2``
 *   ``TOMCRYPT_CIPHER_NOEKEON``
 *   ``TOMCRYPT_CIPHER_RC2``
+*   ``TOMCRYPT_CIPHER_RC4``
 *   ``TOMCRYPT_CIPHER_RC5``
 *   ``TOMCRYPT_CIPHER_RC6``
 *   ``TOMCRYPT_CIPHER_RIJNDAEL``
@@ -88,6 +90,7 @@ This extension also provides constants which can be used to refer to the various
 *   ``TOMCRYPT_CIPHER_SAFERPLUS``
 *   ``TOMCRYPT_CIPHER_SAFERSK128``
 *   ``TOMCRYPT_CIPHER_SAFERSK64``
+*   ``TOMCRYPT_CIPHER_SOBER128``
 *   ``TOMCRYPT_CIPHER_SEED``
 *   ``TOMCRYPT_CIPHER_SKIPJACK``
 *   ``TOMCRYPT_CIPHER_TRIPLEDES``
@@ -110,7 +113,15 @@ The following constants are also provided:
 * ``TOMCRYPT_MODE_OCB``
 * ``TOMCRYPT_MODE_OCB3``
 * ``TOMCRYPT_MODE_OFB``
+* ``TOMCRYPT_MODE_STREAM``
 * ``TOMCRYPT_MODE_XTS``
+
+..  note::
+
+    ``TOMCRYPT_MODE_STREAM`` only works for stream ciphers
+    (ie. ``TOMCRYPT_CIPHER_RC4``, ``TOMCRYPT_CIPHER_CHACHA`` and
+    ``TOMCRYPT_CIPHER_SOBER128``).
+    Likewise, these stream ciphers will not work with other modes.
 
 
 Decryption
