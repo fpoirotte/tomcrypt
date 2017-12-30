@@ -40,13 +40,13 @@ PHP_FUNCTION(tomcrypt_errno)
 /* }}} */
 
 
-/* {{{ proto string tomcrypt_error(int errno)
+/* {{{ proto string tomcrypt_error(int errno=null)
    Retrieve the error message for the given errno */
 PHP_FUNCTION(tomcrypt_error)
 {
-	pltc_long   err;
+	pltc_long   err = TOMCRYPT_G(last_error);
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &err) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|l", &err) == FAILURE) {
 		return;
 	}
 
