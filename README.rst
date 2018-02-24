@@ -299,7 +299,7 @@ If you manage to compile the extension on Windows, please let us know through
 
 License
 -------
-libtomcrypt is released under the a dual
+libtomcrypt is released under a dual
 public domain / `WTFPL <http://sam.zoy.org/wtfpl/>`_ license.
 
 php_tomcrypt is released under version 3.01 of the
