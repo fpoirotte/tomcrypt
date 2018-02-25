@@ -87,7 +87,7 @@ PHP_FUNCTION(tomcrypt_hkdf)
 	output[output_len] = '\0';
 
     if ((err = hkdf(index, salt, salt_len, info, info_len, input, input_len, output, output_len)) != CRYPT_OK) {
-        free(output);
+        efree(output);
 		TOMCRYPT_G(last_error) = err;
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
 		RETURN_FALSE;

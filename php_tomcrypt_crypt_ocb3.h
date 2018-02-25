@@ -15,6 +15,9 @@ static void php_tomcrypt_xcrypt_ocb3(PLTC_CRYPT_PARAM)
 	GET_OPT_LONG(options, "taglen", out_tag_len, 0);
 	GET_OPT_STRING(options, "tag", in_tag, in_tag_len, NULL);
 
+	output = emalloc(input_len + 1);
+	output[input_len] = '\0';
+
 	if (nonce_len < 1 || nonce_len > 15) {
 		efree(output);
 		TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;

@@ -5,7 +5,7 @@ ARG_WITH("tomcrypt", "LibTomCrypt support", "yes");
 
 if (PHP_TOMCRYPT != "no") {
 	if (CHECK_HEADER_ADD_INCLUDE('tomcrypt.h', 'CFLAGS_TOMCRYPT') &&
-			CHECK_LIB('libtomcrypt.lib', 'tomcrypt', PHP_TOMCRYPT)) {
+			CHECK_LIB('tomcrypt.lib', 'tomcrypt', PHP_TOMCRYPT)) {
 		EXTENSION(
 			'tomcrypt',
 			'tomcrypt.c tomcrypt_cipher.c tomcrypt_hash.c ' +

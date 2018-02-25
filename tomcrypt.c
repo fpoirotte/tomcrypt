@@ -241,8 +241,6 @@ static PHP_GINIT_FUNCTION(tomcrypt)
  */
 static PHP_MINIT_FUNCTION(tomcrypt)
 {
-	int i;
-
 	REGISTER_LONG_CONSTANT("LIBTOMCRYPT_VERSION_NUMBER", CRYPT, CONST_PERSISTENT | CONST_CS);
 	REGISTER_STRING_CONSTANT("LIBTOMCRYPT_VERSION_TEXT", SCRYPT, CONST_PERSISTENT | CONST_CS);
 	REGISTER_STRING_CONSTANT("TOMCRYPT_VERSION", PHP_TOMCRYPT_VERSION, CONST_PERSISTENT | CONST_CS);
@@ -284,8 +282,8 @@ static PHP_MINFO_FUNCTION(tomcrypt)
 
 	php_info_print_box_start(0);
 	while (start != NULL && *start) {
-		cr = index(start, '\r');
-		lf = index(start, '\n');
+		cr = strchr(start, '\r');
+		lf = strchr(start, '\n');
 
 		if (cr == NULL) {
 			end = lf;
@@ -296,7 +294,7 @@ static PHP_MINFO_FUNCTION(tomcrypt)
 		}
 
 		if (end == NULL)
-			end = index(start, '\0');
+			end = strchr(start, '\0');
 
 		if (!sapi_module.phpinfo_as_text) {
 #if (PHP_VERSION_ID >= 70000)
