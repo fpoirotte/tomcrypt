@@ -25,6 +25,82 @@ The following features are currently supported:
   <email>clicky@erebot.net</email>
   <active>yes</active>
  </lead>
+ <date>2018-02-25</date>
+ <time>16:30:00</time>
+ <version>
+  <release>0.3.1</release>
+  <api>0.3.1</api>
+ </version>
+ <stability>
+  <release>beta</release>
+  <api>stable</api>
+ </stability>
+ <license uri="http://www.php.net/license/3_01.txt">PHP</license>
+ <notes>Sun, Feb 25, 2018 - tomcrypt 0.3.1
+
++ Changes:
+
+  - Added instructions on how to build the extension on Windows.
+
+= Fixed bugs:
+
+  - Fixed config.w32 so that it actually works under Windows.
+  - Replaced several calls to index() with equivalent calls to strchr()
+    for MSVC/C89 compatibility.
+</notes>
+ <contents>
+  <dir name="/">
+   <file role="doc" name="LICENSE.txt"/>
+   <file role="src" name="config.m4"/>
+   <file role="src" name="config.w32"/>
+   <file role="src" name="tomcrypt.c"/>
+   <file role="src" name="tomcrypt_cipher.c"/>
+   <file role="src" name="tomcrypt_hash.c"/>
+   <file role="src" name="tomcrypt_mac.c"/>
+   <file role="src" name="tomcrypt_misc.c"/>
+   <file role="src" name="tomcrypt_mode.c"/>
+   <file role="src" name="tomcrypt_rng.c"/>
+   <file role="src" name="php_tomcrypt_cipher.h"/>
+   <file role="src" name="php_tomcrypt_compat.h"/>
+   <file role="src" name="php_tomcrypt_crypt.h"/>
+   <file role="src" name="php_tomcrypt_crypt_cbc.h"/>
+   <file role="src" name="php_tomcrypt_crypt_ccm.h"/>
+   <file role="src" name="php_tomcrypt_crypt_cfb.h"/>
+   <file role="src" name="php_tomcrypt_crypt_chacha20poly1305.h"/>
+   <file role="src" name="php_tomcrypt_crypt_ctr.h"/>
+   <file role="src" name="php_tomcrypt_crypt_eax.h"/>
+   <file role="src" name="php_tomcrypt_crypt_ecb.h"/>
+   <file role="src" name="php_tomcrypt_crypt_f8.h"/>
+   <file role="src" name="php_tomcrypt_crypt_gcm.h"/>
+   <file role="src" name="php_tomcrypt_crypt_lrw.h"/>
+   <file role="src" name="php_tomcrypt_crypt_ocb.h"/>
+   <file role="src" name="php_tomcrypt_crypt_ocb3.h"/>
+   <file role="src" name="php_tomcrypt_crypt_ofb.h"/>
+   <file role="src" name="php_tomcrypt_crypt_stream.h"/>
+   <file role="src" name="php_tomcrypt_crypt_xts.h"/>
+   <file role="src" name="php_tomcrypt.h"/>
+   <file role="src" name="php_tomcrypt_hash.h"/>
+   <file role="src" name="php_tomcrypt_mac.h"/>
+   <file role="src" name="php_tomcrypt_mode.h"/>
+   <file role="src" name="php_tomcrypt_rng.h"/>
+   <file role="src" name="php_tomcrypt_utils.h"/>
+  </dir>
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>5.3.0</min>
+    <max>7.2.0</max>
+   </php>
+   <pearinstaller>
+    <min>1.4.0a2</min>
+   </pearinstaller>
+  </required>
+ </dependencies>
+ <providesextension>tomcrypt</providesextension>
+ <extsrcrelease />
+ <changelog>
+  <release>
  <date>2017-12-30</date>
  <time>23:59:59</time>
  <version>
@@ -97,58 +173,7 @@ The following features are currently supported:
   - Removed buggy RC4 stream cipher implementation (a proper
     implementation is now provided with LibTomCrypt v1.18+).
 </notes>
- <contents>
-  <dir name="/">
-   <file role="doc" name="LICENSE.txt"/>
-   <file role="src" name="config.m4"/>
-   <file role="src" name="config.w32"/>
-   <file role="src" name="tomcrypt.c"/>
-   <file role="src" name="tomcrypt_cipher.c"/>
-   <file role="src" name="tomcrypt_hash.c"/>
-   <file role="src" name="tomcrypt_mac.c"/>
-   <file role="src" name="tomcrypt_misc.c"/>
-   <file role="src" name="tomcrypt_mode.c"/>
-   <file role="src" name="tomcrypt_rng.c"/>
-   <file role="src" name="php_tomcrypt_cipher.h"/>
-   <file role="src" name="php_tomcrypt_compat.h"/>
-   <file role="src" name="php_tomcrypt_crypt.h"/>
-   <file role="src" name="php_tomcrypt_crypt_cbc.h"/>
-   <file role="src" name="php_tomcrypt_crypt_ccm.h"/>
-   <file role="src" name="php_tomcrypt_crypt_cfb.h"/>
-   <file role="src" name="php_tomcrypt_crypt_chacha20poly1305.h"/>
-   <file role="src" name="php_tomcrypt_crypt_ctr.h"/>
-   <file role="src" name="php_tomcrypt_crypt_eax.h"/>
-   <file role="src" name="php_tomcrypt_crypt_ecb.h"/>
-   <file role="src" name="php_tomcrypt_crypt_f8.h"/>
-   <file role="src" name="php_tomcrypt_crypt_gcm.h"/>
-   <file role="src" name="php_tomcrypt_crypt_lrw.h"/>
-   <file role="src" name="php_tomcrypt_crypt_ocb.h"/>
-   <file role="src" name="php_tomcrypt_crypt_ocb3.h"/>
-   <file role="src" name="php_tomcrypt_crypt_ofb.h"/>
-   <file role="src" name="php_tomcrypt_crypt_stream.h"/>
-   <file role="src" name="php_tomcrypt_crypt_xts.h"/>
-   <file role="src" name="php_tomcrypt.h"/>
-   <file role="src" name="php_tomcrypt_hash.h"/>
-   <file role="src" name="php_tomcrypt_mac.h"/>
-   <file role="src" name="php_tomcrypt_mode.h"/>
-   <file role="src" name="php_tomcrypt_rng.h"/>
-   <file role="src" name="php_tomcrypt_utils.h"/>
-  </dir>
- </contents>
- <dependencies>
-  <required>
-   <php>
-    <min>5.3.0</min>
-    <max>7.2.0</max>
-   </php>
-   <pearinstaller>
-    <min>1.4.0a2</min>
-   </pearinstaller>
-  </required>
- </dependencies>
- <providesextension>tomcrypt</providesextension>
- <extsrcrelease />
- <changelog>
+  </release>
   <release>
  <date>2017-05-14</date>
  <time>19:15:00</time>

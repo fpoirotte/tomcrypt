@@ -1,3 +1,20 @@
+Version: 0.3.1
+Date: 2018-02-25 16:30:00
+Stability: beta
+
+notes: Sun, Feb 25, 2018 - tomcrypt 0.3.1
+
++ Changes:
+
+  - Added instructions on how to build the extension on Windows.
+
+= Fixed bugs:
+
+  - Fixed config.w32 so that it actually works under Windows.
+  - Replaced several calls to index() with equivalent calls to strchr()
+    for MSVC/C89 compatibility.
+
+
 Version: 0.3.0
 Date: 2017-12-30 23:59:59
 Stability: beta
