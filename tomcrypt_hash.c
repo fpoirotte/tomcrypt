@@ -228,7 +228,7 @@ PHP_FUNCTION(tomcrypt_list_hashes)
 static void php_tomcrypt_do_hash(INTERNAL_FUNCTION_PARAMETERS, int isfilename) /* {{{ */
 {
 	char           *algo, *data, hash[MAXBLOCKSIZE + 1];
-	unsigned long   hash_size;
+	unsigned long   hashsize;
 	pltc_size       algo_len, data_len;
 	int             index, err;
 	hash_state      md;
