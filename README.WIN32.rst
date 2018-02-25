@@ -6,11 +6,12 @@ Introduction
 
 This procedure has been successfully tested with the following configuration:
 
-*   Windows 7 with all available updates applied
+*   Windows 7 with all updates applied
 *   Visual Studio Community 2017
-*   libtommath (develop branch)
-*   libtomcrypt (v1.18.1)
-*   php_tomcrypt (develop branch)
+*   libtommath ("develop" branch)
+*   libtomcrypt ("v1.18.1" release)
+*   php_tomcrypt ("develop" branch)
+*   PHP 7.2.2
 
 
 Prerequisites
