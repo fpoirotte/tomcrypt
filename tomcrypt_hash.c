@@ -227,12 +227,13 @@ PHP_FUNCTION(tomcrypt_list_hashes)
 
 static void php_tomcrypt_do_hash(INTERNAL_FUNCTION_PARAMETERS, int isfilename) /* {{{ */
 {
-	char       *algo, *data, hash[MAXBLOCKSIZE + 1];
-	pltc_size   algo_len, data_len;
-	int         index, err;
-	hash_state  md;
-	zend_bool   raw_output = 0;
-	php_stream *stream = NULL;
+	char           *algo, *data, hash[MAXBLOCKSIZE + 1];
+	unsigned long   hash_size;
+	pltc_size       algo_len, data_len;
+	int             index, err;
+	hash_state      md;
+	zend_bool       raw_output = 0;
+	php_stream     *stream = NULL;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss|b",
 		&algo, &algo_len, &data, &data_len, &raw_output) == FAILURE) {
@@ -245,6 +246,7 @@ static void php_tomcrypt_do_hash(INTERNAL_FUNCTION_PARAMETERS, int isfilename) /
 		RETURN_FALSE;
 	}
 
+	hashsize = hash_descriptor[index].hashsize;
 	hash_descriptor[index].init(&md);
 	if (isfilename) {
 		char buf[1024];
@@ -262,32 +264,33 @@ static void php_tomcrypt_do_hash(INTERNAL_FUNCTION_PARAMETERS, int isfilename) /
 
 		while ((n = php_stream_read(stream, buf, sizeof(buf))) > 0) {
 			if ((err = hash_descriptor[index].process(&md, (unsigned char *) buf, n)) != CRYPT_OK) {
-				TOMCRYPT_G(last_error) = err;
-				php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
-				RETURN_FALSE;
+				goto error;
 			}
 		}
 		php_stream_close(stream);
 	} else {
 		if ((err = hash_descriptor[index].process(&md, data, data_len)) != CRYPT_OK) {
-			TOMCRYPT_G(last_error) = err;
-			php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
-			RETURN_FALSE;
+			goto error;
 		}
 	}
 
 	hash_descriptor[index].done(&md, hash);
-	hash[hash_descriptor[index].hashsize] = '\0';
+	hash[hashsize] = '\0';
 
 	if (raw_output) {
-		PLTC_RETURN_STRINGL(hash, hash_descriptor[index].hashsize, 1);
+		PLTC_RETURN_STRINGL(hash, hashsize, 1);
 	} else {
-		char *hex_digest = safe_emalloc(hash_descriptor[index].hashsize, 2, 1);
+		char *hex_digest = safe_emalloc(hashsize, 2, 1);
 
-		php_tomcrypt_bin2hex(hex_digest, (unsigned char *) hash, hash_descriptor[index].hashsize);
-		hex_digest[2 * hash_descriptor[index].hashsize] = '\0';
-		PLTC_RETURN_STRINGL(hex_digest, 2 * hash_descriptor[index].hashsize, 0);
+		php_tomcrypt_bin2hex(hex_digest, (unsigned char *) hash, hashsize);
+		hex_digest[2 * hashsize] = '\0';
+		PLTC_RETURN_STRINGL(hex_digest, 2 * hashsize, 0);
 	}
+
+error:
+	TOMCRYPT_G(last_error) = err;
+	php_error_docref(NULL TSRMLS_CC, E_WARNING, "%s", error_to_string(err));
+	RETURN_FALSE;
 }
 /* }}} */
 
