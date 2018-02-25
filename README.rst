@@ -29,6 +29,10 @@ I made this extension for two reasons:
 
 Installation
 ------------
+
+POSIX systems (Linux, etc.)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 You can install this extension using ``pear``:
 
 ..  sourcecode:: console
@@ -44,6 +48,21 @@ the following line to your ``php.ini``:
 ..  sourcecode:: ini
 
     extension=tomcrypt.so
+
+Microsoft Windows
+~~~~~~~~~~~~~~~~~
+
+Download a pre-built ``php_tomcrypt.dll`` from the
+`release page <https://github.com/fpoirotte/tomcrypt/releases/latest>`_
+or `compile the DLL yourself <./README.WIN32.rst>`_.
+
+After that, just drop the DLL into you're PHP installation's ``extension_dir``
+and add the following line of configuration to your ``php.ini``:
+
+..  sourcecode:: ini
+
+    extension=php_tomcrypt.dll
+
 
 Usage
 -----
@@ -287,15 +306,6 @@ Various algorithms of (pseudo-)random number generators are available:
     ``tomcrypt_rng_get_bytes()``, all the other generators are only PRNGs
     and should not be used when truly random data is required.
 
-
-Windows support
----------------
-The extension should compile and run just fine under Windows.
-Unfortunately, I do not have access to Windows development tools
-and cannot compile a binary release for Windows users.
-
-If you manage to compile the extension on Windows, please let us know through
-`our issue tracker <https://github.com/fpoirotte/tomcrypt/issues>`_.
 
 License
 -------
