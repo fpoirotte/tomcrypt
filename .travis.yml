@@ -17,7 +17,11 @@ php:
 
 notifications:
     email: false
-    irc: "irc.iiens.net#Clicky"
+    irc:
+      channels:
+        - "irc.iiens.net#Clicky"
+      on_success: change
+      on_failure: always
 
 before_install:
     - export TEST_PHP_EXECUTABLE=`which php`
