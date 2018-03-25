@@ -1,3 +1,14 @@
+Version: 0.3.2
+Date: 2018-03-25 23:59:59
+Stability: beta
+
+notes: Sun, Mar 25, 2018 - tomcrypt 0.3.2
+
++ Changes:
+
+  - Add support for PHP 7.2
+
+
 Version: 0.3.1
 Date: 2018-02-25 16:30:00
 Stability: beta
