@@ -36,7 +36,7 @@ if test "$PHP_TOMCRYPT" != "no"; then
       fi
     done
     if test -z "$LIBTOMCRYPT_INCDIR"; then
-      AC_MSG_ERROR([Please install LibTomCrypt - See https://github.com/https://github.com/libtom/libtomcrypt])
+      AC_MSG_ERROR([Please install LibTomCrypt - See https://github.com/libtom/libtomcrypt])
     fi
   fi
 
