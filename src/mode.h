@@ -16,21 +16,27 @@
   +----------------------------------------------------------------------+
 */
 
-#ifndef PHP_TOMCRYPT_MAC_H
-#define PHP_TOMCRYPT_MAC_H
+#ifndef PHP_TOMCRYPT_MODE_H
+#define PHP_TOMCRYPT_MODE_H
 
-#include "php_tomcrypt_compat.h"
+#include "compat.h"
 
-#define PHP_TOMCRYPT_MAC_BLAKE2B    "blake2b"
-#define PHP_TOMCRYPT_MAC_BLAKE2S    "blake2s"
-#define PHP_TOMCRYPT_MAC_CMAC       "cmac"
-#define PHP_TOMCRYPT_MAC_F9         "f9"
-#define PHP_TOMCRYPT_MAC_HMAC       "hmac"
-#define PHP_TOMCRYPT_MAC_PELICAN    "pelican"
-#define PHP_TOMCRYPT_MAC_PMAC       "pmac"
-#define PHP_TOMCRYPT_MAC_POLY1305   "poly1305"
-#define PHP_TOMCRYPT_MAC_XCBC       "xcbc"
+#define PHP_TOMCRYPT_MODE_CBC               "cbc"
+#define PHP_TOMCRYPT_MODE_CCM               "ccm"
+#define PHP_TOMCRYPT_MODE_CFB               "cfb"
+#define PHP_TOMCRYPT_MODE_CHACHA20POLY1305  "chacha20poly1305"
+#define PHP_TOMCRYPT_MODE_CTR               "ctr"
+#define PHP_TOMCRYPT_MODE_EAX               "eax"
+#define PHP_TOMCRYPT_MODE_ECB               "ecb"
+#define PHP_TOMCRYPT_MODE_F8                "f8"
+#define PHP_TOMCRYPT_MODE_GCM               "gcm"
+#define PHP_TOMCRYPT_MODE_LRW               "lrw"
+#define PHP_TOMCRYPT_MODE_OCB               "ocb"
+#define PHP_TOMCRYPT_MODE_OCB3              "ocb3"
+#define PHP_TOMCRYPT_MODE_OFB               "ofb"
+#define PHP_TOMCRYPT_MODE_STREAM            "stream" /* Hack for stream ciphers */
+#define PHP_TOMCRYPT_MODE_XTS               "xts"
 
-int init_macs(int module_number TSRMLS_DC);
+int init_modes(int module_number TSRMLS_DC);
 
-#endif /* PHP_TOMCRYPT_MAC_H */
+#endif /* PHP_TOMCRYPT_MODE_H */

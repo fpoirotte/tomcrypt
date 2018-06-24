@@ -17,24 +17,9 @@
 */
 
 #include <tomcrypt.h>
-#include "php_tomcrypt_cipher.h"
-#include "php_tomcrypt_mode.h"
-#include "php_tomcrypt_crypt.h"
-#include "php_tomcrypt_crypt_cbc.h"
-#include "php_tomcrypt_crypt_ccm.h"
-#include "php_tomcrypt_crypt_cfb.h"
-#include "php_tomcrypt_crypt_chacha20poly1305.h"
-#include "php_tomcrypt_crypt_ctr.h"
-#include "php_tomcrypt_crypt_eax.h"
-#include "php_tomcrypt_crypt_ecb.h"
-#include "php_tomcrypt_crypt_f8.h"
-#include "php_tomcrypt_crypt_gcm.h"
-#include "php_tomcrypt_crypt_lrw.h"
-#include "php_tomcrypt_crypt_ocb.h"
-#include "php_tomcrypt_crypt_ocb3.h"
-#include "php_tomcrypt_crypt_ofb.h"
-#include "php_tomcrypt_crypt_stream.h"
-#include "php_tomcrypt_crypt_xts.h"
+#include "cipher.h"
+#include "mode.h"
+#include "modes/crypt_mode.h"
 
 #ifdef LTC_RIJNDAEL
 #define PHP_TOMCRYPT_DESC_CIPHER_AES      &aes_desc

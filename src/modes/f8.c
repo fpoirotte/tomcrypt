@@ -1,18 +1,18 @@
 #include <tomcrypt.h>
-#include "php_tomcrypt_compat.h"
-#include "php_tomcrypt_crypt.h"
+#include "../compat.h"
+#include "crypt_mode.h"
 
-static void php_tomcrypt_xcrypt_ctr(PLTC_CRYPT_PARAM)
+void php_tomcrypt_xcrypt_f8(PLTC_CRYPT_PARAM)
 {
-#ifdef LTC_CTR_MODE
-	symmetric_CTR   ctx;
-	char           *output, *iv;
+#ifdef LTC_F8_MODE
+	symmetric_F8    ctx;
+	char           *output, *iv, *salt_key;
 	int             err;
-	pltc_size       iv_len;
-	pltc_long       num_rounds, ctr_mode;
+	pltc_long       num_rounds;
+	pltc_size       iv_len, salt_len;
 
 	GET_OPT_STRING(options, "iv", iv, iv_len, NULL);
-	GET_OPT_LONG(options, "ctr_mode", ctr_mode, 0);
+	GET_OPT_STRING(options, "salt_key", salt_key, salt_len, NULL);
 	GET_OPT_LONG(options, "rounds", num_rounds, 0);
 
 	output = emalloc(input_len + 1);
@@ -25,24 +25,31 @@ static void php_tomcrypt_xcrypt_ctr(PLTC_CRYPT_PARAM)
 		RETURN_FALSE;
 	}
 
-	if ((err = ctr_start(cipher, iv, key, key_len, num_rounds, ctr_mode, &ctx)) != CRYPT_OK) {
-	    goto error;
+	if (salt_key == NULL) {
+		efree(output);
+		TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
+		php_error_docref(NULL TSRMLS_CC, E_WARNING, "A salt_key is required in F8 mode");
+		RETURN_FALSE;
 	}
 
-    if (direction == PLTC_ENCRYPT) {
-        err = ctr_encrypt(input, output, input_len, &ctx);
-    } else {
-        err = ctr_decrypt(input, output, input_len, &ctx);
-    }
+
+	if ((err = f8_start(cipher, iv, key, key_len, salt_key, salt_len, num_rounds, &ctx)) != CRYPT_OK) {
+		goto error;
+	}
+
+	if (direction == PLTC_ENCRYPT) {
+		err = f8_encrypt(input, output, input_len, &ctx);
+	} else {
+		err = f8_decrypt(input, output, input_len, &ctx);
+	}
 
 	if (err != CRYPT_OK) {
 		goto error;
 	}
 
-	if ((err = ctr_done(&ctx)) != CRYPT_OK) {
+	if ((err = f8_done(&ctx)) != CRYPT_OK) {
 		goto error;
 	}
-
 	PLTC_RETURN_STRINGL(output, input_len, 0);
 
 error:

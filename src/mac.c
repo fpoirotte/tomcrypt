@@ -17,8 +17,8 @@
 */
 
 #include <tomcrypt.h>
-#include "php_tomcrypt_mac.h"
-#include "php_tomcrypt_utils.h"
+#include "mac.h"
+#include "utils.h"
 
 #define TOMCRYPT_DEFINE_MAC(mac) \
 	REGISTER_STRING_CONSTANT("TOMCRYPT_MAC_" #mac, PHP_TOMCRYPT_MAC_ ##mac , CONST_PERSISTENT | CONST_CS)

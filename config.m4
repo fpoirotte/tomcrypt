@@ -59,8 +59,6 @@ if test "$PHP_TOMCRYPT" != "no"; then
   ])
 
   PHP_SUBST(TOMCRYPT_SHARED_LIBADD)
-  EXT_TOMCRYPT_SOURCES="tomcrypt.c tomcrypt_cipher.c tomcrypt_hash.c \
-                        tomcrypt_mac.c tomcrypt_misc.c tomcrypt_mode.c \
-                        tomcrypt_rng.c"
+  EXT_TOMCRYPT_SOURCES=$(cd src/ && echo src/*.c src/modes/*.c)
   PHP_NEW_EXTENSION(tomcrypt, $EXT_TOMCRYPT_SOURCES, $ext_shared)
 fi

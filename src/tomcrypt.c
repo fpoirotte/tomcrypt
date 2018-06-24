@@ -29,15 +29,14 @@
 
 #include <tomcrypt.h>
 #include "php_tomcrypt.h"
-#include "php_tomcrypt_compat.h"
-#include "php_tomcrypt_rng.h"
-#include "php_tomcrypt_cipher.h"
-#include "php_tomcrypt_hash.h"
-#include "php_tomcrypt_mac.h"
-#include "php_tomcrypt_mode.h"
+#include "compat.h"
+#include "rng.h"
+#include "cipher.h"
+#include "hash.h"
+#include "mac.h"
+#include "mode.h"
 
 ZEND_DECLARE_MODULE_GLOBALS(tomcrypt)
-static PHP_MINFO_FUNCTION(tomcrypt);
 static PHP_GINIT_FUNCTION(tomcrypt);
 
 /* {{{ arginfo */

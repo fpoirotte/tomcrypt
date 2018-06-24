@@ -16,27 +16,19 @@
   +----------------------------------------------------------------------+
 */
 
-#ifndef PHP_TOMCRYPT_MODE_H
-#define PHP_TOMCRYPT_MODE_H
+#ifndef PHP_TOMCRYPT_RNG_H
+#define PHP_TOMCRYPT_RNG_H
 
-#include "php_tomcrypt_compat.h"
+#include "compat.h"
 
-#define PHP_TOMCRYPT_MODE_CBC               "cbc"
-#define PHP_TOMCRYPT_MODE_CCM               "ccm"
-#define PHP_TOMCRYPT_MODE_CFB               "cfb"
-#define PHP_TOMCRYPT_MODE_CHACHA20POLY1305  "chacha20poly1305"
-#define PHP_TOMCRYPT_MODE_CTR               "ctr"
-#define PHP_TOMCRYPT_MODE_EAX               "eax"
-#define PHP_TOMCRYPT_MODE_ECB               "ecb"
-#define PHP_TOMCRYPT_MODE_F8                "f8"
-#define PHP_TOMCRYPT_MODE_GCM               "gcm"
-#define PHP_TOMCRYPT_MODE_LRW               "lrw"
-#define PHP_TOMCRYPT_MODE_OCB               "ocb"
-#define PHP_TOMCRYPT_MODE_OCB3              "ocb3"
-#define PHP_TOMCRYPT_MODE_OFB               "ofb"
-#define PHP_TOMCRYPT_MODE_STREAM            "stream" /* Hack for stream ciphers */
-#define PHP_TOMCRYPT_MODE_XTS               "xts"
+#define PHP_TOMCRYPT_RNG_CHACHA20   "chacha20"
+#define PHP_TOMCRYPT_RNG_FORTUNA    "fortuna"
+#define PHP_TOMCRYPT_RNG_RC4        "rc4"
+#define PHP_TOMCRYPT_RNG_SECURE     "secure"
+#define PHP_TOMCRYPT_RNG_SOBER128   "sober128"
+#define PHP_TOMCRYPT_RNG_YARROW     "yarrow"
 
-int init_modes(int module_number TSRMLS_DC);
+int init_rngs(int module_number TSRMLS_DC);
+int deinit_rngs(void);
 
-#endif /* PHP_TOMCRYPT_MODE_H */
+#endif /* PHP_TOMCRYPT_RNG_H */

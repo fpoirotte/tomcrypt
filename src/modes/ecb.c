@@ -1,8 +1,8 @@
 #include <tomcrypt.h>
-#include "php_tomcrypt_compat.h"
-#include "php_tomcrypt_crypt.h"
+#include "../compat.h"
+#include "crypt_mode.h"
 
-static void php_tomcrypt_xcrypt_ecb(PLTC_CRYPT_PARAM)
+void php_tomcrypt_xcrypt_ecb(PLTC_CRYPT_PARAM)
 {
 #ifdef LTC_ECB_MODE
 	symmetric_ECB   ctx;

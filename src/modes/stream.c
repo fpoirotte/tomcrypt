@@ -1,19 +1,10 @@
 #include <tomcrypt.h>
 #include "Zend/zend_types.h"
-#include "php_tomcrypt_compat.h"
-#include "php_tomcrypt_cipher.h"
-#include "php_tomcrypt_crypt.h"
+#include "../compat.h"
+#include "../cipher.h"
+#include "crypt_mode.h"
 
-typedef enum {
-    /* -1 is reserved (invalid cipher / cipher not found),
-       positive values are used for block ciphers. */
-    PHP_TOMCRYPT_STREAM_CIPHER_RC4      = -2,
-    PHP_TOMCRYPT_STREAM_CIPHER_CHACHA   = -3,
-    PHP_TOMCRYPT_STREAM_CIPHER_SOBER128 = -4,
-} php_tomcrypt_stream_cipher;
-
-
-static void php_tomcrypt_xcrypt_stream_chacha(PLTC_CRYPT_PARAM)
+void php_tomcrypt_xcrypt_stream_chacha(PLTC_CRYPT_PARAM)
 {
 #ifdef LTC_CHACHA
     chacha_state state;

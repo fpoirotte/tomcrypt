@@ -1,10 +1,10 @@
 #include <tomcrypt.h>
-#include "php_tomcrypt_compat.h"
-#include "php_tomcrypt_crypt.h"
+#include "../compat.h"
+#include "crypt_mode.h"
 
-static void php_tomcrypt_xcrypt_gcm(PLTC_CRYPT_PARAM)
+void php_tomcrypt_xcrypt_chacha20poly1305(PLTC_CRYPT_PARAM)
 {
-#ifdef LTC_GCM_MODE
+#ifdef LTC_CHACHA20POLY1305_MODE
 	char           *output, *iv, *authdata, *in_tag, out_tag[MAXBLOCKSIZE + 1];
 	pltc_size       iv_len, authdata_len, in_tag_len;
 	int             err;
@@ -17,7 +17,7 @@ static void php_tomcrypt_xcrypt_gcm(PLTC_CRYPT_PARAM)
 	output = emalloc(input_len + 1);
 	output[input_len] = '\0';
 
-	if ((err = gcm_memory(cipher, key, key_len, iv, iv_len, authdata, authdata_len,
+	if ((err = chacha20poly1305_memory(key, key_len, iv, iv_len, authdata, authdata_len,
 		input, input_len, output, out_tag, &out_tag_len, direction)) != CRYPT_OK) {
 		efree(output);
 		TOMCRYPT_G(last_error) = err;

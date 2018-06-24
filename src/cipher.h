@@ -19,7 +19,7 @@
 #ifndef PHP_TOMCRYPT_CIPHER_H
 #define PHP_TOMCRYPT_CIPHER_H
 
-#include "php_tomcrypt_compat.h"
+#include "compat.h"
 
 #define PHP_TOMCRYPT_CIPHER_3DES        "3des"
 #define PHP_TOMCRYPT_CIPHER_AES         "aes"

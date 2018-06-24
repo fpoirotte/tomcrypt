@@ -17,7 +17,7 @@
 */
 
 #include <tomcrypt.h>
-#include "php_tomcrypt_compat.h"
+#include "compat.h"
 
 ZEND_EXTERN_MODULE_GLOBALS(tomcrypt)
 

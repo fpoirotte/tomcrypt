@@ -17,7 +17,7 @@
 */
 
 #include <tomcrypt.h>
-#include "php_tomcrypt_mode.h"
+#include "mode.h"
 
 #ifdef LTC_CBC_MODE
 #define PHP_TOMCRYPT_DESC_MODE_CBC 1

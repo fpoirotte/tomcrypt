@@ -16,21 +16,20 @@
   +----------------------------------------------------------------------+
 */
 
-#ifndef PHP_TOMCRYPT_H
-#define PHP_TOMCRYPT_H
+#ifndef PHP_EXT_TOMCRYPT_H
+#define PHP_EXT_TOMCRYPT_H
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
+#ifdef ZTS
+# include "TSRM.h"
 #endif
-
-#if HAVE_LIBTOMCRYPT
-
 
 #define PHP_TOMCRYPT_EXTNAME        "tomcrypt"
 #define PHP_TOMCRYPT_VERSION        "0.3.2"
 
 extern zend_module_entry tomcrypt_module_entry;
 #define tomcrypt_module_ptr &tomcrypt_module_entry
+
+extern int tomcrypt_module_number;
 
 /* Miscelleanous functions */
 PHP_FUNCTION(tomcrypt_clear);
@@ -67,10 +66,4 @@ PHP_FUNCTION(tomcrypt_mac_file);
 PHP_FUNCTION(tomcrypt_list_rngs);
 PHP_FUNCTION(tomcrypt_rng_get_bytes);
 
-#else
-#define tomcrypt_module_ptr NULL
-#endif
-
-#define phpext_tomcrypt_ptr tomcrypt_module_ptr
-
-#endif	/* PHP_TOMCRYPT_H */
+#endif	/* PHP_EXT_TOMCRYPT_H */

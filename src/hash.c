@@ -17,8 +17,8 @@
 */
 
 #include <tomcrypt.h>
-#include "php_tomcrypt_hash.h"
-#include "php_tomcrypt_utils.h"
+#include "hash.h"
+#include "utils.h"
 
 #ifdef LTC_BLAKE2B
 #define PHP_TOMCRYPT_DESC_HASH_BLAKE2B_160 &blake2b_160_desc

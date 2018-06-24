@@ -1,17 +1,15 @@
 #include <tomcrypt.h>
-#include "php_tomcrypt_compat.h"
-#include "php_tomcrypt_crypt.h"
+#include "../compat.h"
+#include "crypt_mode.h"
 
-ZEND_EXTERN_MODULE_GLOBALS(tomcrypt)
-
-static void php_tomcrypt_xcrypt_cbc(PLTC_CRYPT_PARAM)
+void php_tomcrypt_xcrypt_ofb(PLTC_CRYPT_PARAM)
 {
-#ifdef LTC_CBC_MODE
-	symmetric_CBC   ctx;
+#ifdef LTC_OFB_MODE
+	symmetric_OFB   ctx;
 	char           *output, *iv;
 	int             err;
-	pltc_long       num_rounds;
 	pltc_size       iv_len;
+	pltc_long       num_rounds;
 
 	GET_OPT_STRING(options, "iv", iv, iv_len, NULL);
 	GET_OPT_LONG(options, "rounds", num_rounds, 0);
@@ -26,21 +24,21 @@ static void php_tomcrypt_xcrypt_cbc(PLTC_CRYPT_PARAM)
 		RETURN_FALSE;
 	}
 
-	if ((err = cbc_start(cipher, iv, key, key_len, num_rounds, &ctx)) != CRYPT_OK) {
+	if ((err = ofb_start(cipher, iv, key, key_len, num_rounds, &ctx)) != CRYPT_OK) {
 	    goto error;
 	}
 
     if (direction == PLTC_ENCRYPT) {
-        err = cbc_encrypt(input, output, input_len, &ctx);
+        err = ofb_encrypt(input, output, input_len, &ctx);
     } else {
-        err = cbc_decrypt(input, output, input_len, &ctx);
+        err = ofb_decrypt(input, output, input_len, &ctx);
     }
 
 	if (err != CRYPT_OK) {
 		goto error;
 	}
 
-	if ((err = cbc_done(&ctx)) != CRYPT_OK) {
+	if ((err = ofb_done(&ctx)) != CRYPT_OK) {
 		goto error;
 	}
 	PLTC_RETURN_STRINGL(output, input_len, 0);
