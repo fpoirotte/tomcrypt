@@ -22,6 +22,7 @@
 
 #include "php.h"
 #include "SAPI.h"
+#include "Zend/zend_types.h"
 #include "ext/standard/html.h"
 #include "ext/standard/info.h"
 
@@ -42,124 +43,125 @@ static PHP_GINIT_FUNCTION(tomcrypt);
 /* {{{ arginfo */
 
 /* Misc. */
-ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_clear, 0, 0, 0)
+PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_tomcrypt_clear, 0, 0, IS_NULL, 1)
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_errno, 0, 0, 0)
+PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_tomcrypt_errno, 0, 0, IS_LONG, 0)
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_error, 0, 0, 0)
-	ZEND_ARG_INFO(0, errno)
+PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_tomcrypt_error, 0, 0, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, errno, IS_LONG, 1)
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_hkdf, 0, 0, 2)
-	ZEND_ARG_INFO(0, algo)
-	ZEND_ARG_INFO(0, input)
-	ZEND_ARG_INFO(0, length)
-	ZEND_ARG_INFO(0, salt)
-	ZEND_ARG_INFO(0, info)
+PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_tomcrypt_hkdf, 0, 2, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, algo, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, input, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, length, IS_LONG, 1)
+	PLTC_ARG_TYPE_INFO(0, salt, IS_STRING, 1)
+	PLTC_ARG_TYPE_INFO(0, info, IS_STRING, 1)
 ZEND_END_ARG_INFO()
 
 
 /* Lists */
-ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_list_modes, 0, 0, 0)
+PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_tomcrypt_list_modes, 0, 0, IS_ARRAY, 0)
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_list_ciphers, 0, 0, 0)
+PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_tomcrypt_list_ciphers, 0, 0, IS_ARRAY, 0)
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_list_hashes, 0, 0, 0)
+PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_tomcrypt_list_hashes, 0, 0, IS_ARRAY, 0)
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_list_macs, 0, 0, 0)
+PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_tomcrypt_list_macs, 0, 0, IS_ARRAY, 0)
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_list_rngs, 0, 0, 0)
+PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_tomcrypt_list_rngs, 0, 0, IS_ARRAY, 0)
 ZEND_END_ARG_INFO()
 
 
 /* Ciphers */
-ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_cipher_block_size, 0, 0, 1)
-	ZEND_ARG_INFO(0, cipher)
+PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_tomcrypt_cipher_block_size, 0, 1, IS_LONG, 0)
+	PLTC_ARG_TYPE_INFO(0, cipher, IS_STRING, 0)
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_cipher_adapt_key_size, 0, 0, 2)
-	ZEND_ARG_INFO(0, cipher)
-	ZEND_ARG_INFO(0, keysize)
+PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_tomcrypt_cipher_adapt_key_size, 0, 2, IS_LONG, 0)
+	PLTC_ARG_TYPE_INFO(0, cipher, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, keysize, IS_LONG, 0)
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_cipher_min_key_size, 0, 0, 1)
-	ZEND_ARG_INFO(0, cipher)
+PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_tomcrypt_cipher_min_key_size, 0, 1, IS_LONG, 0)
+	PLTC_ARG_TYPE_INFO(0, cipher, IS_STRING, 0)
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_cipher_max_key_size, 0, 0, 1)
-	ZEND_ARG_INFO(0, cipher)
+PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_tomcrypt_cipher_max_key_size, 0, 1, IS_LONG, 0)
+	PLTC_ARG_TYPE_INFO(0, cipher, IS_STRING, 0)
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_cipher_default_rounds, 0, 0, 1)
-	ZEND_ARG_INFO(0, cipher)
+PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_tomcrypt_cipher_default_rounds, 0, 1, IS_LONG, 0)
+	PLTC_ARG_TYPE_INFO(0, cipher, IS_STRING, 0)
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_cipher_encrypt, 0, 0, 4)
-	ZEND_ARG_INFO(0, cipher)
-	ZEND_ARG_INFO(0, key)
-	ZEND_ARG_INFO(0, plaintext)
-	ZEND_ARG_INFO(0, mode)
-	ZEND_ARG_INFO(0, options) /* array */
+PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_tomcrypt_cipher_encrypt, 0, 4, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, cipher, IS_STRING, 1) /* Optional for modes like ChaCha20 */
+	PLTC_ARG_TYPE_INFO(0, key, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, plaintext, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, mode, IS_STRING, 0)
+	ZEND_ARG_ARRAY_INFO(0, options, 1)
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_cipher_decrypt, 0, 0, 4)
-	ZEND_ARG_INFO(0, cipher)
-	ZEND_ARG_INFO(0, key)
-	ZEND_ARG_INFO(0, ciphertext)
-	ZEND_ARG_INFO(0, mode)
-	ZEND_ARG_INFO(0, options) /* array */
+PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_tomcrypt_cipher_decrypt, 0, 4, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, cipher, IS_STRING, 1) /* Optional for modes like ChaCha20 */
+	PLTC_ARG_TYPE_INFO(0, key, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, ciphertext, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, mode, IS_STRING, 0)
+	ZEND_ARG_ARRAY_INFO(0, options, 1)
 ZEND_END_ARG_INFO()
 
 
 /* Hashes */
-ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_hash_block_size, 0, 0, 1)
-	ZEND_ARG_INFO(0, hash)
+PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_tomcrypt_hash_block_size, 0, 1, IS_LONG, 0)
+	PLTC_ARG_TYPE_INFO(0, algo, IS_STRING, 0)
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_hash_digest_size, 0, 0, 1)
-	ZEND_ARG_INFO(0, hash)
+PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_tomcrypt_hash_digest_size, 0, 1, IS_LONG, 0)
+	PLTC_ARG_TYPE_INFO(0, algo, IS_STRING, 0)
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_hash_string, 0, 0, 2)
-	ZEND_ARG_INFO(0, algo)
-	ZEND_ARG_INFO(0, data)
-	ZEND_ARG_INFO(0, raw_output)
+PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_tomcrypt_hash_string, 0, 2, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, algo, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, data, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, raw_output, IS_BOOL, 1)
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_hash_file, 0, 0, 2)
-	ZEND_ARG_INFO(0, algo)
-	ZEND_ARG_INFO(0, filename)
-	ZEND_ARG_INFO(0, raw_output)
+PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_tomcrypt_hash_file, 0, 2, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, algo, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, filename, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, raw_output, IS_BOOL, 1)
 ZEND_END_ARG_INFO()
 
 
 /* MAC */
-ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_mac_string, 0, 0, 4)
-	ZEND_ARG_INFO(0, algo)
-	ZEND_ARG_INFO(0, cipher_hash)
-	ZEND_ARG_INFO(0, key)
-	ZEND_ARG_INFO(0, data)
-	ZEND_ARG_INFO(0, raw_output)
+PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_tomcrypt_mac_string, 0, 4, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, algo, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, cipher_hash, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, key, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, data, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, raw_output, IS_BOOL, 1)
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_mac_file, 0, 0, 4)
-	ZEND_ARG_INFO(0, algo)
-	ZEND_ARG_INFO(0, cipher_hash)
-	ZEND_ARG_INFO(0, key)
-	ZEND_ARG_INFO(0, filename)
-	ZEND_ARG_INFO(0, raw_output)
+PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_tomcrypt_mac_file, 0, 4, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, algo, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, cipher_hash, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, key, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, filename, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, raw_output, IS_BOOL, 1)
 ZEND_END_ARG_INFO()
+
 
 /* PRNGs */
-ZEND_BEGIN_ARG_INFO_EX(arginfo_tomcrypt_rng_get_bytes, 0, 0, 1)
-	ZEND_ARG_INFO(0, size)
-	ZEND_ARG_INFO(0, prng)
+PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_tomcrypt_rng_get_bytes, 0, 1, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, size, IS_LONG, 0)
+	PLTC_ARG_TYPE_INFO(0, prng, IS_STRING, 1)
 ZEND_END_ARG_INFO()
 
 /* }}} */
