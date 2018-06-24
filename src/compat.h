@@ -89,6 +89,24 @@
 # define php_output_write php_body_write
 #endif
 
+#if (PHP_VERSION_ID >= 70000)
+# define IS_BOOL _IS_BOOL
+# define PLTC_ARG_TYPE_INFO(pass_by_ref, name, type_hint, allow_null) \
+            ZEND_ARG_TYPE_INFO(pass_by_ref, name, type_hint, allow_null)
+# if (PHP_VERSION_ID >= 70200)
+#  define PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(name, return_reference, required_num_args, type, allow_null) \
+            ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(name, return_reference, required_num_args, type, allow_null)
+# else
+#  define PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(name, return_reference, required_num_args, type, allow_null) \
+            ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(name, return_reference, required_num_args, type, 0, allow_null)
+# endif
+#else
+# define PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(name, return_reference, required_num_args, type, allow_null) \
+            ZEND_BEGIN_ARG_INFO_EX(name, 0, return_reference, required_num_args)
+# define PLTC_ARG_TYPE_INFO(pass_by_ref, name, type_hint, allow_null) \
+            ZEND_ARG_INFO(pass_by_ref, name)
+#endif
+
 #ifdef ZEND_ENGINE_3
 typedef zend_long   pltc_long;
 typedef size_t      pltc_size;
