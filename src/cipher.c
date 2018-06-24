@@ -214,6 +214,10 @@ PHP_FUNCTION(tomcrypt_list_ciphers)
 {
 	int   i;
 
+	if (zend_parse_parameters_none() == FAILURE) {
+	    return;
+	}
+
 	array_init(return_value);
 	for (i = 0; cipher_descriptor[i].name != NULL; i++) {
 		pltc_add_index_string(return_value, i, cipher_descriptor[i].name, 1);

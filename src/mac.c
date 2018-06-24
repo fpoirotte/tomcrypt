@@ -189,6 +189,10 @@ PHP_FUNCTION(tomcrypt_list_macs)
 {
 	int   i = 0;
 
+	if (zend_parse_parameters_none() == FAILURE) {
+	    return;
+	}
+
 	array_init(return_value);
 	for (i = 0; php_tomcrypt_mac_descriptors[i].done != NULL; i++) {
 		pltc_add_index_string(return_value, i, php_tomcrypt_mac_descriptors[i].name, 1);

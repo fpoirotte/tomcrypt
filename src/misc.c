@@ -25,6 +25,10 @@ ZEND_EXTERN_MODULE_GLOBALS(tomcrypt)
    Clear the last error returned by LibTomCrypt. */
 PHP_FUNCTION(tomcrypt_clear)
 {
+	if (zend_parse_parameters_none() == FAILURE) {
+	    return;
+	}
+
 	TOMCRYPT_G(last_error) = 0;
 }
 /* }}} */
@@ -35,6 +39,10 @@ PHP_FUNCTION(tomcrypt_clear)
    function that failed. */
 PHP_FUNCTION(tomcrypt_errno)
 {
+	if (zend_parse_parameters_none() == FAILURE) {
+	    return;
+	}
+
 	RETURN_LONG(TOMCRYPT_G(last_error));
 }
 /* }}} */

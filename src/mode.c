@@ -158,6 +158,11 @@ int init_modes(int module_number TSRMLS_DC)
 PHP_FUNCTION(tomcrypt_list_modes)
 {
 	int i, j = 0;
+
+	if (zend_parse_parameters_none() == FAILURE) {
+	    return;
+	}
+
 	array_init(return_value);
 	for (i = 0; php_tomcrypt_modes[i].php_const != NULL; i++) {
 		if (php_tomcrypt_modes[i].present == 1) {

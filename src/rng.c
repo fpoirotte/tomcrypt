@@ -114,6 +114,11 @@ int deinit_prngs(void)
 PHP_FUNCTION(tomcrypt_list_rngs)
 {
 	int i, j = 0;
+
+	if (zend_parse_parameters_none() == FAILURE) {
+	    return;
+	}
+
 	array_init(return_value);
 	for (i = 0; php_tomcrypt_rngs[i].php_const != NULL; i++) {
 		if (php_tomcrypt_rngs[i].desc != NULL) {

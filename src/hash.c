@@ -218,6 +218,10 @@ PHP_FUNCTION(tomcrypt_list_hashes)
 {
 	int   i;
 
+	if (zend_parse_parameters_none() == FAILURE) {
+	    return;
+	}
+
 	array_init(return_value);
 	for (i = 0; hash_descriptor[i].name != NULL; i++) {
 		pltc_add_index_string(return_value, i, hash_descriptor[i].name, 1);
