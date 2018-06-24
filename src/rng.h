@@ -28,7 +28,7 @@
 #define PHP_TOMCRYPT_RNG_SOBER128   "sober128"
 #define PHP_TOMCRYPT_RNG_YARROW     "yarrow"
 
-int init_rngs(int module_number TSRMLS_DC);
-int deinit_rngs(void);
+int init_prngs(int module_number TSRMLS_DC);
+int deinit_prngs(void);
 
 #endif /* PHP_TOMCRYPT_RNG_H */
