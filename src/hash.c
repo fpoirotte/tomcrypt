@@ -298,7 +298,7 @@ error:
 }
 /* }}} */
 
-/* {{{ proto int tomcrypt_hash_block_size(string hash)
+/* {{{ proto int tomcrypt_hash_block_size(string algo)
    Get the block size of the specified hashing algorithm in bytes */
 PHP_FUNCTION(tomcrypt_hash_block_size)
 {
@@ -321,7 +321,7 @@ PHP_FUNCTION(tomcrypt_hash_block_size)
 }
 /* }}} */
 
-/* {{{ proto int tomcrypt_hash_digest_size(string hash)
+/* {{{ proto int tomcrypt_hash_digest_size(string algo)
    Get the digest output size of the specified hashing algorithm in bytes */
 PHP_FUNCTION(tomcrypt_hash_digest_size)
 {
