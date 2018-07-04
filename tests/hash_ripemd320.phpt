@@ -1,16 +1,16 @@
 --TEST--
-tomcrypt - SHA-1 hash
+tomcrypt - RIPEMD320 hash
 --SKIPIF--
 <?php
     if (!extension_loaded("tomcrypt")) {
         print "skip extension not loaded";
-    } elseif (!in_array(TOMCRYPT_HASH_SHA1, tomcrypt_list_hashes())) {
+    } elseif (!in_array(TOMCRYPT_HASH_RIPEMD320, tomcrypt_list_hashes())) {
         print "skip hash not available";
     }
 ?>
 --FILE--
 <?php
-    $hash = TOMCRYPT_HASH_SHA1;
+    $hash = TOMCRYPT_HASH_RIPEMD320;
     $data = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'hello.bin');
     var_dump(
         tomcrypt_hash_block_size($hash),
@@ -21,7 +21,7 @@ tomcrypt - SHA-1 hash
 ?>
 --EXPECT--
 int(64)
-int(20)
-string(40) "d3486ae9136e7856bc42212385ea797094475802"
-string(40) "d3486ae9136e7856bc42212385ea797094475802"
+int(40)
+string(80) "f1c1c231d301abcf2d7daae0269ff3e7bc68e623ad723aa068d316b056d26b7d1bb6f0cc0f28336d"
+string(80) "f1c1c231d301abcf2d7daae0269ff3e7bc68e623ad723aa068d316b056d26b7d1bb6f0cc0f28336d"
 

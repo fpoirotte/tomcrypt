@@ -1,16 +1,16 @@
 --TEST--
-tomcrypt - SHA-1 hash
+tomcrypt - MD4 hash
 --SKIPIF--
 <?php
     if (!extension_loaded("tomcrypt")) {
         print "skip extension not loaded";
-    } elseif (!in_array(TOMCRYPT_HASH_SHA1, tomcrypt_list_hashes())) {
+    } elseif (!in_array(TOMCRYPT_HASH_MD4, tomcrypt_list_hashes())) {
         print "skip hash not available";
     }
 ?>
 --FILE--
 <?php
-    $hash = TOMCRYPT_HASH_SHA1;
+    $hash = TOMCRYPT_HASH_MD4;
     $data = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'hello.bin');
     var_dump(
         tomcrypt_hash_block_size($hash),
@@ -21,7 +21,6 @@ tomcrypt - SHA-1 hash
 ?>
 --EXPECT--
 int(64)
-int(20)
-string(40) "d3486ae9136e7856bc42212385ea797094475802"
-string(40) "d3486ae9136e7856bc42212385ea797094475802"
-
+int(16)
+string(32) "0d7a9db5a3bed4ae5738ee6d1909649c"
+string(32) "0d7a9db5a3bed4ae5738ee6d1909649c"
