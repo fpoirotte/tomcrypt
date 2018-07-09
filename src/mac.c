@@ -219,6 +219,7 @@ static void php_tomcrypt_do_mac(INTERNAL_FUNCTION_PARAMETERS, int isfilename)
 
 	for (i = 0; php_tomcrypt_mac_descriptors[i].name != NULL; i++) {
 		if (!strcasecmp(php_tomcrypt_mac_descriptors[i].name, algo)) {
+			index = i;
 			break;
 		}
 	}
