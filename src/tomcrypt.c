@@ -290,6 +290,7 @@ static PHP_MINFO_FUNCTION(tomcrypt)
 	php_info_print_table_start();
 	php_info_print_table_header(2, "libtomcrypt support", "enabled");
 	php_info_print_table_row(2, "extension version", PHP_TOMCRYPT_VERSION);
+	php_info_print_table_row(2, "extension API version", PHP_TOMCRYPT_API_VERSION);
 	php_info_print_table_row(2, "library version", SCRYPT);
 	php_info_print_table_end();
 
