@@ -164,6 +164,15 @@ PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_tomcrypt_rng_get_bytes, 0, 1, IS
 	PLTC_ARG_TYPE_INFO(0, prng, IS_STRING, 0)
 ZEND_END_ARG_INFO()
 
+PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_tomcrypt_rng_import, 0, 2, IS_BOOL, 0)
+	PLTC_ARG_TYPE_INFO(0, prng, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, state, IS_STRING, 0)
+ZEND_END_ARG_INFO()
+
+PLTC_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_tomcrypt_rng_export, 0, 1, IS_STRING, 0)
+	PLTC_ARG_TYPE_INFO(0, prng, IS_STRING, 0)
+ZEND_END_ARG_INFO()
+
 /* }}} */
 
 const zend_function_entry tomcrypt_functions[] = { /* {{{ */

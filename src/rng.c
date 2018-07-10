@@ -170,3 +170,70 @@ PHP_FUNCTION(tomcrypt_rng_get_bytes)
 }
 /* }}} */
 
+/* {{{ proto bool tomcrypt_rng_import(string rng, string state)
+   Reset a (Pseudo-)RNG using the given state */
+PHP_FUNCTION(tomcrypt_rng_import)
+{
+	char          *rng, *state;
+	pltc_size      rng_len, state_len;
+	int            i, err;
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss", &rng, &rng_len, &state, &state_len) == FAILURE) {
+		return;
+	}
+
+	for (i = 0; php_tomcrypt_rngs[i].php_const != NULL; i++) {
+		if (strncmp(php_tomcrypt_rngs[i].php_value, rng, rng_len) || php_tomcrypt_rngs[i].desc == NULL) {
+			continue;
+		}
+
+		if ((err = php_tomcrypt_rngs[i].desc->pimport(rng, rng_len, &php_tomcrypt_rngs[i].state)) != CRYPT_OK) {
+			TOMCRYPT_G(last_error) = err;
+			RETURN_FALSE;
+		}
+
+        RETURN_TRUE;
+	}
+
+	php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unknown RNG: %s", rng);
+	RETURN_FALSE;
+}
+/* }}} */
+
+/* {{{ proto string tomcrypt_rng_export(string rng)
+   Export the current state of a (Pseudo-)RNG */
+PHP_FUNCTION(tomcrypt_rng_export)
+{
+	char          *rng;
+	pltc_size      rng_len;
+	int            i, err;
+	pltc_long      size;
+	unsigned char *buffer;
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &rng, &rng_len) == FAILURE) {
+		return;
+	}
+
+	for (i = 0; php_tomcrypt_rngs[i].php_const != NULL; i++) {
+		if (strncmp(php_tomcrypt_rngs[i].php_value, rng, rng_len) || php_tomcrypt_rngs[i].desc == NULL) {
+			continue;
+		}
+
+        size = php_tomcrypt_rngs[i].desc->export_size;
+		buffer = emalloc(size + 1);
+
+		if ((err = php_tomcrypt_rngs[i].desc->pexport(buffer, &size, &php_tomcrypt_rngs[i].state)) != CRYPT_OK) {
+		    efree(buffer);
+			TOMCRYPT_G(last_error) = err;
+			RETURN_FALSE;
+		}
+
+		buffer[size] = '\0';
+		PLTC_RETURN_STRINGL(buffer, size, 0);
+	}
+
+	php_error_docref(NULL TSRMLS_CC, E_WARNING, "Unknown RNG: %s", rng);
+	RETURN_FALSE;
+}
+/* }}} */
+

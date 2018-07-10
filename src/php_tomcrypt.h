@@ -65,5 +65,7 @@ PHP_FUNCTION(tomcrypt_mac_file);
 /* RNG-related functions */
 PHP_FUNCTION(tomcrypt_list_rngs);
 PHP_FUNCTION(tomcrypt_rng_get_bytes);
+PHP_FUNCTION(tomcrypt_rng_import);
+PHP_FUNCTION(tomcrypt_rng_export);
 
 #endif	/* PHP_EXT_TOMCRYPT_H */
