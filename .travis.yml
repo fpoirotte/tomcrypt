@@ -1,11 +1,12 @@
 language: php
 
 sudo: false
-dist: xenial
 
 addons:
     apt:
-        packages: libtomcrypt-dev
+        packages:
+            - libtomcrypt-dev
+            - valgrind
 
 php:
     - 5.4
@@ -38,4 +39,4 @@ install:
     - echo "extension=tomcrypt.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/tomcrypt.ini
 
 script:
-    - php run-tests.php -q --show-diff
+    - php run-tests.php -m -q --show-diff
