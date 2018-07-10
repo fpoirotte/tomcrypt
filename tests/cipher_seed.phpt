@@ -6,7 +6,8 @@ tomcrypt - KSEED cipher
         print "skip extension not loaded";
     } elseif (!in_array(TOMCRYPT_CIPHER_SEED, tomcrypt_list_ciphers())) {
         print "skip cipher not available";
-    }?>
+    }
+?>
 --FILE--
 <?php
     $cipher = TOMCRYPT_CIPHER_SEED;
