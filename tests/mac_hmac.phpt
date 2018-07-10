@@ -10,8 +10,6 @@ tomcrypt - HMAC mac
         print "skip hash not available";
     }
 ?>
---XFAIL--
-No access to alternative implementation for test vector comparison
 --FILE--
 <?php
     $mac  = TOMCRYPT_MAC_HMAC;
