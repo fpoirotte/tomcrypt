@@ -6,7 +6,7 @@ tomcrypt - Camellia cipher
         print "skip extension not loaded";
     } elseif (!in_array(TOMCRYPT_MODE_ECB, tomcrypt_list_modes())) {
         print "skip ECB mode not available";
-    } elseif (!in_array(TOMCRYPT_CIPHER_NOEKEON, tomcrypt_list_ciphers())) {
+    } elseif (!in_array(TOMCRYPT_CIPHER_CAMELLIA, tomcrypt_list_ciphers())) {
         print "skip cipher not available";
     } elseif (version_compare(LIBTOMCRYPT_VERSION_TEXT, '1.18', '<')) {
         // In LibTomCrypt <= 1.17, the implementation was broken.
