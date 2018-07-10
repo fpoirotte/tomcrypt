@@ -23,21 +23,21 @@ Install Visual Studio
 ---------------------
 
 First, download and install Visual Studio 2017.
-The `Visual Studio Community 2017`_ edition is sufficient.
+`Visual Studio Community 2017`_ is sufficient to compile the code.
 
-During the installation, make sure the "Desktop development with C++" component
-is selected, as well as the "Windows 8.1 SDK and UCRT SDK" optional sub-component.
+During the installation, make sure the ``Desktop development with C++`` component
+is selected, as well as the ``Windows 8.1 SDK and UCRT SDK`` optional sub-component.
 
 ..  note::
 
-    The web installer uses modern algorithm to sign its manifest.
+    The web installer uses modern algorithms to sign its manifest.
     Windows 7 (and probably others) did not come with the support for such
     algorithms when released. However, Microsoft has provided updates that
     add support for such algorithms.
 
     If you get an error about the verification of the manifest's signature
-    during the installation, make sure you have applied the latest updates
-    available for your version of Windows.
+    during Visual Studio's installation, make sure the latest updates available
+    for your system are installed.
 
 
 Compile dependencies
