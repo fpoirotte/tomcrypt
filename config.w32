@@ -18,6 +18,12 @@ if (PHP_TOMCRYPT != "no") {
 	    PHP_TOMCRYPT_SOURCES = PHP_TOMCRYPT_SOURCES + " " + basename;
     }
 
+    var PHP_TOMCRYPT_SRC_ARRAY = glob(configure_module_dirname + "/src/ciphers/*.c");
+    for (var i=0; i<PHP_TOMCRYPT_SRC_ARRAY.length; ++i) {
+	    var basename = FSO.GetFileName(PHP_TOMCRYPT_SRC_ARRAY[i]);
+	    PHP_TOMCRYPT_SOURCES = PHP_TOMCRYPT_SOURCES + " " + basename;
+    }
+
 	if (CHECK_HEADER_ADD_INCLUDE('tomcrypt.h', 'CFLAGS_TOMCRYPT') &&
 			CHECK_LIB('tomcrypt.lib', 'tomcrypt', PHP_TOMCRYPT)) {
 		EXTENSION('tomcrypt', PHP_TOMCRYPT_SOURCES);

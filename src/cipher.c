@@ -167,11 +167,16 @@
 #endif
 
 
+
+/* NULL cipher */
+extern const struct ltc_cipher_descriptor null_desc;
+
 #define TOMCRYPT_DEFINE_CIPHER(cname) \
     if (PHP_TOMCRYPT_DESC_CIPHER_ ## cname != NULL && register_cipher(PHP_TOMCRYPT_DESC_CIPHER_ ## cname) == -1) { \
 		return -1; \
 	} \
 	REGISTER_STRING_CONSTANT("TOMCRYPT_CIPHER_" # cname, PHP_TOMCRYPT_CIPHER_ ## cname, CONST_PERSISTENT | CONST_CS);
+
 
 int init_ciphers(int module_number TSRMLS_DC)
 {
@@ -205,6 +210,13 @@ int init_ciphers(int module_number TSRMLS_DC)
 	TOMCRYPT_DEFINE_CIPHER(TRIPLEDES);
 	TOMCRYPT_DEFINE_CIPHER(TWOFISH);
 	TOMCRYPT_DEFINE_CIPHER(XTEA);
+
+    /* The "null" cipher is not intended for general use,
+       thus we register it, but we don't declare a constant for it. */
+    if (register_cipher(&null_desc) == -1) {
+        return -1;
+    }
+
 	return 0;
 }
 
@@ -220,6 +232,11 @@ PHP_FUNCTION(tomcrypt_list_ciphers)
 
 	array_init(return_value);
 	for (i = 0; cipher_descriptor[i].name != NULL; i++) {
+	    /* Don't make the "null" cipher public to prevent accidental usage. */
+	    if (!strcmp(cipher_descriptor[i].name, null_desc.name)) {
+	        continue;
+	    }
+
 		pltc_add_index_string(return_value, i, cipher_descriptor[i].name, 1);
 	}
 }
