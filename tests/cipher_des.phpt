@@ -4,6 +4,8 @@ tomcrypt - DES cipher
 <?php
     if (!extension_loaded("tomcrypt")) {
         print "skip extension not loaded";
+    } elseif (!in_array(TOMCRYPT_MODE_ECB, tomcrypt_list_modes())) {
+        print "skip ECB mode not available";
     } elseif (!in_array(TOMCRYPT_CIPHER_DES, tomcrypt_list_ciphers())) {
         print "skip cipher not available";
     }
