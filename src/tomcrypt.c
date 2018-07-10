@@ -210,6 +210,8 @@ const zend_function_entry tomcrypt_functions[] = { /* {{{ */
 
 	/* PRNGs */
 	PHP_FE(tomcrypt_rng_get_bytes, 			arginfo_tomcrypt_rng_get_bytes)
+	PHP_FE(tomcrypt_rng_import, 			arginfo_tomcrypt_rng_import)
+	PHP_FE(tomcrypt_rng_export, 			arginfo_tomcrypt_rng_export)
 
 	PHP_FE_END
 };

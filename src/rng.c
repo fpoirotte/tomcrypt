@@ -187,7 +187,7 @@ PHP_FUNCTION(tomcrypt_rng_import)
 			continue;
 		}
 
-		if ((err = php_tomcrypt_rngs[i].desc->pimport(rng, rng_len, &php_tomcrypt_rngs[i].state)) != CRYPT_OK) {
+		if ((err = php_tomcrypt_rngs[i].desc->pimport(state, state_len, &php_tomcrypt_rngs[i].state)) != CRYPT_OK) {
 			TOMCRYPT_G(last_error) = err;
 			RETURN_FALSE;
 		}
