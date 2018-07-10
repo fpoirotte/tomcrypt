@@ -306,6 +306,32 @@ Various algorithms of (pseudo-)random number generators are available:
     ``tomcrypt_rng_get_bytes()``, all the other generators are only PRNGs
     and should not be used when truly random data is required.
 
+It is also possible to export/import the state of a random number generator
+(eg. to reseed a PRNG between restarts of the PHP interpreter or to get
+predictable outputs from the PRNG):
+
+..  sourcecode:: php
+
+    <?php
+        $rand0 = tomcrypt_rng_get_bytes(8, TOMCRYPT_RNG_RC4);
+        $state = tomcrypt_rng_export(TOMCRYPT_RNG_RC4);
+
+        tomcrypt_rng_import(TOMCRYPT_RNG_RC4, $state);
+        $rand1 = tomcrypt_rng_get_bytes(8, TOMCRYPT_RNG_RC4);
+        tomcrypt_rng_import(TOMCRYPT_RNG_RC4, $state);
+        $rand2 = tomcrypt_rng_get_bytes(8, TOMCRYPT_RNG_RC4);
+
+        var_dump($rand0 == $rand1); // bool(false)
+        var_dump($rand1 == $rand2); // bool(true)
+    ?>
+
+..  note::
+
+    Because ``TOMCRYPT_RNG_SECURE`` refers to the system's actual
+    random number generator, it is not possible to export/import
+    the state for that generator. Trying to do so will only result
+    in an empty state being exported/imported.
+
 
 License
 -------
