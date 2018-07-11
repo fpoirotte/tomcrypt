@@ -32,6 +32,12 @@ void php_tomcrypt_xcrypt_chacha20poly1305(PLTC_CRYPT_PARAM)
 	GET_OPT_STRING(options, "authdata", authdata, authdata_len, NULL);
 	GET_OPT_STRING(options, "tag", in_tag, in_tag_len, NULL);
 
+    if (key_len != 16 && key_len != 32) {
+		TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
+		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid key length (expected 16 or 32 bytes)");
+		RETURN_FALSE;
+    }
+
 	output = emalloc(input_len + 1);
 	output[input_len] = '\0';
 
