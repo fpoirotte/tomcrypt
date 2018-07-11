@@ -73,9 +73,11 @@ int null_keysize(int *keysize)
 const struct ltc_cipher_descriptor null_desc =
 {
     "null",
-    0x80, /* This ID probably won't be used internally by LibTomCrypt
+    0x80, /* ID: this particular ID probably won't be used by LibTomCrypt itself
              for a long time (currently, the biggest ID used is < 0x20). */
-    0, 0, 1, 1,
+    0, 0, /* min/max key size*/
+    1,    /* block size */
+    1,    /* default number of rounds */
     &null_setup,
     &null_ecb_encrypt,
     &null_ecb_decrypt,
