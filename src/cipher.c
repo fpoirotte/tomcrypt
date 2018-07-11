@@ -442,7 +442,7 @@ static void php_tomcrypt_do_crypt(INTERNAL_FUNCTION_PARAMETERS, int direction)
 	RETURN_FALSE;
 }
 
-/* {{{ proto string tomcrypt_cipher_encrypt(string cipher = null, string key,
+/* {{{ proto string tomcrypt_cipher_encrypt(string cipher, string key,
                                             string plaintext, string mode,
                                             &array options = array())
    Encrypt some data */
@@ -452,7 +452,7 @@ PHP_FUNCTION(tomcrypt_cipher_encrypt)
 }
 /* }}} */
 
-/* {{{ proto string tomcrypt_cipher_decrypt(string cipher = null, string key,
+/* {{{ proto string tomcrypt_cipher_decrypt(string cipher, string key,
                                             string ciphertext, string mode,
                                             array options = array())
    Decrypt some data */
