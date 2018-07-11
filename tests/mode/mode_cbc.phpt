@@ -13,11 +13,11 @@ PLTC_NULL=1
 --FILE--
 <?php
     $mode   = TOMCRYPT_MODE_CBC;
-    $cipher = TOMCRYPT_CIPHER_NULL_FAST;
+    $cipher = TOMCRYPT_CIPHER_NULL_128;
     $opts   = array(
-        'iv' => '????????',
+        'iv' => str_repeat('?', 16),
     );
-    $pt     = 'Testtest';
+    $pt     = 'Something secret';
     $key    = '';
     $ct     = tomcrypt_cipher_encrypt($cipher, $key, $pt, $mode, $opts);
     $exp    = $opts['iv'] ^ $pt;

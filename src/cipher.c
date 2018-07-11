@@ -170,10 +170,9 @@
 
 
 /* "null" family of ciphers */
-extern const struct ltc_cipher_descriptor null_desc, null_fast_desc, null_128_desc;
+extern const struct ltc_cipher_descriptor null_desc, null_128_desc;
 #define PHP_TOMCRYPT_DESC_CIPHER_NULL_REGULAR   &null_desc
 #define PHP_TOMCRYPT_DESC_CIPHER_NULL_128       &null_128_desc
-#define PHP_TOMCRYPT_DESC_CIPHER_NULL_FAST      &null_fast_desc
 
 
 #define TOMCRYPT_DEFINE_CIPHER(cname) \
@@ -220,7 +219,6 @@ int init_ciphers(int module_number TSRMLS_DC)
        defined in the interpreter's environment before execution. */
     if (getenv("PLTC_NULL") != NULL) {
         TOMCRYPT_DEFINE_CIPHER(NULL_REGULAR);
-        TOMCRYPT_DEFINE_CIPHER(NULL_FAST);
         TOMCRYPT_DEFINE_CIPHER(NULL_128);
     }
 

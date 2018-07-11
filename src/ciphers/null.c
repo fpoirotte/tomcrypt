@@ -103,29 +103,6 @@ const struct ltc_cipher_descriptor null_128_desc =
     &null_done,
     &null_keysize,
     NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
-}, null_fast_desc = {
-    /* fast "null" cipher, with a word-aligned block size for performance */
-    "null-fast",
-    0x81,
-    0, 0,
-#ifdef LTC_FAST
-    sizeof(LTC_FAST_TYPE),
-#else
-    1,
-#endif
-    1,
-    &null_setup,
-#ifdef LTC_FAST
-    &null_ecb_encrypt_fast,
-    &null_ecb_encrypt_fast,
-#else
-    &null_ecb_encrypt,
-    &null_ecb_encrypt,
-#endif
-    &null_test,
-    &null_done,
-    &null_keysize,
-    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
 }, null_desc = {
     /* regular "null" cipher, with a fixed 8-bit block size */
     "null",
