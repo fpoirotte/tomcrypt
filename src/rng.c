@@ -145,7 +145,7 @@ PHP_FUNCTION(tomcrypt_rng_get_bytes)
 
 	if (size <= 0) {
 		TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
-		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid size (%d)", size);
+		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid size");
 		RETURN_FALSE;
 	}
 
