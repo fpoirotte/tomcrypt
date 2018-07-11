@@ -54,6 +54,11 @@
 #define PHP_TOMCRYPT_CIPHER_TWOFISH     "twofish"
 #define PHP_TOMCRYPT_CIPHER_XTEA        "xtea"
 
+/* "null" family of ciphers, intended for unit tests only */
+#define PHP_TOMCRYPT_CIPHER_NULL_REGULAR    "null"
+#define PHP_TOMCRYPT_CIPHER_NULL_128        "null-128"
+#define PHP_TOMCRYPT_CIPHER_NULL_FAST       "null-fast"
+
 int init_ciphers(int module_number TSRMLS_DC);
 
 #endif /* PHP_TOMCRYPT_CIPHER_H */

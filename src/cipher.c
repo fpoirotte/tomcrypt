@@ -16,6 +16,7 @@
   +----------------------------------------------------------------------+
 */
 
+#include <stdlib.h>
 #include <tomcrypt.h>
 #include "cipher.h"
 #include "mode.h"
@@ -168,8 +169,12 @@
 
 
 
-/* NULL cipher */
-extern const struct ltc_cipher_descriptor null_desc;
+/* "null" family of ciphers */
+extern const struct ltc_cipher_descriptor null_desc, null_fast_desc, null_128_desc;
+#define PHP_TOMCRYPT_DESC_CIPHER_NULL_REGULAR   &null_desc
+#define PHP_TOMCRYPT_DESC_CIPHER_NULL_128       &null_128_desc
+#define PHP_TOMCRYPT_DESC_CIPHER_NULL_FAST      &null_fast_desc
+
 
 #define TOMCRYPT_DEFINE_CIPHER(cname) \
     if (PHP_TOMCRYPT_DESC_CIPHER_ ## cname != NULL && register_cipher(PHP_TOMCRYPT_DESC_CIPHER_ ## cname) == -1) { \
@@ -211,10 +216,12 @@ int init_ciphers(int module_number TSRMLS_DC)
 	TOMCRYPT_DEFINE_CIPHER(TWOFISH);
 	TOMCRYPT_DEFINE_CIPHER(XTEA);
 
-    /* The "null" cipher is not intended for general use,
-       thus we register it, but we don't declare a constant for it. */
-    if (register_cipher(&null_desc) == -1) {
-        return -1;
+    /* We only expose the "null" family of ciphers if PLTC_NULL has been
+       defined in the interpreter's environment before execution. */
+    if (getenv("PLTC_NULL") != NULL) {
+        TOMCRYPT_DEFINE_CIPHER(NULL_REGULAR);
+        TOMCRYPT_DEFINE_CIPHER(NULL_FAST);
+        TOMCRYPT_DEFINE_CIPHER(NULL_128);
     }
 
 	return 0;
@@ -232,11 +239,6 @@ PHP_FUNCTION(tomcrypt_list_ciphers)
 
 	array_init(return_value);
 	for (i = 0; cipher_descriptor[i].name != NULL; i++) {
-	    /* Don't make the "null" cipher public to prevent accidental usage. */
-	    if (!strcmp(cipher_descriptor[i].name, null_desc.name)) {
-	        continue;
-	    }
-
 		pltc_add_index_string(return_value, i, cipher_descriptor[i].name, 1);
 	}
 }

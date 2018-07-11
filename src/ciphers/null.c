@@ -38,15 +38,32 @@ int null_ecb_encrypt(const unsigned char *pt, unsigned char *ct, symmetric_key *
 {
     LTC_ARGCHK(pt   != NULL);
     LTC_ARGCHK(ct   != NULL);
+
     *ct = *pt;
     return CRYPT_OK;
 }
 
-int null_ecb_decrypt(const unsigned char *ct, unsigned char *pt, symmetric_key *skey)
+#ifdef LTC_FAST
+int null_ecb_encrypt_fast(const unsigned char *pt, unsigned char *ct, symmetric_key *skey)
 {
     LTC_ARGCHK(pt   != NULL);
     LTC_ARGCHK(ct   != NULL);
-    *pt = *ct;
+
+    *(LTC_FAST_TYPE_PTR_CAST(ct)) = *(LTC_FAST_TYPE_PTR_CAST(pt));
+    return CRYPT_OK;
+}
+#endif
+
+int null_ecb_encrypt_128(const unsigned char *pt, unsigned char *ct, symmetric_key *skey)
+{
+    int i;
+
+    LTC_ARGCHK(pt   != NULL);
+    LTC_ARGCHK(ct   != NULL);
+
+    for (i = 0; i < 16; i++) {
+        *(ct + i) = *(pt + i);
+    }
     return CRYPT_OK;
 }
 
@@ -70,17 +87,55 @@ int null_keysize(int *keysize)
    }
 }
 
-const struct ltc_cipher_descriptor null_desc =
+const struct ltc_cipher_descriptor null_128_desc =
 {
-    "null",
+    /* "null" cipher, with a fixed 128-bit block size */
+    "null-128",
     0x80, /* ID: this particular ID probably won't be used by LibTomCrypt itself
              for a long time (currently, the biggest ID used is < 0x20). */
-    0, 0, /* min/max key size*/
-    1,    /* block size */
+    0, 0, /* minimum/maximum key size (in bytes) */
+    16,   /* block size (in bytes) */
     1,    /* default number of rounds */
     &null_setup,
+    &null_ecb_encrypt_128,
+    &null_ecb_encrypt_128, /* Decryption is the same as encrypton */
+    &null_test,
+    &null_done,
+    &null_keysize,
+    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+}, null_fast_desc = {
+    /* fast "null" cipher, with a word-aligned block size for performance */
+    "null-fast",
+    0x81,
+    0, 0,
+#ifdef LTC_FAST
+    sizeof(LTC_FAST_TYPE),
+#else
+    1,
+#endif
+    1,
+    &null_setup,
+#ifdef LTC_FAST
+    &null_ecb_encrypt_fast,
+    &null_ecb_encrypt_fast,
+#else
     &null_ecb_encrypt,
-    &null_ecb_decrypt,
+    &null_ecb_encrypt,
+#endif
+    &null_test,
+    &null_done,
+    &null_keysize,
+    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+}, null_desc = {
+    /* regular "null" cipher, with a fixed 8-bit block size */
+    "null",
+    0x82,
+    0, 0,
+    1,
+    1,
+    &null_setup,
+    &null_ecb_encrypt,
+    &null_ecb_encrypt,
     &null_test,
     &null_done,
     &null_keysize,
