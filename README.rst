@@ -333,6 +333,20 @@ predictable outputs from the PRNG):
     in an empty state being exported/imported.
 
 
+Caveats
+-------
+
+The following is a list of currently known problems:
+
+*   For the time being, the API for Authenticated Encryption
+    (using the ``options`` array to pass the expected tag during decryption)
+    is a bit awkward to work with.
+
+*   The context used during encryption/decryption with stream ciphers
+    is reinitialized between each operation, therefore making it unusable
+    in any real streaming scenario.
+
+
 License
 -------
 libtomcrypt is released under a dual
