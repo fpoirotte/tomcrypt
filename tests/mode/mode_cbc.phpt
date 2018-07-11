@@ -8,7 +8,25 @@ tomcrypt - CBC mode
         print "skip mode not available";
     }
 ?>
+--ENV--
+PLTC_NULL=1
 --FILE--
-<?php var_dump(in_array(TOMCRYPT_MODE_CBC, tomcrypt_list_modes())); ?>
+<?php
+    $mode   = TOMCRYPT_MODE_CBC;
+    $cipher = TOMCRYPT_CIPHER_NULL_FAST;
+    $opts   = array(
+        'iv' => '????????',
+    );
+    $pt     = 'Testtest';
+    $key    = '';
+    $ct     = tomcrypt_cipher_encrypt($cipher, $key, $pt, $mode, $opts);
+    $exp    = $opts['iv'] ^ $pt;
+    var_dump($ct === $exp);
+
+    $pt2    = tomcrypt_cipher_decrypt($cipher, $key, $ct, $mode, $opts);
+    var_dump($pt === $pt2);
+?>
 --EXPECT--
 bool(true)
+bool(true)
+

@@ -8,22 +8,25 @@ tomcrypt - OFB mode
         print "skip mode not available";
     }
 ?>
+--ENV--
+PLTC_NULL=1
 --FILE--
 <?php
     $mode   = TOMCRYPT_MODE_OFB;
+    $cipher = TOMCRYPT_CIPHER_NULL_REGULAR;
     $opts   = array(
         'iv' => '?',
     );
     $pt     = 'Test';
     $key    = '';
-    $ct     = tomcrypt_cipher_encrypt("null", $key, $pt, $mode, $opts);
+    $ct     = tomcrypt_cipher_encrypt($cipher, $key, $pt, $mode, $opts);
     $exp    = ($opts['iv'] ^ $pt[0]) .
               ($opts['iv'] ^ $pt[1]) .
               ($opts['iv'] ^ $pt[2]) .
               ($opts['iv'] ^ $pt[3]);
     var_dump($ct === $exp);
 
-    $pt2    = tomcrypt_cipher_decrypt("null", $key, $ct, $mode, $opts);
+    $pt2    = tomcrypt_cipher_decrypt($cipher, $key, $ct, $mode, $opts);
     var_dump($pt === $pt2);
 ?>
 --EXPECT--
