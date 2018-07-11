@@ -34,12 +34,6 @@ modules/
 *.loT
 
 # make test
-tests/*.sh
-tests/*.log
-tests/*.diff
-tests/*.out
-tests/*.exp
-tests/*.php
 tmp-php.ini
 
 # releases
