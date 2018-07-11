@@ -34,6 +34,12 @@ void php_tomcrypt_xcrypt_ccm(PLTC_CRYPT_PARAM)
 	GET_OPT_STRING(options, "authdata", authdata, authdata_len, NULL);
 	GET_OPT_STRING(options, "tag", in_tag, in_tag_len, NULL);
 
+    if (nonce == NULL) {
+		TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
+		php_error_docref(NULL TSRMLS_CC, E_WARNING, "A nonce is required in CCM mode");
+		RETURN_FALSE;
+    }
+
 	output = emalloc(input_len + 1);
 	output[input_len] = '\0';
 
