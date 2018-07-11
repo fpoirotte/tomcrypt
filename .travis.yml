@@ -30,6 +30,7 @@ before_install:
     - export TEST_PHP_SRCDIR=`pwd`
     - export REPORT_EXIT_STATUS=1
     - export NO_INTERACTION=1
+    - if [ "$TRAVIS_EVENT_TYPE" = "cron" ] && [ "$TRAVIS_PHP_VERSION" = "nightly" ]; then export TEST_OPTIONS=-m; else export TEST_OPTIONS=; fi
 
 install:
     - phpize
@@ -39,4 +40,4 @@ install:
     - echo "extension=tomcrypt.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/tomcrypt.ini
 
 script:
-    - php run-tests.php -m -q --show-diff
+    - php run-tests.php $TEST_OPTIONS -q --show-diff
