@@ -34,6 +34,8 @@
 #define PLTC_ENCRYPT 0
 #define PLTC_DECRYPT 1
 
+#define PLTC_DEFAULT_TAG_LENGTH 16
+
 typedef enum {
     /* -1 is reserved (invalid cipher / cipher not found),
        positive values are used for block ciphers. */

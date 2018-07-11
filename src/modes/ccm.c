@@ -34,9 +34,21 @@ void php_tomcrypt_xcrypt_ccm(PLTC_CRYPT_PARAM)
 	GET_OPT_STRING(options, "authdata", authdata, authdata_len, NULL);
 	GET_OPT_STRING(options, "tag", in_tag, in_tag_len, NULL);
 
+    if (direction == PLTC_ENCRYPT) {
+    	GET_OPT_LONG(options, "taglen", out_tag_len, PLTC_DEFAULT_TAG_LENGTH);
+    } else {
+        out_tag_len = in_tag_len;
+    }
+
     if (nonce == NULL) {
 		TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "A nonce is required in CCM mode");
+		RETURN_FALSE;
+    }
+
+    if (out_tag_len < 4 || out_tag_len > 16 || out_tag_len % 2) {
+		TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
+		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid tag length (should be an even number between 4 and 16)");
 		RETURN_FALSE;
     }
 

@@ -32,6 +32,12 @@ void php_tomcrypt_xcrypt_gcm(PLTC_CRYPT_PARAM)
 	GET_OPT_STRING(options, "authdata", authdata, authdata_len, NULL);
 	GET_OPT_STRING(options, "tag", in_tag, in_tag_len, NULL);
 
+    if (direction == PLTC_ENCRYPT) {
+    	GET_OPT_LONG(options, "taglen", out_tag_len, PLTC_DEFAULT_TAG_LENGTH);
+    } else {
+        out_tag_len = in_tag_len;
+    }
+
 	output = emalloc(input_len + 1);
 	output[input_len] = '\0';
 

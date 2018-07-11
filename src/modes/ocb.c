@@ -31,6 +31,12 @@ void php_tomcrypt_xcrypt_ocb(PLTC_CRYPT_PARAM)
 	GET_OPT_STRING(options, "nonce", nonce, nonce_len, NULL);
 	GET_OPT_STRING(options, "tag", in_tag, in_tag_len, NULL);
 
+    if (direction == PLTC_ENCRYPT) {
+    	GET_OPT_LONG(options, "taglen", out_tag_len, PLTC_DEFAULT_TAG_LENGTH);
+    } else {
+        out_tag_len = in_tag_len;
+    }
+
 	output = emalloc(input_len + 1);
 	output[input_len] = '\0';
 
@@ -56,6 +62,13 @@ void php_tomcrypt_xcrypt_ocb(PLTC_CRYPT_PARAM)
 		    pltc_add_assoc_stringl(options, "tag", out_tag, out_tag_len, 1);
 	    }
     } else {
+        if (in_tag == NULL) {
+			efree(output);
+		    TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
+		    php_error_docref(NULL TSRMLS_CC, E_WARNING, "A tag is required when decrypting");
+		    RETURN_FALSE;
+        }
+
 		if ((err = ocb_decrypt_verify_memory(cipher, key, key_len, nonce,
 			input, input_len, output, in_tag, (unsigned long) in_tag_len, &res)) != CRYPT_OK) {
 			efree(output);
