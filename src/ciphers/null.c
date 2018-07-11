@@ -43,17 +43,6 @@ int null_ecb_encrypt(const unsigned char *pt, unsigned char *ct, symmetric_key *
     return CRYPT_OK;
 }
 
-#ifdef LTC_FAST
-int null_ecb_encrypt_fast(const unsigned char *pt, unsigned char *ct, symmetric_key *skey)
-{
-    LTC_ARGCHK(pt   != NULL);
-    LTC_ARGCHK(ct   != NULL);
-
-    *(LTC_FAST_TYPE_PTR_CAST(ct)) = *(LTC_FAST_TYPE_PTR_CAST(pt));
-    return CRYPT_OK;
-}
-#endif
-
 int null_ecb_encrypt_128(const unsigned char *pt, unsigned char *ct, symmetric_key *skey)
 {
     int i;
