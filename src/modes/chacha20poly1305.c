@@ -31,10 +31,17 @@ void php_tomcrypt_xcrypt_chacha20poly1305(PLTC_CRYPT_PARAM)
 	GET_OPT_STRING(options, "iv", iv, iv_len, NULL);
 	GET_OPT_STRING(options, "authdata", authdata, authdata_len, NULL);
 	GET_OPT_STRING(options, "tag", in_tag, in_tag_len, NULL);
+	GET_OPT_LONG(options, "taglen", out_tag_len, 16);
 
     if (key_len != 16 && key_len != 32) {
 		TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid key length (expected 16 or 32 bytes)");
+		RETURN_FALSE;
+    }
+
+    if (out_tag_len < 16 || out_tag_len > MAXBLOCKSIZE) {
+		TOMCRYPT_G(last_error) = CRYPT_INVALID_ARG;
+		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid tag length (should be between 16 and %d)", MAXBLOCKSIZE);
 		RETURN_FALSE;
     }
 
