@@ -258,6 +258,13 @@ static PHP_MINIT_FUNCTION(tomcrypt)
 	REGISTER_STRING_CONSTANT("TOMCRYPT_VERSION", PHP_TOMCRYPT_VERSION, CONST_PERSISTENT | CONST_CS);
 	REGISTER_STRING_CONSTANT("TOMCRYPT_API_VERSION", PHP_TOMCRYPT_API_VERSION, CONST_PERSISTENT | CONST_CS);
 
+    /* Expose whether LTC was compiled in fast mode or not. */
+#ifdef LTC_FAST
+	REGISTER_BOOL_CONSTANT("TOMCRYPT_FAST", 1, CONST_PERSISTENT | CONST_CS);
+#else
+	REGISTER_BOOL_CONSTANT("TOMCRYPT_FAST", 0, CONST_PERSISTENT | CONST_CS);
+#endif
+
     /* Initialize the various components.
        PRNGs must be initialized last due to dependencies. */
 	if (init_ciphers(module_number TSRMLS_CC) != 0 ||
