@@ -9,7 +9,7 @@ tomcrypt - ChaCha20-Poly1305 mode
     }
 ?>
 --ENV--
-PLTC_NULL=1
+PLTC_TESTS=1
 --FILE--
 <?php
     $mode   = TOMCRYPT_MODE_CHACHA20POLY1305;
@@ -42,7 +42,7 @@ string(228) "d31a8d34648e60db7b86afbc53ef7ec2a4aded51296e08fea9e2b5a736ee62d63db
 string(32) "1ae10b594f09e26a7e902ecbd0600691"
 bool(true)
 
-Warning: tomcrypt_cipher_decrypt(): Tag verification failed in %s on line %d
+Warning: tomcrypt_cipher_decrypt(): Invalid tag length (should be between 16 and 128) in %s on line %d
 bool(false)
 
 Warning: tomcrypt_cipher_decrypt(): Tag verification failed in %s on line %d
