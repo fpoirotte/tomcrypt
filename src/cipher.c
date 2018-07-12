@@ -169,11 +169,11 @@
 
 
 
-/* "null" family of ciphers */
-extern const struct ltc_cipher_descriptor null_desc, null_128_desc;
+/* Ciphers intended for unit tests only */
+extern const struct ltc_cipher_descriptor null_desc, null_128_desc, test_aes_desc;
 #define PHP_TOMCRYPT_DESC_CIPHER_NULL_REGULAR   &null_desc
 #define PHP_TOMCRYPT_DESC_CIPHER_NULL_128       &null_128_desc
-
+#define PHP_TOMCRYPT_DESC_CIPHER_TEST_AES       &test_aes_desc
 
 #define TOMCRYPT_DEFINE_CIPHER(cname) \
     if (PHP_TOMCRYPT_DESC_CIPHER_ ## cname != NULL && register_cipher(PHP_TOMCRYPT_DESC_CIPHER_ ## cname) == -1) { \
@@ -215,11 +215,12 @@ int init_ciphers(int module_number TSRMLS_DC)
 	TOMCRYPT_DEFINE_CIPHER(TWOFISH);
 	TOMCRYPT_DEFINE_CIPHER(XTEA);
 
-    /* We only expose the "null" family of ciphers if PLTC_NULL has been
+    /* We only expose the test ciphers if PLTC_TESTS has been
        defined in the interpreter's environment before execution. */
-    if (getenv("PLTC_NULL") != NULL) {
+    if (getenv("PLTC_TESTS") != NULL) {
         TOMCRYPT_DEFINE_CIPHER(NULL_REGULAR);
         TOMCRYPT_DEFINE_CIPHER(NULL_128);
+        TOMCRYPT_DEFINE_CIPHER(TEST_AES);
     }
 
 	return 0;
