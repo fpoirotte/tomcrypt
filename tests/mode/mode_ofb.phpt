@@ -9,7 +9,7 @@ tomcrypt - OFB mode
     }
 ?>
 --ENV--
-PLTC_NULL=1
+PLTC_TESTS=1
 --FILE--
 <?php
     $mode   = TOMCRYPT_MODE_OFB;
