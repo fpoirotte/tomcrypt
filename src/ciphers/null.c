@@ -18,7 +18,7 @@
 
 #include <tomcrypt.h>
 
-int null_setup(const unsigned char *key, int keylen, int num_rounds, symmetric_key *skey)
+static int null_setup(const unsigned char *key, int keylen, int num_rounds, symmetric_key *skey)
 {
     LTC_ARGCHK(key   != NULL);
     LTC_ARGCHK(skey  != NULL);
@@ -34,7 +34,7 @@ int null_setup(const unsigned char *key, int keylen, int num_rounds, symmetric_k
     return CRYPT_OK;
 }
 
-int null_ecb_encrypt(const unsigned char *pt, unsigned char *ct, symmetric_key *skey)
+static int null_ecb_encrypt(const unsigned char *pt, unsigned char *ct, symmetric_key *skey)
 {
     LTC_ARGCHK(pt   != NULL);
     LTC_ARGCHK(ct   != NULL);
@@ -43,7 +43,7 @@ int null_ecb_encrypt(const unsigned char *pt, unsigned char *ct, symmetric_key *
     return CRYPT_OK;
 }
 
-int null_ecb_encrypt_128(const unsigned char *pt, unsigned char *ct, symmetric_key *skey)
+static int null_ecb_encrypt_128(const unsigned char *pt, unsigned char *ct, symmetric_key *skey)
 {
     int i;
 
@@ -56,16 +56,11 @@ int null_ecb_encrypt_128(const unsigned char *pt, unsigned char *ct, symmetric_k
     return CRYPT_OK;
 }
 
-int null_test(void)
-{
-   return CRYPT_NOP;
-}
-
-void null_done(symmetric_key *skey)
+static void null_done(symmetric_key *skey)
 {
 }
 
-int null_keysize(int *keysize)
+static int null_keysize(int *keysize)
 {
    LTC_ARGCHK(keysize != NULL);
    if (*keysize >= 0) {
@@ -88,21 +83,21 @@ const struct ltc_cipher_descriptor null_128_desc =
     &null_setup,
     &null_ecb_encrypt_128,
     &null_ecb_encrypt_128, /* Decryption is the same as encrypton */
-    &null_test,
+    NULL,
     &null_done,
     &null_keysize,
     NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
 }, null_desc = {
     /* regular "null" cipher, with a fixed 8-bit block size */
     "null",
-    0x82,
+    0x81,
     0, 0,
     1,
     1,
     &null_setup,
     &null_ecb_encrypt,
     &null_ecb_encrypt,
-    &null_test,
+    NULL,
     &null_done,
     &null_keysize,
     NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
