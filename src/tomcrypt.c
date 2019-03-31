@@ -204,7 +204,7 @@ const zend_function_entry tomcrypt_functions[] = { /* {{{ */
 	PHP_FE(tomcrypt_hash_string,			arginfo_tomcrypt_hash_string)
 	PHP_FE(tomcrypt_hash_file,				arginfo_tomcrypt_hash_file)
 
-	/* MAC */
+	/* MACs */
 	PHP_FE(tomcrypt_mac_string,				arginfo_tomcrypt_mac_string)
 	PHP_FE(tomcrypt_mac_file,				arginfo_tomcrypt_mac_file)
 

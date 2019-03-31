@@ -24,8 +24,8 @@
 #endif
 
 #define PHP_TOMCRYPT_EXTNAME        "tomcrypt"
-#define PHP_TOMCRYPT_VERSION        "0.3.2"
-#define PHP_TOMCRYPT_API_VERSION    "0.3.1"
+#define PHP_TOMCRYPT_VERSION        "0.4.0"
+#define PHP_TOMCRYPT_API_VERSION    "0.4.0"
 
 extern zend_module_entry tomcrypt_module_entry;
 #define tomcrypt_module_ptr &tomcrypt_module_entry
