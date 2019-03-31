@@ -9,7 +9,7 @@ tomcrypt - NULL cipher
     }
 ?>
 --ENV--
-PLTC_NULL=1
+PLTC_TESTS=1
 --FILE--
 <?php
     foreach (array(TOMCRYPT_CIPHER_NULL_REGULAR, TOMCRYPT_CIPHER_NULL_128) as $cipher) {

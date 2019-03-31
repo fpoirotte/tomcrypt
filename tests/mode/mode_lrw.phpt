@@ -8,7 +8,23 @@ tomcrypt - LRW mode
         print "skip mode not available";
     }
 ?>
+--ENV--
+PLTC_TESTS=1
 --FILE--
-<?php var_dump(in_array(TOMCRYPT_MODE_LRW, tomcrypt_list_modes())); ?>
+<?php
+    $mode   = TOMCRYPT_MODE_LRW;
+    // LRW can only be used with 128-bit block ciphers.
+    $cipher = TOMCRYPT_CIPHER_NULL_128;
+    $opts   = array(
+        'iv' => '?',
+    );
+    $pt     = 'Test';
+    $key    = '';
+    $ct     = tomcrypt_cipher_encrypt($cipher, $key, $pt, $mode, $opts);
+    var_dump(bin2hex($ct));
+
+    $pt2    = tomcrypt_cipher_decrypt($cipher, $key, $ct, $mode, $opts);
+    var_dump($pt === $pt2);
+?>
 --EXPECT--
 bool(true)
