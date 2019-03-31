@@ -33,7 +33,7 @@ void php_tomcrypt_xcrypt_eax(PLTC_CRYPT_PARAM)
 	GET_OPT_STRING(options, "tag", in_tag, in_tag_len, NULL);
 
     if (direction == PLTC_ENCRYPT) {
-    	GET_OPT_LONG(options, "taglen", out_tag_len, PLTC_DEFAULT_TAG_LENGTH);
+        GET_OPT_LONG(options, "taglen", out_tag_len, PLTC_DEFAULT_TAG_LENGTH);
     } else {
         out_tag_len = in_tag_len;
     }
