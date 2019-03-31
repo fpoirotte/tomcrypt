@@ -65,32 +65,32 @@ while true; do
     echo -n "Updating release $version... "
     if [ $block -eq 1 ]; then
         # Update the block reserved for the latest release
-        xmlstarlet -u '/p:package/p:date'                 -v "${date}"           
-        xmlstarlet -u '/p:package/p:time'                 -v "${time}"           
-        xmlstarlet -u '/p:package/p:version/p:release'    -v "${version}"        
-        xmlstarlet -u '/p:package/p:version/p:api'        -v "${api_version}"    
-        xmlstarlet -u '/p:package/p:stability/p:release'  -v "${stability}"      
-        xmlstarlet -u '/p:package/p:stability/p:api'      -v "${api_stability}"  
-        xmlstarlet -u '/p:package/p:notes'                -v "${notes}"          
+        xmlstarlet -u '/p:package/p:date'                 -v "${date}"
+        xmlstarlet -u '/p:package/p:time'                 -v "${time}"
+        xmlstarlet -u '/p:package/p:version/p:release'    -v "${version}"
+        xmlstarlet -u '/p:package/p:version/p:api'        -v "${api_version}"
+        xmlstarlet -u '/p:package/p:stability/p:release'  -v "${stability}"
+        xmlstarlet -u '/p:package/p:stability/p:api'      -v "${api_stability}"
+        xmlstarlet -u '/p:package/p:notes'                -v "${notes}"
 
         # Sync the release & API versions found in php_tomcrypt.h
-        sed -Ei -e 's/(#define PHP_TOMCRYPT_VERSION)\s.*$/\1        "'"$version"'"/'         \
-                -e 's/(#define PHP_TOMCRYPT_API_VERSION)\s.*$/\1    "'"$api_version"'"/' \
+        sed -Ei -e 's/(#define PHP_TOMCRYPT_VERSION)\s.*$/\1        "'"$version"'"/'        \
+                -e 's/(#define PHP_TOMCRYPT_API_VERSION)\s.*$/\1    "'"$api_version"'"/'    \
                 src/php_tomcrypt.h
     else
         # Add a new release to the changelog and populate its properties
         xmlstarlet -s '/p:package/p:changelog' -t elem -n release
-        xmlstarlet -s '/p:package/p:changelog/p:release[last()]' -t elem -n date                -v "${date}"           
-        xmlstarlet -s '/p:package/p:changelog/p:release[last()]' -t elem -n time                -v "${time}"           
-        xmlstarlet -s '/p:package/p:changelog/p:release[last()]' -t elem -n version                                    
-        xmlstarlet -s '/p:package/p:changelog/p:release[last()]/p:version' -t elem -n release   -v "${version}"        
-        xmlstarlet -s '/p:package/p:changelog/p:release[last()]/p:version' -t elem -n api       -v "${api_version}"    
-        xmlstarlet -s '/p:package/p:changelog/p:release[last()]' -t elem -n stability                                  
-        xmlstarlet -s '/p:package/p:changelog/p:release[last()]/p:stability' -t elem -n release -v "${stability}"      
-        xmlstarlet -s '/p:package/p:changelog/p:release[last()]/p:stability' -t elem -n api     -v "${api_stability}"  
-        xmlstarlet -s '/p:package/p:changelog/p:release[last()]' -t elem -n license             -v "PHP"               
-        xmlstarlet -s '/p:package/p:changelog/p:release[last()]/p:license' -t attr -n uri       -v "${license}"        
-        xmlstarlet -s '/p:package/p:changelog/p:release[last()]' -t elem -n notes               -v "${notes}"          
+        xmlstarlet -s '/p:package/p:changelog/p:release[last()]' -t elem -n date                -v "${date}"
+        xmlstarlet -s '/p:package/p:changelog/p:release[last()]' -t elem -n time                -v "${time}"
+        xmlstarlet -s '/p:package/p:changelog/p:release[last()]' -t elem -n version
+        xmlstarlet -s '/p:package/p:changelog/p:release[last()]/p:version' -t elem -n release   -v "${version}"
+        xmlstarlet -s '/p:package/p:changelog/p:release[last()]/p:version' -t elem -n api       -v "${api_version}"
+        xmlstarlet -s '/p:package/p:changelog/p:release[last()]' -t elem -n stability
+        xmlstarlet -s '/p:package/p:changelog/p:release[last()]/p:stability' -t elem -n release -v "${stability}"
+        xmlstarlet -s '/p:package/p:changelog/p:release[last()]/p:stability' -t elem -n api     -v "${api_stability}"
+        xmlstarlet -s '/p:package/p:changelog/p:release[last()]' -t elem -n license             -v "PHP"
+        xmlstarlet -s '/p:package/p:changelog/p:release[last()]/p:license' -t attr -n uri       -v "${license}"
+        xmlstarlet -s '/p:package/p:changelog/p:release[last()]' -t elem -n notes               -v "${notes}"
     fi
     echo "OK"
 
