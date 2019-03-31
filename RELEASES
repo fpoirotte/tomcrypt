@@ -1,6 +1,40 @@
-Version: 0.3.2
+Version: 0.4.0 (API: 0.4.0)
+Date: 2019-03-31 23:59:59
+Stability: beta (API: stable)
+
+notes: Sun, Mar 31, 2019 - tomcrypt 0.4.0
+
++ Changes:
+
+  - Added support for PHP 7.3
+
+  - Refactored some of the code
+
+  - Added tomcrypt_rng_import() / tomcrypt_rng_export()
+    functions to import / export a PRNG's state
+
+  - Added TOMCRYPT_FAST boolean constant that indicates whether
+    LibTomCrypt is running in "fast mode" or not.
+    When running in "fast mode", LibTomCrypt will refuse to perform
+    slow operations, like encrypting a block of data when the parameters
+    are not aligned with the machine's native word size.
+
+  - Added "null" family of ciphers for private use (unit tests)
+    They come in two flavors:
+    - "null"      is an 8-bit block cipher
+    - "null-128"  is a 128-bit block cipher
+
+  - Added tests for every type of object exposed by this extension
+    (ciphers, encryption modes, hashes, MACs & RNGs)
+
+= Fixed bugs:
+
+  - Fixed MAC-related functions not working at all
+
+
+Version: 0.3.2 (API: 0.3.1)
 Date: 2018-03-25 23:59:59
-Stability: beta
+Stability: beta (API: stable)
 
 notes: Sun, Mar 25, 2018 - tomcrypt 0.3.2
 
@@ -9,9 +43,9 @@ notes: Sun, Mar 25, 2018 - tomcrypt 0.3.2
   - Add support for PHP 7.2
 
 
-Version: 0.3.1
+Version: 0.3.1 (API: 0.3.1)
 Date: 2018-02-25 16:30:00
-Stability: beta
+Stability: beta (API: stable)
 
 notes: Sun, Feb 25, 2018 - tomcrypt 0.3.1
 
@@ -26,9 +60,9 @@ notes: Sun, Feb 25, 2018 - tomcrypt 0.3.1
     for MSVC/C89 compatibility.
 
 
-Version: 0.3.0
+Version: 0.3.0 (API: 0.3.0)
 Date: 2017-12-30 23:59:59
-Stability: beta
+Stability: beta (API: stable)
 
 notes: Sat, Dec 30, 2017 - tomcrypt 0.3.0
 
@@ -41,8 +75,8 @@ notes: Sat, Dec 30, 2017 - tomcrypt 0.3.0
     - ChaCha (stream cipher)
     - RC4, aka. Arcfour (stream cipher)
     - Sober128 (stream cipher)
-  - Added support for these Pseudo-Random Number Generators (requires LTC v1.18+)
-    - ChaCha20
+  - Added support for the ChaCha20 Pseudo-Random Number Generator
+    (requires LTC v1.18+)
   - Added support for these hashing algorithms (requires LTC v1.18+)
       - SHA512-256
       - SHA512-224
@@ -91,9 +125,9 @@ notes: Sat, Dec 30, 2017 - tomcrypt 0.3.0
     implementation is now provided with LibTomCrypt v1.18+).
 
 
-Version: 0.2.3
+Version: 0.2.3 (API: 0.2.3)
 Date: 2017-05-14 19:15:00
-Stability: beta
+Stability: beta (API: stable)
 
 notes: Sun, May 14, 2017 - tomcrypt 0.2.3
 
@@ -103,10 +137,9 @@ notes: Sun, May 14, 2017 - tomcrypt 0.2.3
   - Rename TOMCRYPT_CIPHER_KSEED into TOMCRYPT_CIPHER_SEED
 
 
-
-Version: 0.2.2
+Version: 0.2.2 (API: 0.2.0)
 Date: 2016-11-13 10:50:00
-Stability: beta
+Stability: beta (API: stable)
 
 notes: Sat, Nov 13, 2016 - tomcrypt 0.2.2
 
@@ -115,11 +148,9 @@ notes: Sat, Nov 13, 2016 - tomcrypt 0.2.2
   - Fixed version mismatch in php_tomcrypt.h
 
 
-
-
-Version: 0.2.1
+Version: 0.2.1 (API: 0.2.0)
 Date: 2016-11-13 10:35:00
-Stability: beta
+Stability: beta (API: stable)
 
 notes: Sat, Nov 13, 2016 - tomcrypt 0.2.1
 
@@ -128,10 +159,9 @@ notes: Sat, Nov 13, 2016 - tomcrypt 0.2.1
   - Fixed composer.json to include vendor name in package name
 
 
-
-Version: 0.2.0
+Version: 0.2.0 (API: 0.2.0)
 Date: 2016-07-23 18:35:00
-Stability: beta
+Stability: beta (API: stable)
 
 notes: Sat, Jul 23, 2016 - tomcrypt 0.2.0
 
@@ -149,12 +179,9 @@ notes: Sat, Jul 23, 2016 - tomcrypt 0.2.0
   - Removed the old base64 functions since PHP already provides some
 
 
-
-Version: 0.1.0
+Version: 0.1.0 (API: 0.1.0)
 Date: 2015-05-17 20:36:00
-Stability: beta
+Stability: beta (API: stable)
 
 notes: Initial Release.
-
-
 

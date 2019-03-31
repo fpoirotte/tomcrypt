@@ -1,10 +1,5 @@
-<?xml version="1.0"?>
-<package
-packagerversion="1.4.0a2"
-version="2.0"
-xmlns="http://pear.php.net/dtd/package-2.0" 
-xmlns:tasks="http://pear.php.net/dtd/tasks-1.0"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" packagerversion="1.4.0a2" version="2.0">
  <name>tomcrypt</name>
  <channel>pecl.php.net</channel>
  <summary>PHP bindings for libtomcrypt</summary>
@@ -25,23 +20,45 @@ The following features are currently supported:
   <email>clicky@erebot.net</email>
   <active>yes</active>
  </lead>
- <date>2018-03-25</date>
+ <date>2019-03-31</date>
  <time>23:59:59</time>
  <version>
-  <release>0.3.2</release>
-  <api>0.3.1</api>
+  <release>0.4.0</release>
+  <api>0.4.0</api>
  </version>
  <stability>
   <release>beta</release>
   <api>stable</api>
  </stability>
  <license uri="http://www.php.net/license/3_01.txt">PHP</license>
- <notes>Sun, Mar 25, 2018 - tomcrypt 0.3.3
+ <notes>Sun, Mar 31, 2019 - tomcrypt 0.4.0
 
 + Changes:
 
-  - Added support for PHP 7.2
-</notes>
+  - Added support for PHP 7.3
+
+  - Refactored some of the code
+
+  - Added tomcrypt_rng_import() / tomcrypt_rng_export()
+    functions to import / export a PRNG's state
+
+  - Added TOMCRYPT_FAST boolean constant that indicates whether
+    LibTomCrypt is running in "fast mode" or not.
+    When running in "fast mode", LibTomCrypt will refuse to perform
+    slow operations, like encrypting a block of data when the parameters
+    are not aligned with the machine's native word size.
+
+  - Added "null" family of ciphers for private use (unit tests)
+    They come in two flavors:
+    - "null"      is an 8-bit block cipher
+    - "null-128"  is a 128-bit block cipher
+
+  - Added tests for every type of object exposed by this extension
+    (ciphers, encryption modes, hashes, MACs &amp; RNGs)
+
+= Fixed bugs:
+
+  - Fixed MAC-related functions not working at all</notes>
  <contents>
   <dir name="/">
    <file role="doc" name="LICENSE.txt"/>
@@ -92,21 +109,39 @@ The following features are currently supported:
   </required>
  </dependencies>
  <providesextension>tomcrypt</providesextension>
- <extsrcrelease />
+ <extsrcrelease/>
  <changelog>
-<release>
- <date>2018-02-25</date>
- <time>16:30:00</time>
- <version>
-  <release>0.3.1</release>
-  <api>0.3.1</api>
- </version>
- <stability>
-  <release>beta</release>
-  <api>stable</api>
- </stability>
- <license uri="http://www.php.net/license/3_01.txt">PHP</license>
- <notes>Sun, Feb 25, 2018 - tomcrypt 0.3.1
+  <release>
+   <date>2018-03-25</date>
+   <time>23:59:59</time>
+   <version>
+    <release>0.3.2</release>
+    <api>0.3.1</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.php.net/license/3_01.txt">PHP</license>
+   <notes>Sun, Mar 25, 2018 - tomcrypt 0.3.2
+
++ Changes:
+
+  - Add support for PHP 7.2</notes>
+  </release>
+  <release>
+   <date>2018-02-25</date>
+   <time>16:30:00</time>
+   <version>
+    <release>0.3.1</release>
+    <api>0.3.1</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.php.net/license/3_01.txt">PHP</license>
+   <notes>Sun, Feb 25, 2018 - tomcrypt 0.3.1
 
 + Changes:
 
@@ -116,22 +151,21 @@ The following features are currently supported:
 
   - Fixed config.w32 so that it actually works under Windows.
   - Replaced several calls to index() with equivalent calls to strchr()
-    for MSVC/C89 compatibility.
-</notes>
-</release>
+    for MSVC/C89 compatibility.</notes>
+  </release>
   <release>
- <date>2017-12-30</date>
- <time>23:59:59</time>
- <version>
-  <release>0.3.0</release>
-  <api>0.3.0</api>
- </version>
- <stability>
-  <release>beta</release>
-  <api>stable</api>
- </stability>
- <license uri="http://www.php.net/license/3_01.txt">PHP</license>
- <notes>Sat, Dec 30, 2017 - tomcrypt 0.3.0
+   <date>2017-12-30</date>
+   <time>23:59:59</time>
+   <version>
+    <release>0.3.0</release>
+    <api>0.3.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.php.net/license/3_01.txt">PHP</license>
+   <notes>Sat, Dec 30, 2017 - tomcrypt 0.3.0
 
 + Changes:
 
@@ -142,8 +176,8 @@ The following features are currently supported:
     - ChaCha (stream cipher)
     - RC4, aka. Arcfour (stream cipher)
     - Sober128 (stream cipher)
-  - Added support for these Pseudo-Random Number Generators (requires LTC v1.18+)
-    - ChaCha20
+  - Added support for the ChaCha20 Pseudo-Random Number Generator
+    (requires LTC v1.18+)
   - Added support for these hashing algorithms (requires LTC v1.18+)
       - SHA512-256
       - SHA512-224
@@ -189,51 +223,48 @@ The following features are currently supported:
     tomcrypt_rng_name() functions. They were pretty much useless
     since you already had to know the object's name to call them.
   - Removed buggy RC4 stream cipher implementation (a proper
-    implementation is now provided with LibTomCrypt v1.18+).
-</notes>
+    implementation is now provided with LibTomCrypt v1.18+).</notes>
   </release>
   <release>
- <date>2017-05-14</date>
- <time>19:15:00</time>
- <version>
-  <release>0.2.3</release>
-  <api>0.2.3</api>
- </version>
- <stability>
-  <release>beta</release>
-  <api>stable</api>
- </stability>
- <license uri="http://www.php.net/license/3_01.txt">PHP</license>
- <notes>Sun, May 14, 2017 - tomcrypt 0.2.3
+   <date>2017-05-14</date>
+   <time>19:15:00</time>
+   <version>
+    <release>0.2.3</release>
+    <api>0.2.3</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.php.net/license/3_01.txt">PHP</license>
+   <notes>Sun, May 14, 2017 - tomcrypt 0.2.3
 
 + Changes:
 
   - Make TOMCRYPT_CIPHER_AES an alias for TOMCRYPT_CIPHER_RIJNDAEL
-  - Rename TOMCRYPT_CIPHER_KSEED into TOMCRYPT_CIPHER_SEED
-</notes>
+  - Rename TOMCRYPT_CIPHER_KSEED into TOMCRYPT_CIPHER_SEED</notes>
   </release>
   <release>
- <date>2016-11-13</date>
- <time>10:50:00</time>
- <version>
-  <release>0.2.2</release>
-  <api>0.2.0</api>
- </version>
- <stability>
-  <release>beta</release>
-  <api>stable</api>
- </stability>
- <license uri="http://www.php.net/license/3_01.txt">PHP</license>
- <notes>Sat, Nov 13, 2016 - tomcrypt 0.2.2
+   <date>2016-11-13</date>
+   <time>10:50:00</time>
+   <version>
+    <release>0.2.2</release>
+    <api>0.2.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.php.net/license/3_01.txt">PHP</license>
+   <notes>Sat, Nov 13, 2016 - tomcrypt 0.2.2
 
 = Fixed bugs:
 
-  - Fixed version mismatch in php_tomcrypt.h
-</notes>
+  - Fixed version mismatch in php_tomcrypt.h</notes>
   </release>
   <release>
- <date>2016-11-13</date>
- <time>10:35:00</time>
+   <date>2016-11-13</date>
+   <time>10:35:00</time>
    <version>
     <release>0.2.1</release>
     <api>0.2.0</api>
@@ -243,15 +274,15 @@ The following features are currently supported:
     <api>stable</api>
    </stability>
    <license uri="http://www.php.net/license/3_01.txt">PHP</license>
- <notes>Sat, Nov 13, 2016 - tomcrypt 0.2.1
+   <notes>Sat, Nov 13, 2016 - tomcrypt 0.2.1
 
 = Fixed bugs:
 
   - Fixed composer.json to include vendor name in package name</notes>
   </release>
   <release>
- <date>2016-07-23</date>
- <time>18:35:00</time>
+   <date>2016-07-23</date>
+   <time>18:35:00</time>
    <version>
     <release>0.2.0</release>
     <api>0.2.0</api>
@@ -261,7 +292,7 @@ The following features are currently supported:
     <api>stable</api>
    </stability>
    <license uri="http://www.php.net/license/3_01.txt">PHP</license>
- <notes>Sat, Jul 23, 2016 - tomcrypt 0.2.0
+   <notes>Sat, Jul 23, 2016 - tomcrypt 0.2.0
 
 = Fixed bugs:
 
